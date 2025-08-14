@@ -1,0 +1,59 @@
+# Code Analytica Configuration
+# 로컬 실행을 위한 설정 파일
+
+# Azure OpenAI Configuration
+azure_openai:
+  api_key: "${AZURE_OPENAI_API_KEY}"
+  endpoint: "${AZURE_OPENAI_ENDPOINT}"
+  api_version: "2024-02-15-preview"
+  deployment_name: "${AZURE_OPENAI_DEPLOYMENT_NAME}"
+  embedding_deployment: "${AZURE_OPENAI_EMBEDDING_DEPLOYMENT}"
+
+# Local Storage Configuration
+storage:
+  data_dir: "./data"
+  artifacts_dir: "./artifacts"
+  sqlite_db: "./data/code_analytica.db"
+  faiss_index: "./data/faiss_index"
+  
+# Agent Configuration
+agents:
+  structsynth:
+    enabled: true
+    chunk_size: 1000
+    chunk_overlap: 200
+    supported_languages: ["python", "java", "cpp", "c"]
+    
+  insightgen:
+    enabled: true
+    max_graph_nodes: 1000
+    graph_layout: "hierarchical"
+    
+  evalguard:
+    enabled: true
+    quality_threshold: 0.7
+    
+  codechat:
+    enabled: true
+    max_context_length: 4000
+
+# Search Configuration
+search:
+  hybrid_weight_keyword: 0.3
+  hybrid_weight_vector: 0.7
+  max_results: 20
+  rerank_top_k: 10
+
+# UI Configuration
+ui:
+  streamlit:
+    page_title: "Code Analytica"
+    page_icon: "🔍"
+    layout: "wide"
+    initial_sidebar_state: "expanded"
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "./artifacts/app.log" 

@@ -1,0 +1,38 @@
+# Code Analytica - Local Execution Dependencies
+# 로컬 실행을 위한 최소 의존성 세트
+
+# Core Language Parsing
+tree_sitter==0.21.3
+tree_sitter_languages==1.10.2
+
+# Vector Store & Search
+faiss-cpu==1.8.0
+numpy==1.26.4
+pandas==2.2.2
+
+# Database & Storage
+sqlite-utils==3.36
+
+# Azure OpenAI Integration
+openai>=1.40.0          # Azure OpenAI 호환(엔드포인트/버전 환경변수화)
+tiktoken==0.7.0
+
+# Data Validation & Config
+pydantic==2.7.4
+pyyaml==6.0.2
+
+# Caching (Optional)
+redis==5.0.4            # 로컬 캐시
+
+# Web UI
+streamlit==1.36.0
+
+# Visualization
+pyvis==0.3.2
+graphviz==0.20.3        # 정적 그래프 생성 (옵션)
+
+# Markdown Processing
+markdown2==2.5.0
+
+# Note: Windows 환경에서 faiss-cpu 설치 이슈가 있다면
+# Qdrant local(Docker) 또는 Chroma로 대체 가능 
