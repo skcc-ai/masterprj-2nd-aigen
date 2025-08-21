@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: code-analytica-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - PYTHONPATH=/app
+      - DOCKER_ENV=true
+      # Azure OpenAI 설정 (필요시)
+      # - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      # - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+    volumes:
+      # 로컬 디렉토리를 컨테이너에 마운트
+      - ./agents:/app/agents
+      - ./common:/app/common
+      - ./ui:/app/ui
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - code-analytica-network
+
+networks:
+  code-analytica-network:
+    driver: bridge
+
+volumes:
+  artifacts:
+  data: 

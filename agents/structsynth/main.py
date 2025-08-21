@@ -1,117 +1,97 @@
+#!/usr/bin/env python3
 """
-StructSynth Agent - Main Execution Script
-코드 파싱 및 분석 준비 에이전트 실행 스크립트
+Entry point for StructSynth Agent
+코드 저장소 분석 및 AST 추출 파이프라인 실행
 """
 
 import argparse
 import logging
+import os
 import sys
-from pathlib import Path
+from dotenv import load_dotenv
 
-# 프로젝트 루트를 Python 경로에 추가
-project_root = Path(__file__).parent.parent.parent
-sys.path.append(str(project_root))
+# 상대 import 문제 해결을 위해 경로 추가
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 
-from .agent import StructSynthAgent
+from agents.structsynth.agent import StructSynthAgent
 
-# 로깅 설정
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('structsynth.log'),
-        logging.StreamHandler(sys.stdout)
+# .env 로딩
+load_dotenv()
+
+# 환경변수 로딩 확인
+def check_env_variables():
+    """환경변수 설정 확인"""
+    required_vars = [
+        "AZURE_OPENAI_API_KEY",
+        "AZURE_OPENAI_ENDPOINT",
+        "AZURE_OPENAI_API_VERSION",
+        "AZURE_OPENAI_DEPLOYMENT_NAME"
     ]
-)
-
-logger = logging.getLogger(__name__)
-
+    
+    missing_vars = []
+    for var in required_vars:
+        if not os.getenv(var):
+            missing_vars.append(var)
+    
+    if missing_vars:
+        logging.warning(f"⚠️  누락된 환경변수: {missing_vars}")
+        return False
+    else:
+        logging.info("✅ 모든 필수 환경변수가 설정되었습니다")
+        return True
 
 def main():
-    """메인 함수"""
-    parser = argparse.ArgumentParser(description="StructSynth Agent - Code Parsing and Analysis")
-    
-    parser.add_argument(
-        "repo_path",
-        help="분석할 저장소 경로"
-    )
-    
-    parser.add_argument(
-        "--artifacts-dir",
-        default="./artifacts",
-        help="아티팩트 출력 디렉토리 (기본값: ./artifacts)"
-    )
-    
-    parser.add_argument(
-        "--data-dir",
-        default="./data",
-        help="데이터 저장 디렉토리 (기본값: ./data)"
-    )
-    
-    parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="상세 로그 출력"
-    )
-    
+    parser = argparse.ArgumentParser(description="StructSynth Agent - 코드 구조 분석")
+    parser.add_argument("repo_path", help="Path to source code repository")
+    parser.add_argument("--artifacts-dir", default="./artifacts", help="Output artifacts directory")
+    parser.add_argument("--data-dir", default="./data", help="Data storage directory")
+    parser.add_argument("--verbose", action="store_true", help="Verbose logging")
     args = parser.parse_args()
+
+    # 로깅 설정
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
+    # 환경변수 확인
+    if not check_env_variables():
+        logging.warning("⚠️  일부 환경변수가 누락되었습니다. LLM 분석이 제한될 수 있습니다.")
+
+    repo_path = os.path.abspath(args.repo_path)
     
-    # 로깅 레벨 설정
-    if args.verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
+    # repo_path가 파일인 경우 해당 파일이 속한 디렉토리를 전달
+    if os.path.isfile(repo_path):
+        repo_dir = os.path.dirname(repo_path)
+        logging.info(f"📁 파일 경로 감지됨: {repo_path}")
+        logging.info(f"📁 분석 대상 디렉토리: {repo_dir}")
+        repo_path = repo_dir
+    else:
+        logging.info(f"📁 디렉토리 경로 감지됨: {repo_path}")
     
+    # 절대 경로로 artifacts와 data 디렉토리 설정
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    artifacts_dir = os.path.abspath(args.artifacts_dir)
+    data_dir = os.path.abspath(args.data_dir)
+    
+    logging.info(f"🚀 StructSynth Agent 시작: {repo_path}")
+    logging.info(f"📁 결과물 저장 위치: {artifacts_dir}")
+    logging.info(f"📁 데이터 저장 위치: {data_dir}")
+
     try:
-        # 에이전트 초기화
-        logger.info("Initializing StructSynth Agent...")
+        # Agent 생성 및 실행 (절대 경로 전달)
         agent = StructSynthAgent(
-            repo_path=args.repo_path,
-            artifacts_dir=args.artifacts_dir,
-            data_dir=args.data_dir
+            repo_path=repo_path,
+            artifacts_dir=artifacts_dir,
+            data_dir=data_dir
         )
         
-        # 상태 출력
-        status = agent.get_status()
-        logger.info(f"Agent initialized successfully")
-        logger.info(f"Repository: {status['repo_path']}")
-        logger.info(f"Artifacts directory: {status['artifacts_dir']}")
-        logger.info(f"Data directory: {status['data_dir']}")
+        # 저장소 분석 실행
+        agent.analyze_repository()
         
-        # 저장소 분석 시작
-        logger.info("Starting repository analysis...")
-        results = agent.analyze_repository()
-        
-        # 결과 출력
-        logger.info("Analysis completed!")
-        logger.info(f"Total files: {results['total_files']}")
-        logger.info(f"Parsed files: {results['parsed_files']}")
-        logger.info(f"Failed files: {results['failed_files']}")
-        logger.info(f"Total symbols: {results['total_symbols']}")
-        logger.info(f"Total chunks: {results['total_chunks']}")
-        logger.info(f"Total calls: {results['total_calls']}")
-        logger.info(f"Processing time: {results['processing_time']:.2f}s")
-        
-        # 출력 경로 출력
-        logger.info("Output files generated:")
-        for key, path in results['output_paths'].items():
-            logger.info(f"  {key}: {path}")
-        
-        if results['errors']:
-            logger.warning(f"Encountered {len(results['errors'])} errors:")
-            for error in results['errors']:
-                logger.warning(f"  - {error}")
-        
-        # 에이전트 정리
-        agent.close()
-        
-        logger.info("StructSynth Agent completed successfully")
-        
-    except KeyboardInterrupt:
-        logger.info("Analysis interrupted by user")
-        sys.exit(1)
     except Exception as e:
-        logger.error(f"Analysis failed: {e}")
-        sys.exit(1)
-
+        logging.error(f"❌ StructSynth Agent 실행 실패: {e}")
+        raise
 
 if __name__ == "__main__":
-    main() 
+    main()
