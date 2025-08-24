@@ -34,10 +34,10 @@ def check_env_variables():
             missing_vars.append(var)
     
     if missing_vars:
-        logging.warning(f"⚠️  누락된 환경변수: {missing_vars}")
+        logging.warning(f"누락된 환경변수: {missing_vars}")
         return False
     else:
-        logging.info("✅ 모든 필수 환경변수가 설정되었습니다")
+        logging.info("모든 필수 환경변수가 설정되었습니다")
         return True
 
 def main():
@@ -56,27 +56,27 @@ def main():
 
     # 환경변수 확인
     if not check_env_variables():
-        logging.warning("⚠️  일부 환경변수가 누락되었습니다. LLM 분석이 제한될 수 있습니다.")
+        logging.warning("일부 환경변수가 누락되었습니다. LLM 분석이 제한될 수 있습니다.")
 
     repo_path = os.path.abspath(args.repo_path)
     
     # repo_path가 파일인 경우 해당 파일이 속한 디렉토리를 전달
     if os.path.isfile(repo_path):
         repo_dir = os.path.dirname(repo_path)
-        logging.info(f"📁 파일 경로 감지됨: {repo_path}")
-        logging.info(f"📁 분석 대상 디렉토리: {repo_dir}")
+        logging.info(f"파일 경로 감지됨: {repo_path}")
+        logging.info(f"분석 대상 디렉토리: {repo_dir}")
         repo_path = repo_dir
     else:
-        logging.info(f"📁 디렉토리 경로 감지됨: {repo_path}")
+        logging.info(f"디렉토리 경로 감지됨: {repo_path}")
     
     # 절대 경로로 artifacts와 data 디렉토리 설정
     current_dir = os.path.dirname(os.path.abspath(__file__))
     artifacts_dir = os.path.abspath(args.artifacts_dir)
     data_dir = os.path.abspath(args.data_dir)
     
-    logging.info(f"🚀 StructSynth Agent 시작: {repo_path}")
-    logging.info(f"📁 결과물 저장 위치: {artifacts_dir}")
-    logging.info(f"📁 데이터 저장 위치: {data_dir}")
+    logging.info(f"StructSynth Agent 시작: {repo_path}")
+    logging.info(f"결과물 저장 위치: {artifacts_dir}")
+    logging.info(f"데이터 저장 위치: {data_dir}")
 
     try:
         # Agent 생성 및 실행 (절대 경로 전달)

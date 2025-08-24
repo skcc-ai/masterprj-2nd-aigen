@@ -47,6 +47,10 @@ class SearchRequest(BaseModel):
     query: str = Field(..., description="검색 쿼리")
     top_k: Optional[int] = Field(10, description="검색 결과 수")
 
+class ChatRequest(BaseModel):
+    query: str = Field(..., description="코드 관련 질문")
+    top_k: Optional[int] = Field(5, description="검색 결과 수")
+
 class AgentResponse(BaseModel):
     success: bool
     message: str
@@ -72,7 +76,7 @@ class AgentManager:
                 'class': StructSynthAgent,
                 'status': 'ready'
             }
-            logger.info("✅ Agent1 (StructSynth) 초기화 완료")
+            logger.info(" Agent1 (StructSynth) 초기화 완료")
         except Exception as e:
             logger.warning(f"⚠️  Agent1 초기화 실패: {e}")
             self.agents['agent1'] = {
@@ -91,7 +95,7 @@ class AgentManager:
                 'class': None,
                 'status': 'not_implemented'
             }
-            logger.info("✅ Agent2 (InsightGen) 초기화 완료 (구현 예정)")
+            logger.info(" Agent2 (InsightGen) 초기화 완료 (구현 예정)")
         except Exception as e:
             logger.warning(f"⚠️  Agent2 초기화 실패: {e}")
         
@@ -99,25 +103,33 @@ class AgentManager:
         try:
             self.agents['agent3'] = {
                 'name': 'EvalGuard',
-                'description': '코드 품질 및 보안 평가',
+                'description': '코드 품질 평가 및 보안 검사',
                 'class': None,
                 'status': 'not_implemented'
             }
-            logger.info("✅ Agent3 (EvalGuard) 초기화 완료 (구현 예정)")
+            logger.info(" Agent3 (EvalGuard) 초기화 완료 (구현 예정)")
         except Exception as e:
             logger.warning(f"⚠️  Agent3 초기화 실패: {e}")
         
-        # Agent4: CodeChat (코드 관련 질의응답)
+        # Agent4: CodeChat (코드 채팅)
         try:
+            from agents.codechat.agent import CodeChatAgent
             self.agents['agent4'] = {
                 'name': 'CodeChat',
-                'description': '코드 관련 질의응답 및 설명',
-                'class': None,
-                'status': 'not_implemented'
+                'description': '하이브리드 검색(FTS+FAISS) + RAG 기반 코드 채팅',
+                'class': CodeChatAgent,
+                'status': 'ready'
             }
-            logger.info("✅ Agent4 (CodeChat) 초기화 완료 (구현 예정)")
+            logger.info(" Agent4 (CodeChat) 초기화 완료")
         except Exception as e:
             logger.warning(f"⚠️  Agent4 초기화 실패: {e}")
+            self.agents['agent4'] = {
+                'name': 'CodeChat',
+                'description': '하이브리드 검색(FTS+FAISS) + RAG 기반 코드 채팅',
+                'class': None,
+                'status': 'error',
+                'error': str(e)
+            }
     
     def get_agent_status(self) -> Dict[str, Any]:
         """모든 Agent의 상태 반환"""
@@ -145,6 +157,8 @@ class AgentManager:
             # Agent 실행
             if agent_id == 'agent1':
                 return self._run_agent1(repo_path, **kwargs)
+            elif agent_id == 'agent4':
+                return self._run_agent4(repo_path, **kwargs)
             else:
                 return {
                     'success': False,
@@ -190,6 +204,33 @@ class AgentManager:
                 'error': str(e)
             }
 
+    def _run_agent4(self, repo_path: str, **kwargs) -> Dict[str, Any]:
+        """Agent4 (CodeChat) 실행"""
+        try:
+            artifacts_dir = kwargs.get('artifacts_dir', './artifacts')
+            data_dir = kwargs.get('data_dir', './data')
+            
+            # CodeChatAgent는 repo_path만 필수 인자로 받음
+            agent = self.agents['agent4']['class'](repo_path) # Changed from agent2 to agent4
+            
+            # 채팅 실행
+            response = agent.chat(kwargs.get('query', ''))
+            
+            return {
+                'success': True,
+                'agent': 'agent4', # Changed from agent2 to agent2
+                'repo_path': repo_path,
+                'message': '코드 채팅 완료',
+                'response': response
+            }
+            
+        except Exception as e:
+            logger.error(f"Agent4 실행 실패: {e}")
+            return {
+                'success': False,
+                'error': str(e)
+            }
+
 # Agent 매니저 초기화
 agent_manager = AgentManager()
 
@@ -217,9 +258,9 @@ async def health_check():
         "status": "healthy",
         "message": "Code Analytica API is running",
         "modules": {
-            "agents": "✅",
-            "common": "✅", 
-            "ui": "✅"
+            "agents": "",
+            "common": "", 
+            "ui": ""
         }
     }
 
@@ -322,6 +363,41 @@ async def search_symbols(request: SearchRequest):
         logger.error(f"검색 중 오류: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/chat", tags=["Chat"], response_model=AgentResponse)
+async def chat_with_code(request: ChatRequest):
+    """코드 관련 질문에 대한 답변 생성 (Agent2 결과 활용)"""
+    try:
+        # Agent2 (CodeChat) 실행
+        try:
+            from agents.codechat.agent import CodeChatAgent
+            # 임시로 현재 디렉토리 사용
+            agent = CodeChatAgent(
+                repo_path=".",
+                artifacts_dir="./artifacts",
+                data_dir="./data"
+            )
+            
+            response = agent.chat(request.query)
+            
+            return AgentResponse(
+                success=True,
+                message=f"채팅 완료: {len(response.evidence)}개 근거",
+                data={
+                    "query": request.query,
+                    "response": response
+                }
+            )
+                
+        except Exception as e:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Chat failed: {str(e)}"
+            )
+            
+    except Exception as e:
+        logger.error(f"채팅 중 오류: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/modules", tags=["Modules"])
 async def get_modules():
     """사용 가능한 모듈 정보 반환"""
@@ -347,5 +423,10 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     host = os.environ.get("HOST", "0.0.0.0")
     
+    # Docker 환경에서는 reload=False, 로컬에서는 reload=True
+    reload_enabled = os.environ.get("DOCKER_ENV", "false").lower() != "true"
+    
     logger.info(f"🚀 Code Analytica FastAPI Backend 시작 (포트: {port})")
-    uvicorn.run(app, host=host, port=port, reload=True) 
+    logger.info(f"🔄 Reload 모드: {'활성화' if reload_enabled else '비활성화'}")
+    
+    uvicorn.run(app, host=host, port=port, reload=reload_enabled) 

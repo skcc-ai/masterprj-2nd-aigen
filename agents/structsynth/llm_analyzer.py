@@ -68,11 +68,11 @@ class LLMAnalyzer:
                 "sequence_steps": analysis.get("sequence_steps", [])
             }
             
-            logger.info(f"✅ 함수 분석 완료: {function_data.get('name', 'unknown')}")
+            logger.info(f"함수 분석 완료: {function_data.get('name', 'unknown')}")
             return enriched_function
             
         except Exception as e:
-            logger.error(f"⚠️ 함수 분석 실패: {e}")
+            logger.error(f"함수 분석 실패: {e}")
             # 분석 실패 시 원본 데이터 반환
             function_data["llm_analysis"] = {
                 "summary": "분석 실패",
@@ -112,11 +112,11 @@ class LLMAnalyzer:
                 "design_notes": analysis.get("design_notes", "설계 분석")
             }
             
-            logger.info(f"✅ 클래스 분석 완료: {class_data.get('name', 'unknown')}")
+            logger.info(f"클래스 분석 완료: {class_data.get('name', 'unknown')}")
             return enriched_class
             
         except Exception as e:
-            logger.error(f"⚠️ 클래스 분석 실패: {e}")
+            logger.error(f"클래스 분석 실패: {e}")
             # 분석 실패 시 원본 데이터 반환
             class_data["llm_analysis"] = {
                 "summary": "분석 실패",
@@ -184,7 +184,7 @@ class LLMAnalyzer:
             }
             
         except Exception as e:
-            logger.error(f"⚠️  파일 분석 실패: {e}")
+            logger.error(f"파일 분석 실패: {e}")
             return {
                 "summary": "분석 실패",
                 "responsibility": "분석 실패",
@@ -208,7 +208,7 @@ class LLMAnalyzer:
             return response.choices[0].message.content.strip()
             
         except Exception as e:
-            logger.error(f"⚠️  LLM 응답 실패: {e}")
+            logger.error(f"LLM 응답 실패: {e}")
             return "분석 실패"
 
     def _build_function_analysis_prompt(self, function_data: Dict[str, Any], file_context: str) -> str:
@@ -301,4 +301,187 @@ JSON 형식으로 구조화된 분석 결과를 제공해야 합니다.
             return {
                 "purpose": "JSON 파싱 실패",
                 "summary": response[:200] if response else "빈 응답"
-            } 
+            }
+    
+    def analyze_repository(self, parsed_data: Dict[str, Any]) -> Dict[str, Any]:
+        """저장소 전체에 대한 LLM 분석"""
+        try:
+            files = parsed_data.get("files", [])
+            symbols = parsed_data.get("symbols", [])
+            
+            # 저장소 요약 정보
+            summary_prompt = f"""
+다음 코드베이스를 분석하여 간결하게 요약해주세요:
+
+총 파일 수: {len(files)}
+총 심볼 수: {len(symbols)}
+
+파일 목록:
+{chr(10).join([f"- {f.get('file', {}).get('path', 'unknown')}" for f in files[:10]])}
+
+이 코드베이스의 주요 기능과 역할을 2-3문장으로 요약해주세요.
+"""
+            
+            summary = self._get_llm_response(summary_prompt)
+            
+            # 전체 구조 분석
+            structure_prompt = f"""
+다음 코드베이스의 구조적 특징을 분석해주세요:
+
+파일 수: {len(files)}
+심볼 수: {len(symbols)}
+
+주요 언어: {', '.join(set([f.get('file', {}).get('language', 'unknown') for f in files]))}
+
+이 코드베이스의 아키텍처와 설계 패턴을 2-3문장으로 설명해주세요.
+"""
+            
+            structure = self._get_llm_response(structure_prompt)
+            
+            return {
+                "summary": summary,
+                "structure": structure,
+                "total_files": len(files),
+                "total_symbols": len(symbols),
+                "languages": list(set([f.get('file', {}).get('language', 'unknown') for f in files]))
+            }
+            
+        except Exception as e:
+            logger.error(f"저장소 분석 실패: {e}")
+            return {
+                "summary": "분석 실패",
+                "structure": "분석 실패",
+                "total_files": 0,
+                "total_symbols": 0,
+                "languages": []
+            }
+    
+    def perform_repository_analysis(self, parsed_data: Dict[str, Any]) -> Dict[str, Any]:
+        """저장소 전체에 대한 종합 LLM 분석 수행"""
+        try:
+            analysis_results = {}
+            
+            # 1. 파일별 개별 분석
+            for file_data in parsed_data.get("files", []):
+                file_path = file_data.get("file_path", "")
+                if file_path:
+                    try:
+                        file_summary = self.analyze_file(file_data, "")
+                        analysis_results[file_path] = file_summary
+                        logger.info(f"파일 분석 완료: {file_path}")
+                    except Exception as e:
+                        logger.warning(f"파일 분석 실패 {file_path}: {e}")
+                        analysis_results[file_path] = {"error": str(e)}
+            
+            # 2. 저장소 전체 분석
+            try:
+                repo_analysis = self.analyze_repository(parsed_data)
+                analysis_results["repository"] = repo_analysis
+                logger.info("저장소 전체 분석 완료")
+            except Exception as e:
+                logger.warning(f"저장소 전체 분석 실패: {e}")
+                analysis_results["repository"] = {"error": str(e)}
+            
+            # 3. 분석 통계
+            analysis_results["statistics"] = {
+                "total_files": len(parsed_data.get("files", [])),
+                "total_symbols": len(parsed_data.get("symbols", [])),
+                "files_analyzed": len([k for k, v in analysis_results.items() if k != "repository" and k != "statistics" and "error" not in v]),
+                "analysis_timestamp": self._get_timestamp()
+            }
+            
+            logger.info("저장소 LLM 분석 완료")
+            return analysis_results
+            
+        except Exception as e:
+            logger.error(f"저장소 LLM 분석 실패: {e}")
+            return {
+                "error": str(e),
+                "statistics": {
+                    "total_files": 0,
+                    "total_symbols": 0,
+                    "files_analyzed": 0,
+                    "analysis_timestamp": self._get_timestamp()
+                }
+            }
+    
+    def _get_timestamp(self) -> str:
+        """현재 타임스탬프 반환"""
+        from datetime import datetime
+        return datetime.now().isoformat()
+    
+    def analyze_chunk(self, chunk_data: Dict[str, Any]) -> Dict[str, Any]:
+        """청킹 단위 LLM 분석"""
+        try:
+            chunk_type = chunk_data.get("symbol_type", "unknown")
+            chunk_name = chunk_data.get("symbol_name", "unknown")
+            content = chunk_data.get("content", "")
+            
+            # 청크 타입별 분석 프롬프트 구성
+            if chunk_type == "function":
+                prompt = self._build_function_chunk_prompt(chunk_name, content)
+            elif chunk_type == "class":
+                prompt = self._build_class_chunk_prompt(chunk_name, content)
+            else:
+                prompt = self._build_general_chunk_prompt(chunk_name, chunk_type, content)
+            
+            # LLM 호출
+            response = self._get_llm_response(prompt)
+            
+            # 분석 결과 구성
+            analysis = {
+                "summary": response,
+                "chunk_type": chunk_type,
+                "chunk_name": chunk_name,
+                "analysis_timestamp": self._get_timestamp()
+            }
+            
+            logger.info(f"청크 분석 완료: {chunk_name} ({chunk_type})")
+            return analysis
+            
+        except Exception as e:
+            logger.error(f"청크 분석 실패: {e}")
+            return {
+                "summary": "분석 실패",
+                "chunk_type": chunk_data.get("symbol_type", "unknown"),
+                "chunk_name": chunk_data.get("symbol_name", "unknown"),
+                "error": str(e),
+                "analysis_timestamp": self._get_timestamp()
+            }
+    
+    def _build_function_chunk_prompt(self, func_name: str, content: str) -> str:
+        """함수 청크 분석 프롬프트"""
+        return f"""
+다음 Python 함수를 분석해주세요:
+
+**함수명**: {func_name}
+**내용**:
+{content}
+
+이 함수의 주요 기능, 목적, 동작 방식을 1-2문장으로 요약해주세요.
+"""
+    
+    def _build_class_chunk_prompt(self, class_name: str, content: str) -> str:
+        """클래스 청크 분석 프롬프트"""
+        return f"""
+다음 Python 클래스를 분석해주세요:
+
+**클래스명**: {class_name}
+**내용**:
+{content}
+
+이 클래스의 주요 책임, 설계 패턴, 역할을 1-2문장으로 요약해주세요.
+"""
+    
+    def _build_general_chunk_prompt(self, chunk_name: str, chunk_type: str, content: str) -> str:
+        """일반 청크 분석 프롬프트"""
+        return f"""
+다음 코드 청크를 분석해주세요:
+
+**이름**: {chunk_name}
+**타입**: {chunk_type}
+**내용**:
+{content}
+
+이 코드의 주요 기능과 역할을 1-2문장으로 요약해주세요.
+""" 

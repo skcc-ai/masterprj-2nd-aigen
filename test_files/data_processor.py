@@ -43,7 +43,7 @@ class DataProcessor:
         self._lock = threading.Lock()
         self._processing_queue = queue.Queue()
         
-        logger.info("✅ DataProcessor 초기화 완료")
+        logger.info("DataProcessor 초기화 완료")
     
     def _load_validation_rules(self) -> Dict[str, Any]:
         """데이터 검증 규칙 로드"""
@@ -115,7 +115,7 @@ class DataProcessor:
                 'processing_time': datetime.now().isoformat()
             }
             
-            logger.info(f"✅ 데이터 파일 처리 완료: {file_path} - {len(transformed_data)}개 레코드")
+            logger.info(f" 데이터 파일 처리 완료: {file_path} - {len(transformed_data)}개 레코드")
             return result
             
         except Exception as e:
@@ -216,7 +216,7 @@ class DataProcessor:
                 logger.error(f"레코드 검증 실패: {e}")
                 continue
         
-        logger.info(f"✅ 데이터 검증 완료: {len(validated_data)}/{len(data)} 레코드 유효")
+        logger.info(f" 데이터 검증 완료: {len(validated_data)}/{len(data)} 레코드 유효")
         return validated_data
     
     def _is_valid_record(self, record: Dict[str, Any]) -> bool:
@@ -454,17 +454,17 @@ class DataProcessor:
             else:
                 raise ValueError(f"지원하지 않는 출력 형식: {format}")
             
-            logger.info(f"✅ 데이터 내보내기 완료: {output_file}")
+            logger.info(f"데이터 내보내기 완료: {output_file}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ 데이터 내보내기 실패: {e}")
+            logger.error(f"데이터 내보내기 실패: {e}")
             return False
     
     def clear_cache(self):
         """캐시 정리"""
         self.data_cache.clear()
-        logger.info("🧹 캐시 정리 완료")
+        logger.info("캐시 정리 완료")
     
     def reset_stats(self):
         """통계 초기화"""
@@ -476,4 +476,4 @@ class DataProcessor:
                 'start_time': datetime.now(),
                 'last_processed': None
             }
-        logger.info("🔄 통계 초기화 완료") 
+        logger.info("통계 초기화 완료") 

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build: .
@@ -11,11 +9,12 @@ services:
       - HOST=0.0.0.0
       - PYTHONPATH=/app
       - DOCKER_ENV=true
-      # Azure OpenAI 설정 (필요시)
-      # - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
-      # - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_CHAT_DEPLOYMENT}
+      - AZURE_OPENAI_EMBEDDING_DEPLOYMENT=${AZURE_OPENAI_EMBEDDING_DEPLOYMENT}
     volumes:
-      # 로컬 디렉토리를 컨테이너에 마운트
       - ./agents:/app/agents
       - ./common:/app/common
       - ./ui:/app/ui
@@ -30,6 +29,37 @@ services:
       start_period: 40s
     networks:
       - code-analytica-network
+    command: python api/main.py
+
+  ui:
+    build: .
+    container_name: code-analytica-ui
+    ports:
+      - "8501:8501"
+    environment:
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+      - DOCKER_ENV=true
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION}
+      - AZURE_OPENAI_DEPLOYMENT_NAME=${AZURE_OPENAI_CHAT_DEPLOYMENT}
+      - AZURE_OPENAI_EMBEDDING_DEPLOYMENT=${AZURE_OPENAI_EMBEDDING_DEPLOYMENT}
+    volumes:
+      - ./agents:/app/agents
+      - ./common:/app/common
+      - ./ui:/app/ui
+      - ./artifacts:/app/artifacts
+      - ./data:/app/data
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - code-analytica-network
+    command: streamlit run ui/streamlit_app/app.py --server.port=8501 --server.address=0.0.0.0
 
 networks:
   code-analytica-network:

@@ -96,6 +96,27 @@ class VectorStore:
         logger.info(f"✅ {file_path}: {added_count}/{len(symbols)}개 심볼 벡터 저장 완료")
         return added_count
 
+    def add_chunk(self, chunk_data: Dict[str, Any]) -> bool:
+        """청크를 벡터로 변환하여 저장"""
+        try:
+            # 청크 데이터를 심볼 형태로 변환
+            symbol_data = {
+                "name": chunk_data.get("symbol_name", "unknown"),
+                "type": chunk_data.get("symbol_type", "chunk"),
+                "content": chunk_data.get("content", ""),
+                "location": chunk_data.get("location", {}),
+                "metadata": chunk_data.get("metadata", {})
+            }
+            
+            file_path = chunk_data.get("file_path", "unknown")
+            
+            # add_symbol 메서드 사용
+            return self.add_symbol(symbol_data, file_path)
+            
+        except Exception as e:
+            logger.error(f"⚠️ 청크 벡터 저장 실패: {e}")
+            return False
+
     def search(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
         """쿼리와 유사한 심볼 검색"""
         try:
@@ -273,4 +294,4 @@ class VectorStore:
     def _get_timestamp(self) -> str:
         """현재 타임스탬프 반환"""
         from datetime import datetime
-        return datetime.now().isoformat() 
+        return datetime.now().isoformat()
