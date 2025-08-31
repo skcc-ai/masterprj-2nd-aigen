@@ -19,8 +19,8 @@ class LLMAnalyzer:
         # 환경변수에서 Azure OpenAI 설정 가져오기
         self.api_key = os.getenv("AZURE_OPENAI_API_KEY")
         self.endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        self.deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o")
-        self.embedding_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-small")
+        self.deployment = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT", "gpt-4o")
+        self.embedding_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
         self.api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
         
         # API 키 검증
@@ -37,6 +37,28 @@ class LLMAnalyzer:
         )
         
         logger.info(f"LLMAnalyzer initialized with Azure OpenAI deployment: {self.deployment}")
+
+    def create_embedding(self, text: str) -> Optional[List[float]]:
+        """텍스트를 임베딩 벡터로 변환"""
+        try:
+            if not text or not text.strip():
+                return None
+            
+            # Azure OpenAI 임베딩 API 호출
+            response = self.client.embeddings.create(
+                model=self.embedding_deployment,
+                input=text.strip()
+            )
+            
+            # 임베딩 벡터 추출
+            embedding = response.data[0].embedding
+            
+            logger.debug(f"임베딩 생성 완료: {len(embedding)}차원")
+            return embedding
+            
+        except Exception as e:
+            logger.error(f"임베딩 생성 실패: {e}")
+            return None
 
     def analyze_function(self, function_data: Dict[str, Any], file_context: str = "") -> Dict[str, Any]:
         """함수/메서드 분석"""
@@ -58,8 +80,14 @@ class LLMAnalyzer:
             # 응답 파싱
             analysis = self._parse_llm_response(response.choices[0].message.content)
             
-            # 원본 데이터와 분석 결과 병합
+            # 원본 데이터와 분석 결과 병합 
             enriched_function = function_data.copy()
+            enriched_function["llm_summary"] = analysis.get("summary", "분석 완료")
+            enriched_function["responsibility"] = analysis.get("purpose", "목적 분석")
+            enriched_function["design_notes"] = analysis.get("logic_overview", "로직 분석")
+            enriched_function["collaboration"] = ", ".join(analysis.get("sequence_steps", []))
+            
+            # 기존 llm_analysis 필드도 유지 (하위 호환성)
             enriched_function["llm_analysis"] = {
                 "summary": analysis.get("summary", "분석 완료"),
                 "purpose": analysis.get("purpose", "목적 분석"),
@@ -103,8 +131,14 @@ class LLMAnalyzer:
             # 응답 파싱
             analysis = self._parse_llm_response(response.choices[0].message.content)
             
-            # 원본 데이터와 분석 결과 병합
+            # 원본 데이터와 분석 결과 병합 
             enriched_class = class_data.copy()
+            enriched_class["llm_summary"] = analysis.get("summary", "분석 완료")
+            enriched_class["responsibility"] = analysis.get("responsibility", "책임 분석")
+            enriched_class["design_notes"] = analysis.get("design_notes", "설계 분석")
+            enriched_class["collaboration"] = ", ".join(analysis.get("collaboration", []))
+            
+            # 기존 llm_analysis 필드도 유지 (하위 호환성)
             enriched_class["llm_analysis"] = {
                 "summary": analysis.get("summary", "분석 완료"),
                 "responsibility": analysis.get("responsibility", "책임 분석"),
@@ -176,20 +210,27 @@ class LLMAnalyzer:
             
             design_notes = self._get_llm_response(design_prompt)
             
+            # files 테이블 스키마와 일치하는 구조로 반환
             return {
-                "summary": summary,
-                "responsibility": responsibility,
-                "collaboration": [collab.strip() for collab in collaboration.split('\n') if collab.strip()],
-                "design_notes": design_notes
+                "llm_summary": summary,
+                "llm_analysis": {
+                    "summary": summary,
+                    "responsibility": responsibility,
+                    "collaboration": [collab.strip() for collab in collaboration.split('\n') if collab.strip()],
+                    "design_notes": design_notes
+                }
             }
             
         except Exception as e:
             logger.error(f"파일 분석 실패: {e}")
             return {
-                "summary": "분석 실패",
-                "responsibility": "분석 실패",
-                "collaboration": [],
-                "design_notes": "분석 실패"
+                "llm_summary": "분석 실패",
+                "llm_analysis": {
+                    "summary": "분석 실패",
+                    "responsibility": "분석 실패",
+                    "collaboration": [],
+                    "design_notes": "분석 실패"
+                }
             }
 
     def _get_llm_response(self, prompt: str) -> str:

@@ -1,0 +1,544 @@
+2025-08-31 16:15:33,999 - __main__ - WARNING - ⚠️  Agent1 초기화 실패: expected an indented block after 'else' statement on line 99 (faiss_store.py, line 101)
+2025-08-31 16:15:33,999 - __main__ - INFO -  Agent2 (InsightGen) 초기화 완료 (구현 예정)
+2025-08-31 16:15:33,999 - __main__ - INFO -  Agent3 (EvalGuard) 초기화 완료 (구현 예정)
+2025-08-31 16:15:34,124 - __main__ - INFO -  Agent4 (CodeChat) 초기화 완료
+2025-08-31 16:15:34,126 - __main__ - INFO - 🚀 Code Analytica FastAPI Backend 시작 (포트: 8000)
+2025-08-31 16:15:34,126 - __main__ - INFO - 🔄 Reload 모드: 비활성화
+2025-08-31 16:16:15,725 - __main__ - INFO - 🔄 agent1 실행 중...
+2025-08-31 16:16:15,726 - __main__ - WARNING - ⚠️  agent1 실행 실패: Agent agent1 is not ready: error
+2025-08-31 16:16:15,726 - __main__ - INFO - 🔄 agent2 실행 중...
+2025-08-31 16:16:15,727 - __main__ - WARNING - ⚠️  agent2 실행 실패: Agent agent2 is not ready: not_implemented
+2025-08-31 16:16:15,727 - __main__ - INFO - 🔄 agent3 실행 중...
+2025-08-31 16:16:15,727 - __main__ - WARNING - ⚠️  agent3 실행 실패: Agent agent3 is not ready: not_implemented
+2025-08-31 16:16:15,727 - __main__ - INFO - 🔄 agent4 실행 중...
+2025-08-31 16:16:15,760 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:16:15,780 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:16:15,782 - agents.codechat.agent - WARNING - StructSynthAgent 초기화 실패: expected an indented block after 'else' statement on line 99 (faiss_store.py, line 101)
+2025-08-31 16:16:15,782 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 0개
+2025-08-31 16:16:15,782 - agents.codechat.agent - WARNING - embeddings 테이블에 데이터가 없습니다
+2025-08-31 16:16:15,783 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:16:15,783 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: test_files
+2025-08-31 16:16:15,783 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: ''
+2025-08-31 16:16:15,783 - agents.codechat.agent - WARNING - 채팅 요청 무효: query가 비어 있음 (공백만 포함)
+2025-08-31 16:16:17,605 - __main__ - INFO - 🔄 agent1 실행 중...
+2025-08-31 16:16:17,605 - __main__ - WARNING - ⚠️  agent1 실행 실패: Agent agent1 is not ready: error
+2025-08-31 16:16:17,605 - __main__ - INFO - 🔄 agent2 실행 중...
+2025-08-31 16:16:17,606 - __main__ - WARNING - ⚠️  agent2 실행 실패: Agent agent2 is not ready: not_implemented
+2025-08-31 16:16:17,606 - __main__ - INFO - 🔄 agent3 실행 중...
+2025-08-31 16:16:17,606 - __main__ - WARNING - ⚠️  agent3 실행 실패: Agent agent3 is not ready: not_implemented
+2025-08-31 16:16:17,606 - __main__ - INFO - 🔄 agent4 실행 중...
+2025-08-31 16:16:17,616 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:16:17,620 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:16:17,625 - agents.codechat.agent - WARNING - StructSynthAgent 초기화 실패: expected an indented block after 'else' statement on line 99 (faiss_store.py, line 101)
+2025-08-31 16:16:17,627 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 0개
+2025-08-31 16:16:17,627 - agents.codechat.agent - WARNING - embeddings 테이블에 데이터가 없습니다
+2025-08-31 16:16:17,627 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:16:17,628 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: test_files
+2025-08-31 16:16:17,628 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: ''
+2025-08-31 16:16:17,628 - agents.codechat.agent - WARNING - 채팅 요청 무효: query가 비어 있음 (공백만 포함)
+2025-08-31 16:16:24,497 - __main__ - INFO - 🔄 agent1 실행 중...
+2025-08-31 16:16:24,499 - __main__ - WARNING - ⚠️  agent1 실행 실패: Agent agent1 is not ready: error
+2025-08-31 16:16:24,499 - __main__ - INFO - 🔄 agent2 실행 중...
+2025-08-31 16:16:24,499 - __main__ - WARNING - ⚠️  agent2 실행 실패: Agent agent2 is not ready: not_implemented
+2025-08-31 16:16:24,500 - __main__ - INFO - 🔄 agent3 실행 중...
+2025-08-31 16:16:24,500 - __main__ - WARNING - ⚠️  agent3 실행 실패: Agent agent3 is not ready: not_implemented
+2025-08-31 16:16:24,500 - __main__ - INFO - 🔄 agent4 실행 중...
+2025-08-31 16:16:24,512 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:16:24,517 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:16:24,521 - agents.codechat.agent - WARNING - StructSynthAgent 초기화 실패: expected an indented block after 'else' statement on line 99 (faiss_store.py, line 101)
+2025-08-31 16:16:24,523 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 0개
+2025-08-31 16:16:24,523 - agents.codechat.agent - WARNING - embeddings 테이블에 데이터가 없습니다
+2025-08-31 16:16:24,523 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:16:24,523 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: test_files
+2025-08-31 16:16:24,523 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: ''
+2025-08-31 16:16:24,523 - agents.codechat.agent - WARNING - 채팅 요청 무효: query가 비어 있음 (공백만 포함)
+2025-08-31 16:19:25,237 - faiss.loader - INFO - Loading faiss.
+2025-08-31 16:19:25,261 - faiss.loader - INFO - Successfully loaded faiss.
+2025-08-31 16:19:25,265 - __main__ - INFO -  Agent1 (StructSynth) 초기화 완료
+2025-08-31 16:19:25,265 - __main__ - INFO -  Agent2 (InsightGen) 초기화 완료 (구현 예정)
+2025-08-31 16:19:25,265 - __main__ - INFO -  Agent3 (EvalGuard) 초기화 완료 (구현 예정)
+2025-08-31 16:19:25,267 - __main__ - INFO -  Agent4 (CodeChat) 초기화 완료
+2025-08-31 16:19:25,269 - __main__ - INFO - 🚀 Code Analytica FastAPI Backend 시작 (포트: 8000)
+2025-08-31 16:19:25,269 - __main__ - INFO - 🔄 Reload 모드: 비활성화
+2025-08-31 16:19:35,177 - __main__ - INFO - 🔄 agent1 실행 중...
+2025-08-31 16:19:35,179 - agents.structsynth.parser - INFO -  Python 내장 ast 모듈 기반 파서 초기화
+2025-08-31 16:19:35,180 - agents.structsynth.parser - INFO -  모든 언어 파서 로드 완료
+2025-08-31 16:19:35,180 - agents.structsynth.chunker - INFO - CodeChunker initialized with config: ChunkConfig(max_tokens=1000, min_tokens=50, overlap_tokens=100, include_comments=True, include_docstrings=True, max_comment_length=200, preserve_structure=True)
+2025-08-31 16:19:35,183 - common.store.faiss_store - INFO - Created FlatIP index for dimension 3072
+2025-08-31 16:19:35,184 - agents.structsynth.agent - INFO - FAISS 벡터 스토어 초기화 완료
+2025-08-31 16:19:35,226 - agents.structsynth.llm_analyzer - INFO - LLMAnalyzer initialized with Azure OpenAI deployment: gpt-4o
+2025-08-31 16:19:35,226 - agents.structsynth.agent - INFO - LLM Analyzer 초기화 완료
+2025-08-31 16:19:35,228 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:19:35,228 - agents.structsynth.agent - INFO - StructSynthAgent 초기화 완료: test_files
+2025-08-31 16:19:35,228 - agents.structsynth.agent - INFO - 저장소 분석 시작: test_files
+2025-08-31 16:19:35,231 - agents.structsynth.agent - INFO - 1단계: 코드 파싱 및 AST 추출
+2025-08-31 16:19:35,232 - agents.structsynth.parser - INFO - 파일 파싱 완료: test_files/test_simple.py -> 5개 심볼
+2025-08-31 16:19:35,242 - agents.structsynth.parser - INFO - 파일 파싱 완료: test_files/data_processor.py -> 29개 심볼
+2025-08-31 16:19:35,243 - agents.structsynth.agent - INFO - 파싱 완료: 2개 파일, 34개 심볼
+2025-08-31 16:19:35,243 - agents.structsynth.agent - INFO - 2단계: 파일 및 심볼 레벨 LLM 분석
+2025-08-31 16:19:35,243 - agents.structsynth.agent - INFO - 파일 LLM 분석 시작: test_files/test_simple.py
+2025-08-31 16:19:36,948 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:38,110 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:41,078 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:42,370 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:44,906 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:44,908 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: simple_function
+2025-08-31 16:19:46,711 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:46,714 - agents.structsynth.llm_analyzer - INFO - 클래스 분석 완료: SimpleClass
+2025-08-31 16:19:49,672 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:49,675 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: main
+2025-08-31 16:19:51,422 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:51,425 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: __init__
+2025-08-31 16:19:54,908 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:54,911 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: get_value
+2025-08-31 16:19:54,911 - agents.structsynth.agent - INFO - 파일 LLM 분석 완료: test_files/test_simple.py
+2025-08-31 16:19:54,911 - agents.structsynth.agent - INFO - 파일 LLM 분석 시작: test_files/data_processor.py
+2025-08-31 16:19:56,622 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:19:58,612 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:04,425 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:05,918 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:10,342 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:10,344 - agents.structsynth.llm_analyzer - INFO - 클래스 분석 완료: DataProcessor
+2025-08-31 16:20:14,361 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:14,363 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: __init__
+2025-08-31 16:20:18,560 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:18,562 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _load_validation_rules
+2025-08-31 16:20:21,117 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:21,119 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _setup_transformation_pipeline
+2025-08-31 16:20:27,983 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:27,986 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: process_data_file
+2025-08-31 16:20:30,567 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:30,570 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _detect_file_type
+2025-08-31 16:20:38,282 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:38,285 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _read_file
+2025-08-31 16:20:40,470 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:40,472 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _read_json_file
+2025-08-31 16:20:43,951 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:43,953 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _read_csv_file
+2025-08-31 16:20:48,869 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:48,871 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _read_text_file
+2025-08-31 16:20:53,274 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:53,276 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _validate_data
+2025-08-31 16:20:56,852 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:20:56,854 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _is_valid_record
+2025-08-31 16:21:01,576 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:01,578 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _check_field_constraints
+2025-08-31 16:21:06,687 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:06,689 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _validate_timestamp
+2025-08-31 16:21:08,912 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:08,914 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _validate_email
+2025-08-31 16:21:14,167 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:14,170 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _validate_phone
+2025-08-31 16:21:17,197 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:17,200 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _transform_data
+2025-08-31 16:21:19,490 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:19,492 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _normalize_strings
+2025-08-31 16:21:25,450 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:25,453 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _convert_data_types
+2025-08-31 16:21:27,580 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:27,582 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _add_derived_fields
+2025-08-31 16:21:33,965 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:33,967 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _get_category_group
+2025-08-31 16:21:40,993 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:40,996 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _clean_data
+2025-08-31 16:21:47,273 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:47,275 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _enrich_data
+2025-08-31 16:21:50,964 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:50,967 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: _update_cache
+2025-08-31 16:21:52,668 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:52,670 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: get_processing_stats
+2025-08-31 16:21:54,047 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:54,049 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: get_data_summary
+2025-08-31 16:21:56,574 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:56,578 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: export_processed_data
+2025-08-31 16:21:58,298 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:21:58,300 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: clear_cache
+2025-08-31 16:22:01,514 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:01,516 - agents.structsynth.llm_analyzer - INFO - 함수 분석 완료: reset_stats
+2025-08-31 16:22:01,517 - agents.structsynth.agent - INFO - 파일 LLM 분석 완료: test_files/data_processor.py
+2025-08-31 16:22:01,517 - agents.structsynth.agent - INFO - 파일 및 심볼 LLM 분석 완료: 2개 파일, 34개 심볼
+2025-08-31 16:22:01,518 - agents.structsynth.agent - INFO - 3단계: 코드 청킹
+2025-08-31 16:22:01,521 - agents.structsynth.chunker - INFO - 청킹 검증 통과 (점수: 1.0)
+2025-08-31 16:22:01,522 - agents.structsynth.chunker - INFO - 5개 청크 생성 완료 (파일: 1)
+2025-08-31 16:22:01,523 - agents.structsynth.chunker - INFO - 파일 청킹 완료: 5개 청크
+2025-08-31 16:22:01,541 - agents.structsynth.chunker - INFO - 청킹 검증 통과 (점수: 1.0)
+2025-08-31 16:22:01,542 - agents.structsynth.chunker - INFO - 29개 청크 생성 완료 (파일: 1)
+2025-08-31 16:22:01,542 - agents.structsynth.chunker - INFO - 파일 청킹 완료: 29개 청크
+2025-08-31 16:22:01,542 - agents.structsynth.agent - INFO - 청킹 완료: 34개 청크
+2025-08-31 16:22:01,542 - agents.structsynth.agent - INFO - 4단계: 청킹 단위 LLM 분석
+2025-08-31 16:22:02,423 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:02,425 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: simple_function (function)
+2025-08-31 16:22:02,426 - agents.structsynth.agent - INFO - 청크 0 LLM 분석 완료: simple_function
+2025-08-31 16:22:03,418 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:03,419 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: SimpleClass (class)
+2025-08-31 16:22:03,419 - agents.structsynth.agent - INFO - 청크 1 LLM 분석 완료: SimpleClass
+2025-08-31 16:22:04,442 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:04,444 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: main (function)
+2025-08-31 16:22:04,444 - agents.structsynth.agent - INFO - 청크 2 LLM 분석 완료: main
+2025-08-31 16:22:05,365 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:05,367 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: __init__ (function)
+2025-08-31 16:22:05,367 - agents.structsynth.agent - INFO - 청크 3 LLM 분석 완료: __init__
+2025-08-31 16:22:06,600 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:06,601 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: get_value (function)
+2025-08-31 16:22:06,602 - agents.structsynth.agent - INFO - 청크 4 LLM 분석 완료: get_value
+2025-08-31 16:22:07,963 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:07,965 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: DataProcessor (class)
+2025-08-31 16:22:07,965 - agents.structsynth.agent - INFO - 청크 5 LLM 분석 완료: DataProcessor
+2025-08-31 16:22:08,966 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:08,969 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: __init__ (function)
+2025-08-31 16:22:08,969 - agents.structsynth.agent - INFO - 청크 6 LLM 분석 완료: __init__
+2025-08-31 16:22:10,348 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:10,349 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _load_validation_rules (function)
+2025-08-31 16:22:10,350 - agents.structsynth.agent - INFO - 청크 7 LLM 분석 완료: _load_validation_rules
+2025-08-31 16:22:11,311 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:11,312 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _setup_transformation_pipeline (function)
+2025-08-31 16:22:11,313 - agents.structsynth.agent - INFO - 청크 8 LLM 분석 완료: _setup_transformation_pipeline
+2025-08-31 16:22:12,570 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:12,572 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: process_data_file (function)
+2025-08-31 16:22:12,573 - agents.structsynth.agent - INFO - 청크 9 LLM 분석 완료: process_data_file
+2025-08-31 16:22:13,624 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:13,626 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _detect_file_type (function)
+2025-08-31 16:22:13,626 - agents.structsynth.agent - INFO - 청크 10 LLM 분석 완료: _detect_file_type
+2025-08-31 16:22:14,852 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:14,854 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _read_file (function)
+2025-08-31 16:22:14,854 - agents.structsynth.agent - INFO - 청크 11 LLM 분석 완료: _read_file
+2025-08-31 16:22:16,016 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:16,018 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _read_json_file (function)
+2025-08-31 16:22:16,019 - agents.structsynth.agent - INFO - 청크 12 LLM 분석 완료: _read_json_file
+2025-08-31 16:22:17,244 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:17,245 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _read_csv_file (function)
+2025-08-31 16:22:17,245 - agents.structsynth.agent - INFO - 청크 13 LLM 분석 완료: _read_csv_file
+2025-08-31 16:22:18,267 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:18,268 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _read_text_file (function)
+2025-08-31 16:22:18,269 - agents.structsynth.agent - INFO - 청크 14 LLM 분석 완료: _read_text_file
+2025-08-31 16:22:19,498 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:19,500 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _validate_data (function)
+2025-08-31 16:22:19,500 - agents.structsynth.agent - INFO - 청크 15 LLM 분석 완료: _validate_data
+2025-08-31 16:22:20,756 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:20,759 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _is_valid_record (function)
+2025-08-31 16:22:20,760 - agents.structsynth.agent - INFO - 청크 16 LLM 분석 완료: _is_valid_record
+2025-08-31 16:22:22,290 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:22,293 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _check_field_constraints (function)
+2025-08-31 16:22:22,293 - agents.structsynth.agent - INFO - 청크 17 LLM 분석 완료: _check_field_constraints
+2025-08-31 16:22:23,873 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:23,875 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _validate_timestamp (function)
+2025-08-31 16:22:23,875 - agents.structsynth.agent - INFO - 청크 18 LLM 분석 완료: _validate_timestamp
+2025-08-31 16:22:24,856 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:24,858 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _validate_email (function)
+2025-08-31 16:22:24,858 - agents.structsynth.agent - INFO - 청크 19 LLM 분석 완료: _validate_email
+2025-08-31 16:22:25,949 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:25,950 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _validate_phone (function)
+2025-08-31 16:22:25,951 - agents.structsynth.agent - INFO - 청크 20 LLM 분석 완료: _validate_phone
+2025-08-31 16:22:26,838 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:26,839 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _transform_data (function)
+2025-08-31 16:22:26,840 - agents.structsynth.agent - INFO - 청크 21 LLM 분석 완료: _transform_data
+2025-08-31 16:22:27,760 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:27,761 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _normalize_strings (function)
+2025-08-31 16:22:27,762 - agents.structsynth.agent - INFO - 청크 22 LLM 분석 완료: _normalize_strings
+2025-08-31 16:22:29,090 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:29,092 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _convert_data_types (function)
+2025-08-31 16:22:29,093 - agents.structsynth.agent - INFO - 청크 23 LLM 분석 완료: _convert_data_types
+2025-08-31 16:22:30,321 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:30,323 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _add_derived_fields (function)
+2025-08-31 16:22:30,323 - agents.structsynth.agent - INFO - 청크 24 LLM 분석 완료: _add_derived_fields
+2025-08-31 16:22:31,548 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:31,550 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _get_category_group (function)
+2025-08-31 16:22:31,551 - agents.structsynth.agent - INFO - 청크 25 LLM 분석 완료: _get_category_group
+2025-08-31 16:22:32,748 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:32,750 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _clean_data (function)
+2025-08-31 16:22:32,750 - agents.structsynth.agent - INFO - 청크 26 LLM 분석 완료: _clean_data
+2025-08-31 16:22:33,706 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:33,708 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _enrich_data (function)
+2025-08-31 16:22:33,708 - agents.structsynth.agent - INFO - 청크 27 LLM 분석 완료: _enrich_data
+2025-08-31 16:22:35,044 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:35,045 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: _update_cache (function)
+2025-08-31 16:22:35,046 - agents.structsynth.agent - INFO - 청크 28 LLM 분석 완료: _update_cache
+2025-08-31 16:22:36,261 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:36,263 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: get_processing_stats (function)
+2025-08-31 16:22:36,263 - agents.structsynth.agent - INFO - 청크 29 LLM 분석 완료: get_processing_stats
+2025-08-31 16:22:37,694 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:37,696 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: get_data_summary (function)
+2025-08-31 16:22:37,697 - agents.structsynth.agent - INFO - 청크 30 LLM 분석 완료: get_data_summary
+2025-08-31 16:22:38,638 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:38,640 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: export_processed_data (function)
+2025-08-31 16:22:38,641 - agents.structsynth.agent - INFO - 청크 31 LLM 분석 완료: export_processed_data
+2025-08-31 16:22:39,672 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:39,673 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: clear_cache (function)
+2025-08-31 16:22:39,674 - agents.structsynth.agent - INFO - 청크 32 LLM 분석 완료: clear_cache
+2025-08-31 16:22:40,765 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:40,767 - agents.structsynth.llm_analyzer - INFO - 청크 분석 완료: reset_stats (function)
+2025-08-31 16:22:40,768 - agents.structsynth.agent - INFO - 청크 33 LLM 분석 완료: reset_stats
+2025-08-31 16:22:40,768 - agents.structsynth.agent - INFO - 청킹 단위 LLM 분석 완료: 34개 청크
+2025-08-31 16:22:40,769 - agents.structsynth.agent - INFO - 5단계: 데이터베이스 저장
+2025-08-31 16:22:40,808 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: get_value
+2025-08-31 16:22:40,814 - common.store.sqlite_store - INFO - AST 데이터 저장 완료: 파일 test_files/test_simple.py, 심볼 5개
+2025-08-31 16:22:40,824 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _load_validation_rules
+2025-08-31 16:22:40,824 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _setup_transformation_pipeline
+2025-08-31 16:22:40,851 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _read_file
+2025-08-31 16:22:40,851 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _validate_data
+2025-08-31 16:22:40,851 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _transform_data
+2025-08-31 16:22:40,852 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _update_cache
+2025-08-31 16:22:40,855 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _detect_file_type
+2025-08-31 16:22:40,909 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _read_json_file
+2025-08-31 16:22:40,921 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _read_csv_file
+2025-08-31 16:22:40,921 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _read_text_file
+2025-08-31 16:22:40,992 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _is_valid_record
+2025-08-31 16:22:41,013 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _check_field_constraints
+2025-08-31 16:22:41,111 - common.store.sqlite_store - WARNING - 심볼 ID를 찾을 수 없음: _get_category_group
+2025-08-31 16:22:41,267 - common.store.sqlite_store - INFO - AST 데이터 저장 완료: 파일 test_files/data_processor.py, 심볼 29개
+2025-08-31 16:22:41,313 - agents.structsynth.agent - INFO - 데이터베이스 저장 완료: 34개 청크 저장됨
+2025-08-31 16:22:41,313 - agents.structsynth.agent - INFO - 5-1단계: JSON 파일 자동 저장
+2025-08-31 16:22:41,315 - agents.structsynth.agent - INFO - ✅ metadata.json 자동 저장 완료: artifacts/metadata.json
+2025-08-31 16:22:41,315 - agents.structsynth.agent - INFO - 📊 총 34개 심볼 정보 저장됨
+2025-08-31 16:22:41,315 - agents.structsynth.agent - INFO - 6단계: 벡터 임베딩 생성
+2025-08-31 16:22:41,591 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:41,873 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:42,155 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:42,437 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:42,742 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:43,037 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:43,321 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:43,601 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:43,871 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:44,160 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:44,449 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:44,734 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:45,008 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:45,300 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:45,588 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:45,874 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:46,166 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:46,453 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:47,012 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:47,283 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:47,563 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:47,841 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:48,120 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:48,402 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:48,675 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:48,966 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:49,239 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:49,547 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:49,828 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:50,098 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:50,369 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:50,647 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:50,918 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:51,199 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:22:51,210 - common.store.faiss_store - INFO - Added 34 vectors to FAISS index
+2025-08-31 16:22:51,216 - common.store.faiss_store - INFO - Saved FAISS index to artifacts/faiss.index
+2025-08-31 16:22:51,225 - common.store.sqlite_store - INFO - 청크 1의 embedding_id 업데이트 완료: 1
+2025-08-31 16:22:51,233 - common.store.sqlite_store - INFO - 청크 2의 embedding_id 업데이트 완료: 2
+2025-08-31 16:22:51,241 - common.store.sqlite_store - INFO - 청크 3의 embedding_id 업데이트 완료: 3
+2025-08-31 16:22:51,246 - common.store.sqlite_store - INFO - 청크 4의 embedding_id 업데이트 완료: 4
+2025-08-31 16:22:51,252 - common.store.sqlite_store - INFO - 청크 5의 embedding_id 업데이트 완료: 5
+2025-08-31 16:22:51,257 - common.store.sqlite_store - INFO - 청크 6의 embedding_id 업데이트 완료: 6
+2025-08-31 16:22:51,260 - common.store.sqlite_store - INFO - 청크 7의 embedding_id 업데이트 완료: 7
+2025-08-31 16:22:51,264 - common.store.sqlite_store - INFO - 청크 8의 embedding_id 업데이트 완료: 8
+2025-08-31 16:22:51,268 - common.store.sqlite_store - INFO - 청크 9의 embedding_id 업데이트 완료: 9
+2025-08-31 16:22:51,271 - common.store.sqlite_store - INFO - 청크 10의 embedding_id 업데이트 완료: 10
+2025-08-31 16:22:51,274 - common.store.sqlite_store - INFO - 청크 11의 embedding_id 업데이트 완료: 11
+2025-08-31 16:22:51,277 - common.store.sqlite_store - INFO - 청크 12의 embedding_id 업데이트 완료: 12
+2025-08-31 16:22:51,281 - common.store.sqlite_store - INFO - 청크 13의 embedding_id 업데이트 완료: 13
+2025-08-31 16:22:51,283 - common.store.sqlite_store - INFO - 청크 14의 embedding_id 업데이트 완료: 14
+2025-08-31 16:22:51,286 - common.store.sqlite_store - INFO - 청크 15의 embedding_id 업데이트 완료: 15
+2025-08-31 16:22:51,289 - common.store.sqlite_store - INFO - 청크 16의 embedding_id 업데이트 완료: 16
+2025-08-31 16:22:51,292 - common.store.sqlite_store - INFO - 청크 17의 embedding_id 업데이트 완료: 17
+2025-08-31 16:22:51,296 - common.store.sqlite_store - INFO - 청크 18의 embedding_id 업데이트 완료: 18
+2025-08-31 16:22:51,300 - common.store.sqlite_store - INFO - 청크 19의 embedding_id 업데이트 완료: 19
+2025-08-31 16:22:51,302 - common.store.sqlite_store - INFO - 청크 20의 embedding_id 업데이트 완료: 20
+2025-08-31 16:22:51,307 - common.store.sqlite_store - INFO - 청크 21의 embedding_id 업데이트 완료: 21
+2025-08-31 16:22:51,310 - common.store.sqlite_store - INFO - 청크 22의 embedding_id 업데이트 완료: 22
+2025-08-31 16:22:51,314 - common.store.sqlite_store - INFO - 청크 23의 embedding_id 업데이트 완료: 23
+2025-08-31 16:22:51,318 - common.store.sqlite_store - INFO - 청크 24의 embedding_id 업데이트 완료: 24
+2025-08-31 16:22:51,321 - common.store.sqlite_store - INFO - 청크 25의 embedding_id 업데이트 완료: 25
+2025-08-31 16:22:51,323 - common.store.sqlite_store - INFO - 청크 26의 embedding_id 업데이트 완료: 26
+2025-08-31 16:22:51,327 - common.store.sqlite_store - INFO - 청크 27의 embedding_id 업데이트 완료: 27
+2025-08-31 16:22:51,330 - common.store.sqlite_store - INFO - 청크 28의 embedding_id 업데이트 완료: 28
+2025-08-31 16:22:51,333 - common.store.sqlite_store - INFO - 청크 29의 embedding_id 업데이트 완료: 29
+2025-08-31 16:22:51,336 - common.store.sqlite_store - INFO - 청크 30의 embedding_id 업데이트 완료: 30
+2025-08-31 16:22:51,340 - common.store.sqlite_store - INFO - 청크 31의 embedding_id 업데이트 완료: 31
+2025-08-31 16:22:51,342 - common.store.sqlite_store - INFO - 청크 32의 embedding_id 업데이트 완료: 32
+2025-08-31 16:22:51,345 - common.store.sqlite_store - INFO - 청크 33의 embedding_id 업데이트 완료: 33
+2025-08-31 16:22:51,349 - common.store.sqlite_store - INFO - 청크 34의 embedding_id 업데이트 완료: 34
+2025-08-31 16:22:51,349 - agents.structsynth.agent - INFO - SQLite embeddings 저장 완료: 34개 임베딩
+2025-08-31 16:22:51,349 - agents.structsynth.agent - INFO - 벡터 임베딩 생성 완료: 34개
+2025-08-31 16:22:51,349 - agents.structsynth.agent - INFO - 벡터 임베딩 생성 완료
+2025-08-31 16:22:51,351 - agents.structsynth.agent - INFO - 저장소 분석 완료
+2025-08-31 16:22:51,352 - __main__ - INFO - 🔄 agent2 실행 중...
+2025-08-31 16:22:51,352 - __main__ - WARNING - ⚠️  agent2 실행 실패: Agent agent2 is not ready: not_implemented
+2025-08-31 16:22:51,352 - __main__ - INFO - 🔄 agent3 실행 중...
+2025-08-31 16:22:51,352 - __main__ - WARNING - ⚠️  agent3 실행 실패: Agent agent3 is not ready: not_implemented
+2025-08-31 16:22:51,352 - __main__ - INFO - 🔄 agent4 실행 중...
+2025-08-31 16:22:51,358 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:22:51,359 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:22:51,360 - agents.structsynth.parser - INFO -  Python 내장 ast 모듈 기반 파서 초기화
+2025-08-31 16:22:51,360 - agents.structsynth.parser - INFO -  모든 언어 파서 로드 완료
+2025-08-31 16:22:51,360 - agents.structsynth.chunker - INFO - CodeChunker initialized with config: ChunkConfig(max_tokens=1000, min_tokens=50, overlap_tokens=100, include_comments=True, include_docstrings=True, max_comment_length=200, preserve_structure=True)
+2025-08-31 16:22:51,362 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:22:51,362 - agents.structsynth.agent - INFO - FAISS 벡터 스토어 초기화 완료
+2025-08-31 16:22:51,366 - agents.structsynth.llm_analyzer - INFO - LLMAnalyzer initialized with Azure OpenAI deployment: gpt-4o
+2025-08-31 16:22:51,366 - agents.structsynth.agent - INFO - LLM Analyzer 초기화 완료
+2025-08-31 16:22:51,368 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:22:51,368 - agents.structsynth.agent - INFO - StructSynthAgent 초기화 완료: test_files
+2025-08-31 16:22:51,368 - agents.codechat.agent - INFO - StructSynthAgent 초기화 완료
+2025-08-31 16:22:51,369 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 34개
+2025-08-31 16:22:51,387 - agents.codechat.agent - INFO - SQLite에서 벡터 로드 완료: 34개
+2025-08-31 16:22:51,388 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:22:51,388 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:22:51,389 - agents.codechat.agent - INFO - FAISS 인덱스 로드 완료
+2025-08-31 16:22:51,389 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:22:51,389 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: test_files
+2025-08-31 16:22:51,389 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: ''
+2025-08-31 16:22:51,389 - agents.codechat.agent - WARNING - 채팅 요청 무효: query가 비어 있음 (공백만 포함)
+2025-08-31 16:23:20,814 - __main__ - INFO - === 채팅 요청 수신 ===
+2025-08-31 16:23:20,815 - __main__ - INFO - 쿼리: '_get_category_group 함수 어떻게써?' (타입: <class 'str'>, 길이: 28)
+2025-08-31 16:23:20,815 - __main__ - INFO - top_k: 5
+2025-08-31 16:23:20,816 - __main__ - INFO - CodeChatAgent 임포트 성공
+2025-08-31 16:23:20,827 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:23:20,848 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:23:20,849 - agents.structsynth.parser - INFO -  Python 내장 ast 모듈 기반 파서 초기화
+2025-08-31 16:23:20,849 - agents.structsynth.parser - INFO -  모든 언어 파서 로드 완료
+2025-08-31 16:23:20,849 - agents.structsynth.chunker - INFO - CodeChunker initialized with config: ChunkConfig(max_tokens=1000, min_tokens=50, overlap_tokens=100, include_comments=True, include_docstrings=True, max_comment_length=200, preserve_structure=True)
+2025-08-31 16:23:20,851 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:23:20,851 - agents.structsynth.agent - INFO - FAISS 벡터 스토어 초기화 완료
+2025-08-31 16:23:20,858 - agents.structsynth.llm_analyzer - INFO - LLMAnalyzer initialized with Azure OpenAI deployment: gpt-4o
+2025-08-31 16:23:20,858 - agents.structsynth.agent - INFO - LLM Analyzer 초기화 완료
+2025-08-31 16:23:20,859 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:23:20,859 - agents.structsynth.agent - INFO - StructSynthAgent 초기화 완료: .
+2025-08-31 16:23:20,860 - agents.codechat.agent - INFO - StructSynthAgent 초기화 완료
+2025-08-31 16:23:20,860 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 34개
+2025-08-31 16:23:20,885 - agents.codechat.agent - INFO - SQLite에서 벡터 로드 완료: 34개
+2025-08-31 16:23:20,886 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:23:20,886 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:23:20,886 - agents.codechat.agent - INFO - FAISS 인덱스 로드 완료
+2025-08-31 16:23:20,886 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: .
+2025-08-31 16:23:20,887 - __main__ - INFO - CodeChatAgent 초기화 완료
+2025-08-31 16:23:20,887 - __main__ - INFO - CodeChatAgent.chat() 호출 시작
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: '_get_category_group 함수 어떻게써?'
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - 채팅 요청 처리 시작: '_get_category_group 함수 어떻게써?'
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - 하이브리드 검색 시작
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - === _hybrid_search 시작: '_get_category_group 함수 어떻게써?', top_k=5 ===
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - structsynth_agent 존재 여부: True
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - structsynth_agent 값: <agents.structsynth.agent.StructSynthAgent object at 0xffff96bd5850>
+2025-08-31 16:23:20,887 - agents.codechat.agent - INFO - StructSynthAgent를 사용한 검색 시도
+2025-08-31 16:23:21,764 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/text-embedding-3-large/embeddings?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:23:21,779 - agents.structsynth.agent - INFO - 쿼리 '_get_category_group 함수 어떻게써?'에 대한 5개 검색 결과 반환
+2025-08-31 16:23:21,779 - agents.codechat.agent - INFO - StructSynthAgent 검색 결과: 5개
+2025-08-31 16:23:21,780 - agents.codechat.agent - INFO - 첫 번째 결과 타입: <class 'dict'>
+2025-08-31 16:23:21,781 - agents.codechat.agent - INFO - 첫 번째 결과 내용: {'doc_id': 26, 'similarity': 0.6656547784805298, 'index': 25, 'symbol_info': {'id': 26, 'name': 'len', 'type': 'external_call', 'language': 'python', 'llm_summary': None, 'responsibility': None, 'design_notes': None, 'collaboration': None, 'start_line': 0, 'end_line': 0, 'signature': 'external:len', 'file_path': 'test_files/data_processor.py'}}
+2025-08-31 16:23:21,781 - agents.codechat.agent - INFO - 결과 1 변환 완료: len (test_files/data_processor.py)
+2025-08-31 16:23:21,782 - agents.codechat.agent - INFO - 결과 2 변환 완료: error (test_files/data_processor.py)
+2025-08-31 16:23:21,782 - agents.codechat.agent - INFO - 결과 3 변환 완료: simple_function (test_files/test_simple.py)
+2025-08-31 16:23:21,782 - agents.codechat.agent - INFO - 결과 4 변환 완료: main (test_files/test_simple.py)
+2025-08-31 16:23:21,782 - agents.codechat.agent - INFO - 결과 5 변환 완료: _read_json_file (test_files/data_processor.py)
+2025-08-31 16:23:21,782 - agents.codechat.agent - INFO - StructSynthAgent 검색 완료: 5개 결과
+2025-08-31 16:23:21,783 - agents.codechat.agent - INFO - 하이브리드 검색 결과: 5개
+2025-08-31 16:23:26,530 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:23:26,534 - agents.codechat.agent - INFO - RAG 답변 생성 완료
+2025-08-31 16:23:26,534 - agents.codechat.agent - INFO - 채팅 응답 생성 완료
+2025-08-31 16:23:26,535 - __main__ - INFO - CodeChatAgent.chat() 응답: 제공된 코드 컨텍스트를 검토한 결과, `_get_category_group` 함수에 대한 정보는 포함되어 있지 않습니다. 따라서 해당 함수의 사용법을 정확히 설명하기 위해서는 추가...
+2025-08-31 16:23:26,535 - __main__ - INFO - 근거 수: 5개
+2025-08-31 16:24:16,976 - __main__ - INFO - === 채팅 요청 수신 ===
+2025-08-31 16:24:16,978 - __main__ - INFO - 쿼리: 'DataProcessor 클래스 설명해줘' (타입: <class 'str'>, 길이: 22)
+2025-08-31 16:24:16,978 - __main__ - INFO - top_k: 5
+2025-08-31 16:24:16,981 - __main__ - INFO - CodeChatAgent 임포트 성공
+2025-08-31 16:24:17,013 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:24:17,017 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:24:17,018 - agents.structsynth.parser - INFO -  Python 내장 ast 모듈 기반 파서 초기화
+2025-08-31 16:24:17,018 - agents.structsynth.parser - INFO -  모든 언어 파서 로드 완료
+2025-08-31 16:24:17,019 - agents.structsynth.chunker - INFO - CodeChunker initialized with config: ChunkConfig(max_tokens=1000, min_tokens=50, overlap_tokens=100, include_comments=True, include_docstrings=True, max_comment_length=200, preserve_structure=True)
+2025-08-31 16:24:17,022 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:24:17,022 - agents.structsynth.agent - INFO - FAISS 벡터 스토어 초기화 완료
+2025-08-31 16:24:17,029 - agents.structsynth.llm_analyzer - INFO - LLMAnalyzer initialized with Azure OpenAI deployment: gpt-4o
+2025-08-31 16:24:17,029 - agents.structsynth.agent - INFO - LLM Analyzer 초기화 완료
+2025-08-31 16:24:17,031 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:24:17,031 - agents.structsynth.agent - INFO - StructSynthAgent 초기화 완료: .
+2025-08-31 16:24:17,031 - agents.codechat.agent - INFO - StructSynthAgent 초기화 완료
+2025-08-31 16:24:17,041 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 34개
+2025-08-31 16:24:17,078 - agents.codechat.agent - INFO - SQLite에서 벡터 로드 완료: 34개
+2025-08-31 16:24:17,079 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:24:17,080 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:24:17,080 - agents.codechat.agent - INFO - FAISS 인덱스 로드 완료
+2025-08-31 16:24:17,080 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:24:17,080 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: .
+2025-08-31 16:24:17,080 - __main__ - INFO - CodeChatAgent 초기화 완료
+2025-08-31 16:24:17,080 - __main__ - INFO - CodeChatAgent.chat() 호출 시작
+2025-08-31 16:24:17,081 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: 'DataProcessor 클래스 설명해줘'
+2025-08-31 16:24:17,081 - agents.codechat.agent - INFO - 채팅 요청 처리 시작: 'DataProcessor 클래스 설명해줘'
+2025-08-31 16:24:17,081 - agents.codechat.agent - INFO - 일반적인 질문 감지 - 전체 분석 모드로 전환
+2025-08-31 16:24:17,081 - agents.codechat.agent - INFO - 전체 코드 분석 시작
+2025-08-31 16:24:23,259 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:24:23,264 - agents.codechat.agent - INFO - 전체 분석 완료
+2025-08-31 16:24:23,264 - __main__ - INFO - CodeChatAgent.chat() 응답: ### 1. 코드베이스의 전체적인 구조와 특징
+이 코드베이스는 두 개의 파일로 구성되어 있으며, 각각 `data_processor.py`와 `test_simple.py`라는 이름을...
+2025-08-31 16:24:23,265 - __main__ - INFO - 근거 수: 0개
+2025-08-31 16:25:47,819 - __main__ - INFO - === 채팅 요청 수신 ===
+2025-08-31 16:25:47,820 - __main__ - INFO - 쿼리: '전체 코드 설명해줘' (타입: <class 'str'>, 길이: 10)
+2025-08-31 16:25:47,820 - __main__ - INFO - top_k: 5
+2025-08-31 16:25:47,820 - __main__ - INFO - CodeChatAgent 임포트 성공
+2025-08-31 16:25:47,845 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:25:47,853 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:25:47,854 - agents.structsynth.parser - INFO -  Python 내장 ast 모듈 기반 파서 초기화
+2025-08-31 16:25:47,854 - agents.structsynth.parser - INFO -  모든 언어 파서 로드 완료
+2025-08-31 16:25:47,855 - agents.structsynth.chunker - INFO - CodeChunker initialized with config: ChunkConfig(max_tokens=1000, min_tokens=50, overlap_tokens=100, include_comments=True, include_docstrings=True, max_comment_length=200, preserve_structure=True)
+2025-08-31 16:25:47,859 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:25:47,859 - agents.structsynth.agent - INFO - FAISS 벡터 스토어 초기화 완료
+2025-08-31 16:25:47,868 - agents.structsynth.llm_analyzer - INFO - LLMAnalyzer initialized with Azure OpenAI deployment: gpt-4o
+2025-08-31 16:25:47,868 - agents.structsynth.agent - INFO - LLM Analyzer 초기화 완료
+2025-08-31 16:25:47,871 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:25:47,871 - agents.structsynth.agent - INFO - StructSynthAgent 초기화 완료: .
+2025-08-31 16:25:47,871 - agents.codechat.agent - INFO - StructSynthAgent 초기화 완료
+2025-08-31 16:25:47,878 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 34개
+2025-08-31 16:25:47,908 - agents.codechat.agent - INFO - SQLite에서 벡터 로드 완료: 34개
+2025-08-31 16:25:47,909 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:25:47,910 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:25:47,910 - agents.codechat.agent - INFO - FAISS 인덱스 로드 완료
+2025-08-31 16:25:47,910 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:25:47,911 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: .
+2025-08-31 16:25:47,911 - __main__ - INFO - CodeChatAgent 초기화 완료
+2025-08-31 16:25:47,911 - __main__ - INFO - CodeChatAgent.chat() 호출 시작
+2025-08-31 16:25:47,911 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: '전체 코드 설명해줘'
+2025-08-31 16:25:47,912 - agents.codechat.agent - INFO - 채팅 요청 처리 시작: '전체 코드 설명해줘'
+2025-08-31 16:25:47,912 - agents.codechat.agent - INFO - 일반적인 질문 감지 - 전체 분석 모드로 전환
+2025-08-31 16:25:47,912 - agents.codechat.agent - INFO - 전체 코드 분석 시작
+2025-08-31 16:25:55,797 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:25:55,806 - agents.codechat.agent - INFO - 전체 분석 완료
+2025-08-31 16:25:55,809 - __main__ - INFO - CodeChatAgent.chat() 응답: ### 1. 코드베이스의 전체적인 구조와 특징
+이 코드베이스는 두 개의 Python 파일로 구성되어 있으며, 하나는 데이터 처리 관련 로직을 담고 있는 `data_processor...
+2025-08-31 16:25:55,809 - __main__ - INFO - 근거 수: 0개
+2025-08-31 16:26:31,780 - __main__ - INFO - === 채팅 요청 수신 ===
+2025-08-31 16:26:31,782 - __main__ - INFO - 쿼리: 'DataProcessor 클래스 설명해줘' (타입: <class 'str'>, 길이: 22)
+2025-08-31 16:26:31,782 - __main__ - INFO - top_k: 5
+2025-08-31 16:26:31,782 - __main__ - INFO - CodeChatAgent 임포트 성공
+2025-08-31 16:26:31,793 - agents.codechat.agent - INFO - Azure OpenAI 클라이언트 초기화 완료 (모델: gpt-4o, 임베딩: text-embedding-3-large)
+2025-08-31 16:26:31,798 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:26:31,798 - agents.structsynth.parser - INFO -  Python 내장 ast 모듈 기반 파서 초기화
+2025-08-31 16:26:31,799 - agents.structsynth.parser - INFO -  모든 언어 파서 로드 완료
+2025-08-31 16:26:31,799 - agents.structsynth.chunker - INFO - CodeChunker initialized with config: ChunkConfig(max_tokens=1000, min_tokens=50, overlap_tokens=100, include_comments=True, include_docstrings=True, max_comment_length=200, preserve_structure=True)
+2025-08-31 16:26:31,801 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:26:31,801 - agents.structsynth.agent - INFO - FAISS 벡터 스토어 초기화 완료
+2025-08-31 16:26:31,813 - agents.structsynth.llm_analyzer - INFO - LLMAnalyzer initialized with Azure OpenAI deployment: gpt-4o
+2025-08-31 16:26:31,813 - agents.structsynth.agent - INFO - LLM Analyzer 초기화 완료
+2025-08-31 16:26:31,819 - common.store.sqlite_store - INFO - Database initialized with new schema at data/structsynth_code.db
+2025-08-31 16:26:31,819 - agents.structsynth.agent - INFO - StructSynthAgent 초기화 완료: .
+2025-08-31 16:26:31,819 - agents.codechat.agent - INFO - StructSynthAgent 초기화 완료
+2025-08-31 16:26:31,821 - common.store.sqlite_store - INFO - 임베딩 데이터 조회 완료: 34개
+2025-08-31 16:26:31,852 - agents.codechat.agent - INFO - SQLite에서 벡터 로드 완료: 34개
+2025-08-31 16:26:31,852 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:26:31,853 - common.store.faiss_store - INFO - Loaded existing FAISS index from artifacts/faiss.index
+2025-08-31 16:26:31,853 - agents.codechat.agent - INFO - FAISS 인덱스 로드 완료
+2025-08-31 16:26:31,854 - agents.codechat.agent - INFO - 데이터 소스 초기화 완료
+2025-08-31 16:26:31,854 - agents.codechat.agent - INFO - CodeChatAgent 초기화 완료: .
+2025-08-31 16:26:31,854 - __main__ - INFO - CodeChatAgent 초기화 완료
+2025-08-31 16:26:31,854 - __main__ - INFO - CodeChatAgent.chat() 호출 시작
+2025-08-31 16:26:31,854 - agents.codechat.agent - INFO - 채팅 요청 수신 - query 타입: <class 'str'>, 값: 'DataProcessor 클래스 설명해줘'
+2025-08-31 16:26:31,854 - agents.codechat.agent - INFO - 채팅 요청 처리 시작: 'DataProcessor 클래스 설명해줘'
+2025-08-31 16:26:31,854 - agents.codechat.agent - INFO - 일반적인 질문 감지 - 전체 분석 모드로 전환
+2025-08-31 16:26:31,854 - agents.codechat.agent - INFO - 전체 코드 분석 시작
+2025-08-31 16:26:40,095 - httpx - INFO - HTTP Request: POST https://skcc-atl-master-openai-01.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2025-01-01-preview "HTTP/1.1 200 OK"
+2025-08-31 16:26:40,098 - agents.codechat.agent - INFO - 전체 분석 완료
+2025-08-31 16:26:40,098 - __main__ - INFO - CodeChatAgent.chat() 응답: ### 1. 코드베이스의 전체적인 구조와 특징
+이 코드베이스는 두 개의 Python 파일로 구성되어 있습니다. 하나는 `data_processor.py`이고, 다른 하나는 `tes...
+2025-08-31 16:26:40,098 - __main__ - INFO - 근거 수: 0개

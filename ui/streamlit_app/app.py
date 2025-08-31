@@ -226,24 +226,58 @@ class CodeAnalyticaUI:
     
     def render_code_chat(self):
         """코드 채팅 탭 렌더링"""
-        if not st.session_state.analysis_completed:
-            st.warning("먼저 Code Analysis에서 소스코드 분석을 완료해주세요.")
-            st.info("소스코드 분석이 완료되면 CodeChat을 사용할 수 있습니다.")
-            return
+        st.subheader("Code Chat")
+        st.info("코드베이스에 대해 질문하고 AI가 답변해드립니다.")
         
-        self.init_codechat_agent()
+        # 에이전트 초기화 상태 확인
+        self.check_agent_status()
+        
+        # 에이전트 초기화
+        if not st.session_state.codechat_agent:
+            self.init_codechat_agent()
+        
+        # 채팅 인터페이스 렌더링
         if st.session_state.codechat_agent:
             self.render_chat_interface()
+    
+    def check_agent_status(self):
+        """에이전트 상태 확인 및 표시"""
+        if st.session_state.codechat_agent:
+            try:
+                # 간단한 상태 확인
+                agent = st.session_state.codechat_agent
+                if hasattr(agent, 'sqlite_store') and agent.sqlite_store:
+                    st.success("✅ CodeChat Agent가 정상적으로 초기화되었습니다.")
+                else:
+                    st.warning("⚠️ CodeChat Agent가 부분적으로 초기화되었습니다.")
+            except Exception as e:
+                st.error(f"❌ CodeChat Agent 상태 확인 실패: {str(e)}")
+                st.session_state.codechat_agent = None
+        else:
+            st.info("🔄 CodeChat Agent를 초기화하는 중...")
     
     def init_codechat_agent(self):
         """CodeChat 에이전트 초기화"""
         if st.session_state.codechat_agent is None:
             try:
                 from agents.codechat.agent import CodeChatAgent
-                st.session_state.codechat_agent = CodeChatAgent()
+                
+                # 프로젝트 루트 경로 계산
+                project_root = Path(__file__).parent.parent.parent
+                artifacts_dir = project_root / "artifacts"
+                data_dir = project_root / "data"
+                
+                # CodeChatAgent 초기화
+                st.session_state.codechat_agent = CodeChatAgent(
+                    repo_path=str(project_root),
+                    artifacts_dir=str(artifacts_dir),
+                    data_dir=str(data_dir)
+                )
                 st.success("CodeChat Agent 초기화 완료!")
+                
             except Exception as e:
                 st.error(f"CodeChat Agent 초기화 실패: {str(e)}")
+                st.info("에이전트 초기화에 실패했습니다. 환경 변수와 경로를 확인해주세요.")
                 st.session_state.codechat_agent = None
     
     def render_chat_interface(self):
@@ -253,45 +287,71 @@ class CodeAnalyticaUI:
         with col1:
             user_query = st.text_input(
                 "코드에 대해 질문하세요:",
-                placeholder="예: 데이터 처리 함수는 어떻게 작동하나요?",
-                key="user_query"
+                placeholder="예: 데이터 처리 함수는 어떻게 작동하나요?"
+                # key 제거 - 세션 상태와의 충돌 방지
             )
         with col2:
             search_top_k = st.number_input("검색 결과 수", min_value=1, max_value=10, value=5)
             send_button = st.button("질문하기", type="primary")
         
-        # 질문 처리
-        if send_button and user_query:
-            self.process_chat_query(user_query, search_top_k)
+        # 질문 처리 - 더 엄격한 검증
+        if send_button:
+            if user_query and user_query.strip():
+                self.process_chat_query(user_query.strip(), search_top_k)
+            else:
+                st.error("❌ 질문을 입력해주세요.")
         
         # 채팅 히스토리
         self.render_chat_history()
     
     def process_chat_query(self, query: str, top_k: int):
         """채팅 질문 처리"""
+        # 상세한 query 검증 및 로깅
+        st.info(f"🔍 질문 검증 중: '{query}' (타입: {type(query)}, 길이: {len(query) if query else 0})")
+        
+        if query is None:
+            st.error("❌ 질문이 None입니다.")
+            return
+        
+        if not isinstance(query, str):
+            st.error(f"❌ 질문이 문자열이 아닙니다: {type(query)}")
+            return
+        
+        if not query.strip():
+            st.error("❌ 질문이 비어있습니다.")
+            return
+        
         with st.spinner("분석 중..."):
             try:
-                response = st.session_state.codechat_agent.chat(query, top_k)
+                # 백엔드 API를 통해 채팅 요청 전송
+                response = self._send_chat_request_to_backend(query.strip(), top_k)
                 
-                # 사용자 메시지 추가
-                st.session_state.chat_history.append({
-                    "role": "user",
-                    "content": query,
-                    "timestamp": datetime.now().strftime("%H:%M")
-                })
-                
-                # 어시스턴트 응답 추가
-                st.session_state.chat_history.append({
-                    "role": "assistant",
-                    "content": response.answer,
-                    "evidence": response.evidence,
-                    "timestamp": datetime.now().strftime("%H:%M")
-                })
-                
-                st.rerun()
-                
+                if response and response.get("success"):
+                    # 사용자 메시지 추가
+                    st.session_state.chat_history.append({
+                        "role": "user",
+                        "content": query.strip(),
+                        "timestamp": datetime.now().strftime("%H:%M")
+                    })
+                    
+                    # 어시스턴트 응답 추가
+                    chat_data = response.get("data", {})
+                    chat_response = chat_data.get("response", {})
+                    
+                    st.session_state.chat_history.append({
+                        "role": "assistant",
+                        "content": chat_response.get("answer", "응답을 생성할 수 없습니다."),
+                        "evidence": chat_response.get("evidence", []),
+                        "timestamp": datetime.now().strftime("%H:%M")
+                    })
+                    
+                    st.rerun()
+                else:
+                    st.error(f"❌ 백엔드 응답 실패: {response.get('error', '알 수 없는 오류')}")
+                    
             except Exception as e:
-                st.error(f"오류 발생: {str(e)}")
+                st.error(f"❌ 오류 발생: {str(e)}")
+                st.info("💡 백엔드 연결에 문제가 있을 수 있습니다.")
     
     def render_chat_history(self):
         """채팅 히스토리 렌더링"""
@@ -351,14 +411,43 @@ class CodeAnalyticaUI:
     def render_evidence(self, evidence_list: list):
         """근거 정보 렌더링"""
         for i, evidence in enumerate(evidence_list, 1):
-            with st.expander(f"근거 {i}: {evidence.symbol_name} ({evidence.symbol_type})"):
-                col1, col2 = st.columns([2, 1])
-                with col1:
-                    st.markdown(f"**파일**: `{evidence.file_path}`")
-                    st.markdown(f"**라인**: {evidence.start_line}-{evidence.end_line}")
-                    st.markdown(f"**소스**: {evidence.source} (유사도: {evidence.similarity_score:.4f})")
-                with col2:
-                    st.code(evidence.content, language="python")
+            # evidence 객체의 타입과 구조 확인
+            try:
+                # SearchResult 객체인지 확인하고 안전하게 속성 접근
+                if hasattr(evidence, 'symbol_name') and hasattr(evidence, 'symbol_type'):
+                    # SearchResult 객체인 경우
+                    symbol_name = evidence.symbol_name
+                    symbol_type = evidence.symbol_type
+                    file_path = getattr(evidence, 'file_path', 'N/A')
+                    start_line = getattr(evidence, 'start_line', 0)
+                    end_line = getattr(evidence, 'end_line', 0)
+                    source = getattr(evidence, 'source', 'N/A')
+                    similarity_score = getattr(evidence, 'similarity_score', 0.0)
+                    content = getattr(evidence, 'content', '')
+                else:
+                    # 딕셔너리인 경우
+                    symbol_name = evidence.get('symbol_name', 'Unknown')
+                    symbol_type = evidence.get('symbol_type', 'Unknown')
+                    file_path = evidence.get('file_path', 'N/A')
+                    start_line = evidence.get('start_line', 0)
+                    end_line = evidence.get('end_line', 0)
+                    source = evidence.get('source', 'N/A')
+                    similarity_score = evidence.get('similarity_score', 0.0)
+                    content = evidence.get('content', '')
+                
+                with st.expander(f"근거 {i}: {symbol_name} ({symbol_type})"):
+                    col1, col2 = st.columns([2, 1])
+                    with col1:
+                        st.markdown(f"**파일**: `{file_path}`")
+                        st.markdown(f"**라인**: {start_line}-{end_line}")
+                        st.markdown(f"**소스**: {source} (유사도: {similarity_score:.4f})")
+                    with col2:
+                        st.code(content, language="python")
+                        
+            except Exception as e:
+                # 오류 발생 시 기본 정보만 표시
+                st.error(f"근거 {i} 렌더링 오류: {str(e)}")
+                st.json(evidence)  # 디버깅을 위해 원본 데이터 표시
     
     def render_docs(self):
         """문서 탭 렌더링"""
@@ -447,6 +536,50 @@ class CodeAnalyticaUI:
             import traceback
             st.error(f"상세 오류: {traceback.format_exc()}")
             return False, str(e)
+
+    def _send_chat_request_to_backend(self, query: str, top_k: int) -> Optional[Dict[str, Any]]:
+        """백엔드 API로 채팅 요청 전송"""
+        try:
+            import requests
+            
+            # 백엔드 API URL
+            backend_url = f"{self.api_url}/api/chat"
+            
+            # 요청 데이터
+            request_data = {
+                "query": query,
+                "top_k": top_k
+            }
+            
+            st.info(f"🚀 백엔드 API 호출: {backend_url}")
+            st.info(f"📤 요청 데이터: {request_data}")
+            
+            # POST 요청 전송
+            response = requests.post(
+                backend_url,
+                json=request_data,
+                timeout=30,
+                headers={"Content-Type": "application/json"}
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                st.success(f"✅ 백엔드 응답 성공: {result.get('message', '')}")
+                return result
+            else:
+                st.error(f"❌ 백엔드 응답 실패 (HTTP {response.status_code}): {response.text}")
+                return None
+                
+        except requests.exceptions.ConnectionError:
+            st.error("❌ 백엔드 서버에 연결할 수 없습니다.")
+            st.info("백엔드 서버가 실행 중인지 확인해주세요.")
+            return None
+        except requests.exceptions.Timeout:
+            st.error("❌ 백엔드 응답 시간 초과")
+            return None
+        except Exception as e:
+            st.error(f"❌ 백엔드 요청 실패: {str(e)}")
+            return None
 
 # 메인 실행
 if __name__ == "__main__":

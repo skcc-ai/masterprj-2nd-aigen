@@ -15,7 +15,11 @@ import uvicorn
 # 로깅 설정
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # 콘솔 출력
+        logging.FileHandler('./artifacts/backend.log')  # 파일 출력
+    ]
 )
 logger = logging.getLogger(__name__)
 
@@ -367,17 +371,28 @@ async def search_symbols(request: SearchRequest):
 async def chat_with_code(request: ChatRequest):
     """코드 관련 질문에 대한 답변 생성 (Agent2 결과 활용)"""
     try:
+        logger.info(f"=== 채팅 요청 수신 ===")
+        logger.info(f"쿼리: '{request.query}' (타입: {type(request.query)}, 길이: {len(request.query)})")
+        logger.info(f"top_k: {request.top_k}")
+        
         # Agent2 (CodeChat) 실행
         try:
             from agents.codechat.agent import CodeChatAgent
+            logger.info("CodeChatAgent 임포트 성공")
+            
             # 임시로 현재 디렉토리 사용
             agent = CodeChatAgent(
                 repo_path=".",
                 artifacts_dir="./artifacts",
                 data_dir="./data"
             )
+            logger.info("CodeChatAgent 초기화 완료")
             
-            response = agent.chat(request.query)
+            # 채팅 요청 처리
+            logger.info("CodeChatAgent.chat() 호출 시작")
+            response = agent.chat(request.query, request.top_k)
+            logger.info(f"CodeChatAgent.chat() 응답: {response.answer[:100]}...")
+            logger.info(f"근거 수: {len(response.evidence)}개")
             
             return AgentResponse(
                 success=True,
@@ -389,13 +404,18 @@ async def chat_with_code(request: ChatRequest):
             )
                 
         except Exception as e:
+            logger.error(f"CodeChatAgent 실행 실패: {e}")
+            import traceback
+            logger.error(f"상세 오류: {traceback.format_exc()}")
             raise HTTPException(
                 status_code=500, 
                 detail=f"Chat failed: {str(e)}"
             )
             
     except Exception as e:
-        logger.error(f"채팅 중 오류: {e}")
+        logger.error(f"채팅 처리 중 오류: {e}")
+        import traceback
+        logger.error(f"상세 오류: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/modules", tags=["Modules"])

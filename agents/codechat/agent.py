@@ -64,7 +64,12 @@ class CodeChatAgent:
             api_key = os.getenv("AZURE_OPENAI_API_KEY")
             endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
             api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2025-01-01-preview")
+            
+            # 채팅용 모델 (gpt-4o)
             deployment_name = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o")
+            
+            # embeddings용 모델
+            embedding_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
             
             if not api_key or not endpoint:
                 raise ValueError("Azure OpenAI API 키와 엔드포인트가 필요합니다")
@@ -75,8 +80,9 @@ class CodeChatAgent:
                 api_version=api_version
             )
             self.deployment_name = deployment_name
+            self.embedding_deployment = embedding_deployment
             
-            logger.info("Azure OpenAI 클라이언트 초기화 완료")
+            logger.info(f"Azure OpenAI 클라이언트 초기화 완료 (모델: {deployment_name}, 임베딩: {embedding_deployment})")
             
         except Exception as e:
             logger.error(f"Azure OpenAI 클라이언트 초기화 실패: {e}")
@@ -88,7 +94,20 @@ class CodeChatAgent:
             # SQLite 데이터베이스 초기화
             self.sqlite_store = SQLiteStore(self.data_dir / "structsynth_code.db")
             
-            # 벡터 스토어 로드
+            # StructSynthAgent 초기화 (개선된 검색 기능 사용)
+            try:
+                from agents.structsynth.agent import StructSynthAgent
+                self.structsynth_agent = StructSynthAgent(
+                    repo_path=str(self.repo_path),
+                    artifacts_dir=str(self.artifacts_dir),
+                    data_dir=str(self.data_dir)
+                )
+                logger.info("StructSynthAgent 초기화 완료")
+            except Exception as e:
+                logger.warning(f"StructSynthAgent 초기화 실패: {e}")
+                self.structsynth_agent = None
+            
+            # 벡터 스토어 로드 (기존 방식 유지)
             self._load_vector_store()
             
             logger.info("데이터 소스 초기화 완료")
@@ -98,48 +117,50 @@ class CodeChatAgent:
             raise
     
     def _load_vector_store(self):
-        """벡터 스토어 로드"""
+        """벡터 스토어를 SQLite와 FAISS에서 로드"""
         try:
-            # 여러 가능한 경로 시도
-            possible_paths = [
-                self.artifacts_dir,                    # artifacts_dir 자체
-                self.artifacts_dir / "vector_store",   # vector_store 하위 디렉토리
-                Path("./artifacts"),                   # artifacts 바로 아래
-                Path("./artifacts/vector_store"),      # vector_store 하위
-                Path("/app/artifacts"),                # Docker 절대 경로
-                Path("/app/artifacts/vector_store"),   # Docker 절대 경로 + vector_store
-                Path("artifacts"),                     # 상대 경로
-                Path("artifacts/vector_store")         # 상대 경로 + vector_store
-            ]
+            # 1. SQLite embeddings 테이블에서 벡터 데이터 로드
+            embeddings_data = self.sqlite_store.get_all_embeddings()
             
-            vector_store_path = None
-            for path in possible_paths:
-                if path.exists():
-                    vector_store_path = path
-                    logger.info(f"벡터 스토어 경로 발견: {path}")
-                    break
-            
-            if not vector_store_path:
-                logger.warning("벡터 스토어가 존재하지 않습니다")
-                logger.warning(f"시도한 경로들: {[str(p) for p in possible_paths]}")
-                self.vectors = None
-                self.metadata = None
-                return
-            
-            # 벡터 데이터 로드
-            vectors_file = vector_store_path / "vectors.npy"
-            metadata_file = vector_store_path / "metadata.json"
-            
-            if vectors_file.exists() and metadata_file.exists():
-                self.vectors = np.load(vectors_file)
-                with open(metadata_file, 'r', encoding='utf-8') as f:
-                    import json
-                    self.metadata = json.load(f)
-                logger.info(f"벡터 스토어 로드 완료: {len(self.vectors)}개 벡터")
+            if embeddings_data:
+                # 벡터와 메타데이터 구성
+                self.vectors = []
+                self.metadata = []
+                
+                for emb in embeddings_data:
+                    try:
+                        # bytes -> numpy array 변환
+                        vector = np.frombuffer(emb['vector'], dtype=np.float32)
+                        self.vectors.append(vector)
+                        
+                        # chunks 테이블에서 메타데이터 조회
+                        chunk_info = self.sqlite_store.get_chunk_info(emb['object_id'])
+                        if chunk_info:
+                            # SearchResult 형식에 맞게 메타데이터 구성
+                            metadata = {
+                                "symbol_name": chunk_info.get('symbol_name', ''),
+                                "symbol_type": chunk_info.get('symbol_type', ''),
+                                "file_path": chunk_info.get('file_path', ''),
+                                "start_line": chunk_info.get('start_line', 0),
+                                "end_line": chunk_info.get('end_line', 0),
+                                "content": chunk_info.get('content', ''),
+                                "chunk_id": emb['object_id']
+                            }
+                            self.metadata.append(metadata)
+                        else:
+                            logger.warning(f"청크 {emb['object_id']} 정보를 찾을 수 없습니다")
+                            
+                    except Exception as e:
+                        logger.warning(f"임베딩 {emb['id']} 처리 실패: {e}")
+                        continue
+                
+                logger.info(f"SQLite에서 벡터 로드 완료: {len(self.vectors)}개")
+                
+                # 2. FAISS 인덱스 로드 시도
+                self._load_faiss_index()
+                
             else:
-                logger.warning("벡터 스토어 파일이 불완전합니다")
-                logger.warning(f"vectors_file: {vectors_file} (존재: {vectors_file.exists()})")
-                logger.warning(f"metadata_file: {metadata_file} (존재: {metadata_file.exists()})")
+                logger.warning("embeddings 테이블에 데이터가 없습니다")
                 self.vectors = None
                 self.metadata = None
                 
@@ -148,27 +169,97 @@ class CodeChatAgent:
             self.vectors = None
             self.metadata = None
     
-    def chat(self, query: str, top_k: int = 5) -> ChatResponse:
-        """
-        사용자 질문에 대한 답변 생성
-        
-        Args:
-            query: 사용자 질문
-            top_k: 검색할 결과 수
-            
-        Returns:
-            ChatResponse: 답변과 근거 정보
-        """
-        logger.info(f"채팅 요청: {query}")
-        
+    def _load_faiss_index(self):
+        """FAISS 인덱스 로드"""
         try:
-            # 1. 하이브리드 검색 수행
-            search_results = self._hybrid_search(query, top_k)
+            # FAISS 인덱스 파일 경로 확인
+            faiss_index_path = self.artifacts_dir / "faiss.index"
             
-            # 2. RAG 기반 답변 생성
+            if faiss_index_path.exists():
+                # FAISSStore 사용하여 인덱스 로드
+                from common.store.faiss_store import FAISSStore
+                
+                self.faiss_store = FAISSStore(
+                    index_path=str(faiss_index_path),
+                    dimension=3072  # text-embedding-3-large 차원
+                )
+                
+                # 기존 인덱스 로드
+                if hasattr(self.faiss_store, 'load_or_create_index'):
+                    self.faiss_store.load_or_create_index()
+                    logger.info("FAISS 인덱스 로드 완료")
+                else:
+                    logger.info("FAISS 인덱스 초기화 완료")
+                    
+            else:
+                logger.warning(f"FAISS 인덱스 파일이 없습니다: {faiss_index_path}")
+                self.faiss_store = None
+                
+        except Exception as e:
+            logger.error(f"FAISS 인덱스 로드 실패: {e}")
+            self.faiss_store = None
+    
+    def chat(self, query: str, top_k: int = 10) -> ChatResponse:
+        """채팅 응답 생성"""
+        try:
+            # query 검증 및 상세 로깅
+            logger.info(f"채팅 요청 수신 - query 타입: {type(query)}, 값: '{query}'")
+            
+            if query is None:
+                logger.warning("채팅 요청 무효: query가 None")
+                return ChatResponse(
+                    answer="질문을 입력해주세요.",
+                    evidence=[],
+                    confidence=0.0
+                )
+            
+            if not isinstance(query, str):
+                logger.warning(f"채팅 요청 무효: query가 문자열이 아님 (타입: {type(query)})")
+                return ChatResponse(
+                    answer="질문이 올바른 형식이 아닙니다.",
+                    evidence=[],
+                    confidence=0.0
+                )
+            
+            if not query.strip():
+                logger.warning("채팅 요청 무효: query가 비어 있음 (공백만 포함)")
+                return ChatResponse(
+                    answer="질문을 입력해주세요.",
+                    evidence=[],
+                    confidence=0.0
+                )
+            
+            # 공백 제거된 query 사용
+            query = query.strip()
+            logger.info(f"채팅 요청 처리 시작: '{query}'")
+            
+            # 1. 일반적인 질문인지 감지
+            if self._detect_general_query(query):
+                logger.info("일반적인 질문 감지 - 전체 분석 모드로 전환")
+                answer = self._handle_general_analysis(query)
+                return ChatResponse(
+                    answer=answer,
+                    evidence=[],
+                    confidence=0.8
+                )
+            
+            # 2. 하이브리드 검색 수행
+            logger.info("하이브리드 검색 시작")
+            search_results = self._hybrid_search(query, top_k)
+            logger.info(f"하이브리드 검색 결과: {len(search_results)}개")
+            
+            if not search_results:
+                logger.info("검색 결과가 없습니다")
+                return ChatResponse(
+                    answer="관련 코드를 찾을 수 없습니다. 더 구체적인 질문을 해주세요.",
+                    evidence=[],
+                    confidence=0.0
+                )
+            
+            # 3. RAG 기반 답변 생성
             answer = self._generate_rag_answer(query, search_results)
             
-            # 3. 응답 구성
+            # 4. 응답 구성
             response = ChatResponse(
                 answer=answer,
                 evidence=search_results,
@@ -186,16 +277,201 @@ class CodeChatAgent:
                 confidence=0.0
             )
     
-    def _hybrid_search(self, query: str, top_k: int) -> List[SearchResult]:
-        """하이브리드 검색 (FTS + FAISS)"""
+    def _detect_general_query(self, query: str) -> bool:
+        """일반적인 질문인지 감지"""
+        if not query or not isinstance(query, str):
+            return False
+            
+        general_keywords = [
+            "전체", "전반", "overview", "summary", "구조", "아키텍처",
+            "분석해줘", "설명해줘", "요약해줘", "개요", "전체적으로", "전반적으로"
+        ]
+        
+        query_lower = query.lower()
+        return any(keyword in query_lower for keyword in general_keywords)
+    
+    def _handle_general_analysis(self, query: str) -> str:
+        """전체 코드 분석 처리"""
         try:
-            # 1. FTS 검색 (SQLite)
+            logger.info("전체 코드 분석 시작")
+            
+            # 1. 데이터베이스 통계 수집
+            stats = self.sqlite_store.get_database_stats()
+            
+            # 2. 주요 파일 및 심볼 정보 수집
+            files = self.sqlite_store.get_all_files()
+            symbols = self.sqlite_store.get_all_symbols()
+            
+            # 3. 전체 구조 분석을 위한 컨텍스트 구성
+            context = self._build_overview_context(stats, files, symbols)
+            
+            # 4. LLM을 통한 전체 분석
+            return self._generate_overview_analysis(query, context)
+            
+        except Exception as e:
+            logger.error(f"전체 분석 실패: {e}")
+            return "전체 코드 분석 중 오류가 발생했습니다."
+    
+    def _build_overview_context(self, stats: Dict[str, Any], files: List[Dict], symbols: List[Dict]) -> str:
+        """전체 분석을 위한 컨텍스트 구성"""
+        context_parts = []
+        
+        # 통계 정보
+        context_parts.append(f"""
+        [프로젝트 개요]
+        총 파일 수: {stats.get('total_files', 0)}
+        총 심볼 수: {stats.get('total_symbols', 0)}
+        총 청크 수: {stats.get('total_chunks', 0)}
+        """)
+        
+        # 파일 구조
+        if files:
+            context_parts.append("\n[파일 구조]")
+            for file_info in files[:10]:  # 상위 10개 파일만
+                context_parts.append(f"- {file_info.get('path', 'unknown')} ({file_info.get('language', 'unknown')})")
+                if file_info.get('llm_summary'):
+                    context_parts.append(f"  요약: {file_info.get('llm_summary')}")
+        
+        # 심볼 분포
+        if symbols:
+            symbol_types = {}
+            for symbol in symbols:
+                symbol_type = symbol.get('type', 'unknown')
+                symbol_types[symbol_type] = symbol_types.get(symbol_type, 0) + 1
+            
+            context_parts.append("\n[심볼 분포]")
+            for symbol_type, count in symbol_types.items():
+                context_parts.append(f"- {symbol_type}: {count}개")
+        
+        return "\n".join(context_parts)
+    
+    def _generate_overview_analysis(self, query: str, context: str) -> str:
+        """전체 분석을 위한 LLM 응답 생성"""
+        try:
+            prompt = f"""
+            다음 코드베이스에 대한 전체적인 분석을 요청받았습니다:
+            
+            질문: {query}
+            
+            코드베이스 컨텍스트:
+            {context}
+            
+            요구사항:
+            1. 코드베이스의 전체적인 구조와 특징을 설명해주세요
+            2. 주요 파일들의 역할과 책임을 요약해주세요
+            3. 심볼 분포를 바탕으로 코드의 복잡도와 패턴을 분석해주세요
+            4. 전반적인 아키텍처 특징을 설명해주세요
+            5. 한국어로 답변하세요
+            """
+            
+            response = self.openai_client.chat.completions.create(
+                model=self.deployment_name,
+                messages=[
+                    {"role": "system", "content": "당신은 코드베이스 분석 전문가입니다. 전체적인 관점에서 코드를 분석하고 요약해주세요."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=1500,
+                temperature=0.3
+            )
+            
+            answer = response.choices[0].message.content
+            logger.info("전체 분석 완료")
+            return answer
+            
+        except Exception as e:
+            logger.error(f"전체 분석 LLM 응답 생성 실패: {e}")
+            return f"전체 분석 중 오류가 발생했습니다: {str(e)}"
+    
+    def _hybrid_search(self, query: str, top_k: int) -> List[SearchResult]:
+        """하이브리드 검색 (StructSynthAgent 우선 + 기존 방식 fallback)"""
+        try:
+            # query 검증 추가
+            if not query or not isinstance(query, str):
+                logger.warning("하이브리드 검색 무효: query가 비어 있음")
+                return []
+            
+            logger.info(f"=== _hybrid_search 시작: '{query}', top_k={top_k} ===")
+            logger.info(f"structsynth_agent 존재 여부: {hasattr(self, 'structsynth_agent')}")
+            logger.info(f"structsynth_agent 값: {self.structsynth_agent}")
+            
+            # 1. StructSynthAgent 검색 우선 시도 (개선된 검색 기능)
+            if hasattr(self, 'structsynth_agent') and self.structsynth_agent is not None:
+                try:
+                    logger.info("StructSynthAgent를 사용한 검색 시도")
+                    structsynth_results = self.structsynth_agent.search_symbols(query, top_k)
+                    
+                    logger.info(f"StructSynthAgent 검색 결과: {len(structsynth_results)}개")
+                    if structsynth_results:
+                        logger.info(f"첫 번째 결과 타입: {type(structsynth_results[0])}")
+                        logger.info(f"첫 번째 결과 내용: {structsynth_results[0]}")
+                    
+                    if structsynth_results:
+                        # StructSynthAgent 결과를 SearchResult로 변환
+                        search_results = []
+                        for i, result in enumerate(structsynth_results):
+                            try:
+                                # result가 딕셔너리인지 확인
+                                if not isinstance(result, dict):
+                                    logger.warning(f"결과 {i+1}이 딕셔너리가 아님: {type(result)}")
+                                    continue
+                                
+                                # symbol_info 추출 (여러 가능한 키 시도)
+                                symbol_info = result.get("symbol_info", {})
+                                if not symbol_info:
+                                    # result 자체가 symbol_info일 수 있음
+                                    symbol_info = result
+                                
+                                # 필수 필드 추출 및 기본값 설정
+                                symbol_name = symbol_info.get("name", "unknown")
+                                symbol_type = symbol_info.get("type", "unknown")
+                                file_path = symbol_info.get("file_path", "unknown")
+                                start_line = symbol_info.get("start_line", 0)
+                                end_line = symbol_info.get("end_line", 0)
+                                content = result.get("chunk_content", result.get("content", ""))
+                                similarity = result.get("similarity", 0.0)
+                                
+                                # file_path가 None인 경우 처리
+                                if file_path is None:
+                                    file_path = "unknown"
+                                
+                                search_result = SearchResult(
+                                    symbol_name=symbol_name,
+                                    symbol_type=symbol_type,
+                                    file_path=str(file_path),
+                                    start_line=int(start_line),
+                                    end_line=int(end_line),
+                                    content=str(content),
+                                    source="structsynth",
+                                    similarity_score=float(similarity)
+                                )
+                                search_results.append(search_result)
+                                logger.info(f"결과 {i+1} 변환 완료: {search_result.symbol_name} ({search_result.file_path})")
+                                
+                            except Exception as e:
+                                logger.warning(f"결과 {i+1} 변환 실패: {e}")
+                                continue
+                        
+                        if search_results:
+                            logger.info(f"StructSynthAgent 검색 완료: {len(search_results)}개 결과")
+                            return search_results
+                        else:
+                            logger.warning("StructSynthAgent 결과 변환 실패 - 빈 결과")
+                    
+                except Exception as e:
+                    logger.warning(f"StructSynthAgent 검색 실패: {e}")
+                    import traceback
+                    logger.warning(f"상세 오류: {traceback.format_exc()}")
+            
+            # 2. 기존 방식으로 fallback (FTS + FAISS)
+            logger.info("기존 검색 방식으로 fallback")
+            
+            # FTS 검색 (SQLite)
             fts_results = self._fts_search(query, top_k)
             
-            # 2. FAISS 검색 (벡터 유사도)
+            # FAISS 검색 (벡터 유사도)
             faiss_results = self._faiss_search(query, top_k)
             
-            # 3. 결과 병합 및 중복 제거
+            # 결과 병합 및 중복 제거
             merged_results = self._merge_search_results(fts_results, faiss_results, top_k)
             
             logger.info(f"하이브리드 검색 완료: {len(merged_results)}개 결과")
@@ -203,11 +479,18 @@ class CodeChatAgent:
             
         except Exception as e:
             logger.error(f"하이브리드 검색 실패: {e}")
+            import traceback
+            logger.error(f"상세 오류: {traceback.format_exc()}")
             return []
     
     def _fts_search(self, query: str, top_k: int) -> List[SearchResult]:
         """SQLite FTS 검색"""
         try:
+            # query 검증 추가
+            if not query or not isinstance(query, str):
+                logger.warning("FTS 검색 무효: query가 비어 있음")
+                return []
+            
             # SQLite에서 키워드 기반 검색
             results = self.sqlite_store.search_symbols_fts(query, top_k)
             
@@ -235,11 +518,86 @@ class CodeChatAgent:
     def _faiss_search(self, query: str, top_k: int) -> List[SearchResult]:
         """FAISS 벡터 유사도 검색"""
         try:
-            # numpy 배열 비교 문제 방지를 위해 명시적 체크
-            if self.vectors is None or self.metadata is None:
-                logger.warning("벡터 스토어가 로드되지 않았습니다")
+            # query 검증 추가
+            if not query or not isinstance(query, str):
+                logger.warning("FAISS 검색 무효: query가 비어 있음")
                 return []
             
+            # 1. FAISS 인덱스가 있으면 우선 사용
+            if hasattr(self, 'faiss_store') and self.faiss_store is not None:
+                return self._faiss_index_search(query, top_k)
+            
+            # 2. fallback: 로컬 벡터 배열 사용
+            if self.vectors is not None and self.metadata is not None:
+                return self._local_vector_search(query, top_k)
+            
+            logger.warning("벡터 스토어가 로드되지 않았습니다")
+            return []
+            
+        except Exception as e:
+            logger.error(f"FAISS 검색 실패: {e}")
+            return []
+    
+    def _faiss_index_search(self, query: str, top_k: int) -> List[SearchResult]:
+        """FAISS 인덱스를 사용한 벡터 검색"""
+        try:
+            # query 검증 추가
+            if not query or not isinstance(query, str):
+                logger.warning("FAISS 인덱스 검색 무효: query가 비어 있음")
+                return []
+            
+            # 쿼리 임베딩 생성
+            query_embedding = self._create_embedding(query)
+            if query_embedding is None:
+                logger.warning("쿼리 임베딩 생성 실패")
+                return []
+            
+            # FAISS 인덱스에서 검색
+            if hasattr(self.faiss_store, 'search'):
+                # FAISSStore의 search 메서드 사용
+                search_results = self.faiss_store.search(query_embedding, top_k)
+                
+                # SearchResult로 변환
+                faiss_results = []
+                for result in search_results:
+                    # result에서 doc_id와 similarity 추출
+                    doc_id = result.get('doc_id', 0)
+                    similarity = result.get('similarity', 0.0)
+                    
+                    # chunks 테이블에서 메타데이터 조회
+                    chunk_info = self.sqlite_store.get_chunk_info(doc_id)
+                    if chunk_info:
+                        search_result = SearchResult(
+                            symbol_name=chunk_info.get('symbol_name', ''),
+                            symbol_type=chunk_info.get('symbol_type', ''),
+                            file_path=chunk_info.get('file_path', ''),
+                            start_line=chunk_info.get('start_line', 0),
+                            end_line=chunk_info.get('end_line', 0),
+                            content=chunk_info.get('content', ''),
+                            source="faiss_index",
+                            similarity_score=float(similarity)
+                        )
+                        faiss_results.append(search_result)
+                
+                logger.info(f"FAISS 인덱스 검색 완료: {len(faiss_results)}개 결과")
+                return faiss_results
+            else:
+                logger.warning("FAISS 인덱스에 search 메서드가 없습니다")
+                return []
+                
+        except Exception as e:
+            logger.error(f"FAISS 인덱스 검색 실패: {e}")
+            return []
+    
+    def _local_vector_search(self, query: str, top_k: int) -> List[SearchResult]:
+        """로컬 벡터 배열을 사용한 검색 (fallback)"""
+        try:
+            # query 검증 추가
+            if not query or not isinstance(query, str):
+                logger.warning("로컬 벡터 검색 무효: query가 비어 있음")
+                return []
+            
+            # numpy 배열 비교 문제 방지를 위해 명시적 체크
             if len(self.vectors) == 0 or len(self.metadata) == 0:
                 logger.warning("벡터 스토어가 비어있습니다")
                 return []
@@ -279,16 +637,16 @@ class CodeChatAgent:
                         start_line=metadata.get("start_line", 0),
                         end_line=metadata.get("end_line", 0),
                         content=metadata.get("content", ""),
-                        source="faiss",
+                        source="faiss_local",
                         similarity_score=float(similarity)
                     )
                     faiss_results.append(search_result)
             
-            logger.info(f"FAISS 검색 완료: {len(faiss_results)}개 결과")
+            logger.info(f"로컬 벡터 검색 완료: {len(faiss_results)}개 결과")
             return faiss_results
             
         except Exception as e:
-            logger.error(f"FAISS 검색 실패: {e}")
+            logger.error(f"로컬 벡터 검색 실패: {e}")
             return []
     
     def _merge_search_results(self, fts_results: List[SearchResult], 
@@ -323,6 +681,10 @@ class CodeChatAgent:
         try:
             if not search_results:
                 return "관련 코드를 찾을 수 없습니다. 더 구체적인 질문을 해주세요."
+            
+            # OpenAI 클라이언트가 없으면 기본 답변 생성
+            if not hasattr(self, 'openai_client') or self.openai_client is None:
+                return self._generate_basic_answer(query, search_results)
             
             # 컨텍스트 구성
             context = self._build_context(search_results)
@@ -384,13 +746,24 @@ class CodeChatAgent:
     def _create_embedding(self, text: str) -> Optional[np.ndarray]:
         """텍스트 임베딩 생성"""
         try:
+            # 환경변수에서 임베딩 모델 가져오기
+            embedding_model = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
+            
+            # Azure OpenAI 클라이언트 사용
             response = self.openai_client.embeddings.create(
-                model="text-embedding-3-small",
+                model=embedding_model,
                 input=text
             )
-            return np.array(response.data[0].embedding)
+            
+            embedding_array = np.array(response.data[0].embedding)
+            logger.info(f"임베딩 생성 성공: 차원={embedding_array.shape}")
+            
+            return embedding_array
+            
         except Exception as e:
             logger.error(f"임베딩 생성 실패: {e}")
+            logger.info("임베딩 실패로 인해 벡터 검색을 건너뜁니다.")
+            # 임베딩 실패 시 None 반환하여 벡터 검색 건너뛰기
             return None
     
     def _cosine_similarity(self, vec1: np.ndarray, vec2: np.ndarray) -> float:
@@ -425,12 +798,33 @@ class CodeChatAgent:
     def get_search_stats(self) -> Dict[str, Any]:
         """검색 통계 정보 반환"""
         try:
-            return {
-                "vector_store_loaded": self.vectors is not None and self.metadata is not None,
-                "total_vectors": len(self.vectors) if self.vectors is not None else 0,
+            stats = {
                 "sqlite_available": hasattr(self, 'sqlite_store'),
-                "openai_available": hasattr(self, 'openai_client')
+                "openai_available": hasattr(self, 'openai_client'),
+                "vector_search": {
+                    "sqlite_embeddings": {
+                        "loaded": self.vectors is not None and self.metadata is not None,
+                        "total_vectors": len(self.vectors) if self.vectors is not None else 0,
+                        "total_metadata": len(self.metadata) if self.metadata is not None else 0
+                    },
+                    "faiss_index": {
+                        "loaded": hasattr(self, 'faiss_store') and self.faiss_store is not None,
+                        "index_path": str(self.artifacts_dir / "faiss.index") if hasattr(self, 'artifacts_dir') else None,
+                        "index_exists": (self.artifacts_dir / "faiss.index").exists() if hasattr(self, 'artifacts_dir') else False
+                    }
+                }
             }
+            
+            # SQLite 통계 추가
+            if hasattr(self, 'sqlite_store'):
+                try:
+                    db_stats = self.sqlite_store.get_database_stats()
+                    stats["sqlite_stats"] = db_stats
+                except Exception as e:
+                    stats["sqlite_stats"] = {"error": str(e)}
+            
+            return stats
+            
         except Exception as e:
             logger.error(f"검색 통계 조회 실패: {e}")
             return {"error": str(e)}

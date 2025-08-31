@@ -493,7 +493,8 @@ class SQLiteStore:
                     FROM symbols
                 """)
 
-                # FTS 검색 실행
+                # FTS 검색 실행 - 파라미터 바인딩 문제 해결
+                search_query = f'"{query}"'  # 쿼리를 따옴표로 감싸기
                 cursor = conn.execute("""
                     SELECT s.id, s.name, s.type, s.language, s.signature, s.llm_summary,
                            s.responsibility, s.design_notes, s.collaboration,
@@ -505,7 +506,7 @@ class SQLiteStore:
                     WHERE symbols_fts MATCH ?
                     ORDER BY rank
                     LIMIT ?
-                """, (query, top_k))
+                """, (search_query, top_k))
 
                 results = []
                 for row in cursor.fetchall():
@@ -530,3 +531,265 @@ class SQLiteStore:
         except Exception as e:
             logger.error(f"FTS 검색 실패: {e}")
             return []
+
+    def get_all_embeddings(self) -> List[Dict[str, Any]]:
+        """모든 임베딩 데이터 조회"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT id, object_type, object_id, vector, dimension, created_at
+                    FROM embeddings
+                    ORDER BY id
+                """)
+                
+                results = []
+                for row in cursor.fetchall():
+                    result = {
+                        "id": row[0],
+                        "object_type": row[1],
+                        "object_id": row[2],
+                        "vector": row[3],  # bytes
+                        "dimension": row[4],
+                        "created_at": row[5]
+                    }
+                    results.append(result)
+                
+                logger.info(f"임베딩 데이터 조회 완료: {len(results)}개")
+                return results
+                
+        except Exception as e:
+            logger.error(f"임베딩 데이터 조회 실패: {e}")
+            return []
+    
+    def get_chunk_info(self, chunk_id: int) -> Optional[Dict[str, Any]]:
+        """청크 정보 조회 (파일 경로 포함)"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                # 먼저 chunks 테이블에서 symbol_id 확인
+                cursor = conn.execute("SELECT symbol_id FROM chunks WHERE id = ?", (chunk_id,))
+                chunk_row = cursor.fetchone()
+                
+                if not chunk_row:
+                    logger.warning(f"청크 {chunk_id}를 찾을 수 없습니다")
+                    return None
+                
+                symbol_id = chunk_row[0]
+                
+                # symbol_id가 문자열인 경우 (예: "1_SimpleClass")
+                if isinstance(symbol_id, str) and '_' in symbol_id:
+                    # 문자열에서 실제 심볼 이름 추출
+                    actual_symbol_name = symbol_id.split('_', 1)[1]
+                    
+                    # 심볼 이름으로 검색
+                    cursor = conn.execute("""
+                        SELECT s.id, s.name, s.type, s.start_line, s.end_line,
+                               f.path as file_path
+                        FROM symbols s
+                        JOIN files f ON s.file_id = f.id
+                        WHERE s.name = ?
+                    """, (actual_symbol_name,))
+                    
+                    symbol_row = cursor.fetchone()
+                    if symbol_row:
+                        # 청크 내용 조회
+                        cursor = conn.execute("""
+                            SELECT chunk_type, content, tokens, embedding_id
+                            FROM chunks WHERE id = ?
+                        """, (chunk_id,))
+                        chunk_info = cursor.fetchone()
+                        
+                        if chunk_info:
+                            result = {
+                                "id": chunk_id,
+                                "chunk_type": chunk_info[0],
+                                "content": chunk_info[1],
+                                "tokens": chunk_info[2],
+                                "embedding_id": chunk_info[3],
+                                "symbol_name": symbol_row[1],
+                                "symbol_type": symbol_row[2],
+                                "start_line": symbol_row[3],
+                                "end_line": symbol_row[4],
+                                "file_path": symbol_row[5]
+                            }
+                            return result
+                
+                # 기존 방식 (symbol_id가 숫자인 경우)
+                cursor = conn.execute("""
+                    SELECT c.id, c.chunk_type, c.content, c.tokens, c.embedding_id,
+                           s.name as symbol_name, s.type as symbol_type,
+                           s.start_line, s.end_line,
+                           f.path as file_path
+                    FROM chunks c
+                    JOIN symbols s ON c.symbol_id = s.id
+                    JOIN files f ON s.file_id = f.id
+                    WHERE c.id = ?
+                """, (chunk_id,))
+                
+                row = cursor.fetchone()
+                if row:
+                    result = {
+                        "id": row[0],
+                        "chunk_type": row[1],
+                        "content": row[2],
+                        "tokens": row[3],
+                        "embedding_id": row[4],
+                        "symbol_name": row[5],
+                        "symbol_type": row[6],
+                        "start_line": row[7],
+                        "end_line": row[8],
+                        "file_path": row[9]
+                    }
+                    return result
+                else:
+                    logger.warning(f"청크 {chunk_id} 정보를 찾을 수 없습니다")
+                    return None
+                    
+        except Exception as e:
+            logger.error(f"청크 정보 조회 실패: {e}")
+            return None
+    
+    def get_database_stats(self) -> Dict[str, Any]:
+        """데이터베이스 통계 정보 반환"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                stats = {}
+                
+                # 파일 수
+                cursor = conn.execute("SELECT COUNT(*) FROM files")
+                stats['total_files'] = cursor.fetchone()[0]
+                
+                # 심볼 수
+                cursor = conn.execute("SELECT COUNT(*) FROM symbols")
+                stats['total_symbols'] = cursor.fetchone()[0]
+                
+                # 청크 수
+                cursor = conn.execute("SELECT COUNT(*) FROM chunks")
+                stats['total_chunks'] = cursor.fetchone()[0]
+                
+                # 임베딩 수
+                cursor = conn.execute("SELECT COUNT(*) FROM embeddings")
+                stats['total_embeddings'] = cursor.fetchone()[0]
+                
+                # 언어별 분포
+                cursor = conn.execute("SELECT language, COUNT(*) FROM files GROUP BY language")
+                stats['languages'] = dict(cursor.fetchall())
+                
+                # 심볼 타입별 분포
+                cursor = conn.execute("SELECT type, COUNT(*) FROM symbols GROUP BY type")
+                stats['symbol_types'] = dict(cursor.fetchall())
+                
+                return stats
+                
+        except Exception as e:
+            logger.error(f"데이터베이스 통계 조회 실패: {e}")
+            return {}
+    
+    def get_all_files(self) -> List[Dict[str, Any]]:
+        """모든 파일 정보 조회"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT id, path, language, llm_summary, created_at
+                    FROM files 
+                    ORDER BY path
+                """)
+                
+                files = []
+                for row in cursor.fetchall():
+                    files.append({
+                        'id': row[0],
+                        'path': row[1],
+                        'language': row[2],
+                        'llm_summary': row[3],
+                        'created_at': row[4]
+                    })
+                
+                return files
+                
+        except Exception as e:
+            logger.error(f"전체 파일 조회 실패: {e}")
+            return []
+    
+    def get_all_symbols(self) -> List[Dict[str, Any]]:
+        """모든 심볼 정보 조회"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT id, name, type, language, llm_summary, responsibility, 
+                           design_notes, collaboration, start_line, end_line
+                    FROM symbols 
+                    ORDER BY name
+                """)
+                
+                symbols = []
+                for row in cursor.fetchall():
+                    symbols.append({
+                        'id': row[0],
+                        'name': row[1],
+                        'type': row[2],
+                        'language': row[3],
+                        'llm_summary': row[4],
+                        'responsibility': row[5],
+                        'design_notes': row[6],
+                        'collaboration': row[7],
+                        'start_line': row[8],
+                        'end_line': row[9]
+                    })
+                
+                return symbols
+                
+        except Exception as e:
+            logger.error(f"전체 심볼 조회 실패: {e}")
+            return []
+    
+    def get_symbol_by_id(self, symbol_id: int) -> Optional[Dict[str, Any]]:
+        """ID로 특정 심볼 정보 조회"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT s.id, s.name, s.type, s.language, s.llm_summary, 
+                           s.responsibility, s.design_notes, s.collaboration, 
+                           s.start_line, s.end_line, s.signature,
+                           f.path as file_path
+                    FROM symbols s
+                    JOIN files f ON s.file_id = f.id
+                    WHERE s.id = ?
+                """, (symbol_id,))
+                
+                row = cursor.fetchone()
+                if row:
+                    return {
+                        'id': row[0],
+                        'name': row[1],
+                        'type': row[2],
+                        'language': row[3],
+                        'llm_summary': row[4],
+                        'responsibility': row[5],
+                        'design_notes': row[6],
+                        'collaboration': row[7],
+                        'start_line': row[8],
+                        'end_line': row[9],
+                        'signature': row[10],
+                        'file_path': row[11]
+                    }
+                return None
+                
+        except Exception as e:
+            logger.error(f"심볼 {symbol_id} 조회 실패: {e}")
+            return None
+    
+    def update_chunk_embedding(self, chunk_id: int, embedding_id: int):
+        """청크의 embedding_id 업데이트"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute("""
+                    UPDATE chunks 
+                    SET embedding_id = ? 
+                    WHERE id = ?
+                """, (embedding_id, chunk_id))
+                conn.commit()
+                logger.info(f"청크 {chunk_id}의 embedding_id 업데이트 완료: {embedding_id}")
+                return True
+        except Exception as e:
+            logger.error(f"청크 {chunk_id}의 embedding_id 업데이트 실패: {e}")
+            return False
