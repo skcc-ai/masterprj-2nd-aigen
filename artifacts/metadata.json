@@ -3,3060 +3,574 @@
     "file_path": "test_files/test_simple.py",
     "symbol_type": "function",
     "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 1,
+      "end_line": 3
+    },
+    "llm_analysis": {
+      "summary": "간단한 문자열을 반환하는 테스트 함수",
+      "responsibility": "이 함수는 'Hello, World!'라는 문자열을 반환하는 간단한 테스트 목적으로 작성된 함수입니다.",
+      "design_notes": "함수는 매개변수를 받지 않으며, 호출 시 정적인 문자열 'Hello, World!'를 반환합니다.",
+      "collaboration": "함수가 호출된다., 문자열 'Hello, World!'가 반환된다."
+    },
     "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:10:45.782600"
+    "timestamp": "2025-08-31T16:22:41.313401"
   },
   {
     "file_path": "test_files/test_simple.py",
     "symbol_type": "class",
     "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 5,
+      "end_line": 12
+    },
+    "llm_analysis": {
+      "summary": "SimpleClass는 정수 값을 저장하고 이를 반환하는 간단한 기능을 제공하는 클래스입니다.",
+      "responsibility": "SimpleClass는 단일 책임 원칙을 준수하며, 내부적으로 정수 값을 저장하고 이를 반환하는 역할만 수행합니다. 클래스의 책임이 명확하고 제한적입니다.",
+      "design_notes": "SimpleClass는 매우 간단한 구조로 설계되어 있으며, 객체 지향 프로그래밍의 기본 원칙인 캡슐화를 따릅니다. 추가적인 디자인 패턴은 사용되지 않았으며, 유지보수성과 가독성이 높은 코드입니다.",
+      "collaboration": "simple_function (외부 함수와 협력하여 main 함수에서 결과를 생성)"
+    },
     "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:10:46.109850"
+    "timestamp": "2025-08-31T16:22:41.313411"
   },
   {
     "file_path": "test_files/test_simple.py",
     "symbol_type": "function",
     "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 14,
+      "end_line": 17
+    },
+    "llm_analysis": {
+      "summary": "main 함수는 SimpleClass의 메서드와 simple_function을 호출하여 결과를 반환합니다.",
+      "responsibility": "main 함수는 SimpleClass의 인스턴스를 생성하고, simple_function의 반환값과 SimpleClass의 메서드 호출 결과를 함께 반환하는 역할을 합니다. 이는 프로그램의 진입점으로 사용됩니다.",
+      "design_notes": "main 함수는 SimpleClass 객체를 생성한 후, simple_function을 호출하여 문자열을 얻고, SimpleClass의 get_value 메서드를 호출하여 값을 가져옵니다. 두 결과를 튜플로 묶어 반환합니다.",
+      "collaboration": "SimpleClass 객체 생성, simple_function 호출, SimpleClass의 get_value 메서드 호출, 두 결과를 튜플로 묶어 반환"
+    },
     "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:10:46.381906"
+    "timestamp": "2025-08-31T16:22:41.313414"
   },
   {
     "file_path": "test_files/test_simple.py",
     "symbol_type": "function",
     "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 8,
+      "end_line": 9
+    },
+    "llm_analysis": {
+      "summary": "__init__ 메서드는 클래스의 인스턴스를 초기화하는 생성자 역할을 합니다.",
+      "responsibility": "SimpleClass의 인스턴스를 생성할 때 기본 속성인 'value'를 42로 초기화합니다.",
+      "design_notes": "self.value 속성을 42로 설정하여 클래스 인스턴스의 초기 상태를 정의합니다.",
+      "collaboration": "SimpleClass의 인스턴스가 생성됨., __init__ 메서드가 자동으로 호출됨., self.value 속성이 42로 설정됨."
+    },
     "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:10:46.638018"
+    "timestamp": "2025-08-31T16:22:41.313416"
   },
   {
     "file_path": "test_files/test_simple.py",
     "symbol_type": "function",
     "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 11,
+      "end_line": 12
+    },
+    "llm_analysis": {
+      "summary": "클래스 인스턴스의 'value' 속성을 반환하는 간단한 메서드입니다.",
+      "responsibility": "이 함수는 클래스 'SimpleClass'의 인스턴스에서 'value' 속성 값을 가져와 반환하는 역할을 합니다.",
+      "design_notes": "함수는 클래스의 인스턴스 속성 'self.value'를 단순히 반환합니다. 추가적인 로직이나 조건문은 없습니다.",
+      "collaboration": "1. 함수 호출 시, 'self' 인스턴스가 전달됩니다., 2. 'self.value' 속성에 접근합니다., 3. 'self.value' 값을 반환합니다."
+    },
     "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:10:46.897247"
+    "timestamp": "2025-08-31T16:22:41.313419"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "class",
     "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 24,
+      "end_line": 479
+    },
+    "llm_analysis": {
+      "summary": "DataProcessor 클래스는 다양한 데이터 소스에서 데이터를 읽고, 검증하고, 변환하며, 처리된 데이터를 관리하는 역할을 수행합니다.",
+      "responsibility": "DataProcessor는 데이터 파일을 읽고, 데이터의 유효성을 검증하며, 변환 및 정규화를 수행한 후, 처리된 데이터를 저장하거나 요약 정보를 제공합니다. 또한, 데이터 처리와 관련된 통계 및 캐시 관리 기능도 포함하고 있습니다.",
+      "design_notes": "DataProcessor는 SRP(단일 책임 원칙)를 준수하며, 데이터 처리의 각 단계를 메서드로 분리하여 모듈성을 높였습니다. 또한, 데이터 검증과 변환을 파이프라인 형태로 구성하여 확장 가능성을 고려한 설계를 채택했습니다. 다만, 클래스의 메서드 수가 많아 복잡도가 높아질 가능성이 있으므로, 일부 기능을 별도 클래스로 분리하는 것도 고려할 수 있습니다.",
+      "collaboration": "json 모듈: JSON 파일 읽기 및 쓰기, csv 모듈: CSV 파일 읽기 및 쓰기, datetime 모듈: 시간 및 날짜 처리, re 모듈: 정규 표현식을 통한 데이터 검증, statistics 모듈: 데이터 통계 계산, collections 모듈: 데이터 구조 관리 (defaultdict, Counter), logging 모듈: 로깅 및 디버깅, pathlib.Path: 파일 경로 관리"
+    },
     "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:47.236213"
+    "timestamp": "2025-08-31T16:22:41.313437"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 27,
+      "end_line": 46
+    },
+    "llm_analysis": {
+      "summary": "클래스 초기화 메서드로, 설정(config) 데이터를 받아 인스턴스 변수를 초기화합니다.",
+      "responsibility": "DataProcessor 클래스의 인스턴스를 생성할 때 필요한 초기 설정을 수행합니다. 이 함수는 설정 데이터를 저장하고, 데이터 처리에 필요한 다양한 내부 구조를 초기화합니다.",
+      "design_notes": "config 매개변수를 받아 이를 인스턴스 변수로 저장하며, 기본값을 설정합니다. 또한 데이터 검증 규칙과 변환 파이프라인을 초기화하고, 데이터 캐시 및 처리 통계를 위한 구조를 생성합니다.",
+      "collaboration": "config 매개변수를 받아 self.config에 저장하거나 기본값 {}으로 초기화, self.processed_data를 빈 리스트로 초기화, self.error_log를 빈 리스트로 초기화, self.validation_rules를 _load_validation_rules() 메서드를 호출하여 초기화, self.transformation_pipeline을 _setup_transformation_pipeline() 메서드를 호출하여 초기화, self.data_cache를 빈 딕셔너리로 초기화, self.processing_stats를 처리 통계 정보를 담은 딕셔너리로 초기화"
+    },
     "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:47.488428"
+    "timestamp": "2025-08-31T16:22:41.313446"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 48,
+      "end_line": 70
+    },
+    "llm_analysis": {
+      "summary": "데이터 검증 규칙을 로드하는 함수로 추정됩니다.",
+      "responsibility": "이 함수는 데이터 처리 과정에서 사용할 검증 규칙을 로드하거나 초기화하는 역할을 수행할 것으로 보입니다. 클래스 내에서 `validation_rules` 속성에 할당되어 데이터 검증의 핵심 역할을 담당할 가능성이 있습니다.",
+      "design_notes": "현재 함수 본문이 비어 있으므로 로직은 정의되지 않았습니다. 일반적으로 이 함수는 외부 파일, 데이터베이스, 또는 클래스의 설정에서 검증 규칙을 읽어오는 작업을 포함할 수 있습니다.",
+      "collaboration": "1. 검증 규칙을 로드하거나 생성, 2. 검증 규칙을 반환"
+    },
     "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:47.743443"
+    "timestamp": "2025-08-31T16:22:41.313449"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 72,
+      "end_line": 80
+    },
+    "llm_analysis": {
+      "summary": "데이터 변환 파이프라인을 설정하는 함수입니다.",
+      "responsibility": "이 함수는 데이터 처리 클래스(DataProcessor)에서 사용할 데이터 변환 파이프라인을 초기화하거나 설정하는 역할을 합니다. 변환 작업의 논리적 흐름을 정의하거나 준비하는 데 사용됩니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 정의되지 않았습니다. 현재 상태로는 함수가 호출되더라도 아무 작업도 수행하지 않습니다."
+    },
     "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:48.024833"
+    "timestamp": "2025-08-31T16:22:41.313470"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 82,
+      "end_line": 134
+    },
+    "llm_analysis": {
+      "summary": "파일 경로와 파일 유형을 입력받아 데이터를 처리하는 함수.",
+      "responsibility": "이 함수는 주어진 파일 경로와 파일 유형에 따라 데이터를 읽고, 검증하거나 변환하는 역할을 수행할 것으로 보입니다. 이는 데이터 처리 엔진의 일부로 작동하며, 다양한 데이터 소스에서 데이터를 처리하는 데 사용됩니다.",
+      "design_notes": "함수는 파일 경로와 파일 유형을 기반으로 데이터를 읽고, 특정 로직에 따라 데이터를 처리하거나 변환한 후 결과를 반환할 것으로 예상됩니다.",
+      "collaboration": "1. 파일 경로와 파일 유형을 입력으로 받음., 2. 파일을 열고 데이터를 읽음., 3. 데이터 검증 또는 변환 로직을 수행., 4. 처리된 데이터를 반환."
+    },
     "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:48.360969"
+    "timestamp": "2025-08-31T16:22:41.313477"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 136,
+      "end_line": 149
+    },
+    "llm_analysis": {
+      "summary": "파일 경로를 기반으로 파일 유형을 감지하는 함수입니다.",
+      "responsibility": "이 함수는 주어진 파일 경로를 분석하여 파일의 유형을 결정하는 역할을 합니다. 데이터 처리 엔진에서 파일 유형에 따라 적절한 처리 로직을 적용하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "함수는 파일 경로를 입력으로 받아 파일의 확장자 또는 기타 메타데이터를 분석하여 파일 유형을 반환합니다. 그러나 함수 본문이 제공되지 않아 구체적인 로직은 확인할 수 없습니다.",
+      "collaboration": "1. 파일 경로를 입력으로 받습니다., 2. 파일의 특성을 분석합니다 (예: 확장자 확인, 메타데이터 검사 등)., 3. 파일 유형을 결정합니다., 4. 파일 유형을 반환합니다."
+    },
     "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:48.612590"
+    "timestamp": "2025-08-31T16:22:41.313480"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 151,
+      "end_line": 164
+    },
+    "llm_analysis": {
+      "summary": "파일 경로와 파일 유형을 기반으로 데이터를 읽는 함수.",
+      "responsibility": "이 함수는 주어진 파일 경로(`file_path`)와 파일 유형(`file_type`)에 따라 파일을 읽고, 해당 데이터를 반환하는 역할을 합니다. 파일 유형에 따라 다른 읽기 로직이 적용될 가능성이 높습니다.",
+      "design_notes": "함수는 파일 경로를 입력받아 파일을 열고, 파일 유형에 따라 적절한 읽기 방식을 선택하여 데이터를 처리합니다. 예를 들어, JSON 파일은 `json.load`를, CSV 파일은 `csv.reader`를 사용할 수 있습니다.",
+      "collaboration": "1. `file_path`와 `file_type` 매개변수를 입력으로 받음., 2. 파일 경로가 유효한지 확인., 3. 파일을 열고, `file_type`에 따라 적절한 읽기 로직을 선택., 4. 데이터를 읽고 반환., 5. 예외 상황(파일 없음, 읽기 실패 등)을 처리."
+    },
     "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:48.976409"
+    "timestamp": "2025-08-31T16:22:41.313483"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 166,
+      "end_line": 176
+    },
+    "llm_analysis": {
+      "summary": "파일 경로를 받아 JSON 파일을 읽고 데이터를 반환하는 함수입니다.",
+      "responsibility": "이 함수는 지정된 파일 경로에서 JSON 데이터를 읽어 Python 객체로 변환하는 역할을 합니다. 데이터 처리 클래스에서 파일 기반 데이터 입력을 처리하기 위해 사용됩니다.",
+      "design_notes": "함수는 파일 경로를 입력받아 해당 파일을 열고, JSON 데이터를 로드하여 반환합니다. 파일이 존재하지 않거나 JSON 형식이 잘못된 경우 예외를 발생시킬 가능성이 있습니다.",
+      "collaboration": "1. 파일 경로를 입력으로 받습니다., 2. 파일을 열고 내용을 읽습니다., 3. JSON 데이터를 파싱하여 Python 객체로 변환합니다., 4. 변환된 데이터를 반환합니다."
+    },
     "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:49.231594"
+    "timestamp": "2025-08-31T16:22:41.313485"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 178,
+      "end_line": 185
+    },
+    "llm_analysis": {
+      "summary": "CSV 파일을 읽는 기능을 수행하는 함수",
+      "responsibility": "이 함수는 주어진 파일 경로에서 CSV 파일을 읽어 데이터를 반환하는 역할을 합니다. 데이터 처리 클래스(DataProcessor)에서 파일 입력을 처리하는 데 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 제공되지 않았으므로 구체적인 로직은 알 수 없지만, 함수 이름과 시그니처로 보아 파일 경로를 입력받아 CSV 파일을 읽고 데이터를 반환하는 동작을 수행할 것으로 추정됩니다.",
+      "collaboration": "1. 파일 경로(file_path)를 입력으로 받음, 2. CSV 파일을 열고 데이터를 읽음, 3. 데이터를 적절한 형식으로 변환, 4. 변환된 데이터를 반환"
+    },
     "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:49.488815"
+    "timestamp": "2025-08-31T16:22:41.313487"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 187,
+      "end_line": 203
+    },
+    "llm_analysis": {
+      "summary": "텍스트 파일을 읽는 함수로 추정됩니다.",
+      "responsibility": "파일 경로를 입력받아 텍스트 파일의 내용을 읽고 반환하는 역할을 수행할 것으로 보입니다. 데이터 처리 엔진의 일부로 사용될 가능성이 있습니다.",
+      "design_notes": "함수는 파일 경로를 매개변수로 받아 파일을 열고 내용을 읽어 반환하는 방식으로 구현될 것으로 예상됩니다.",
+      "collaboration": "1. 파일 경로를 입력받는다., 2. 파일 존재 여부를 확인한다., 3. 파일을 열고 내용을 읽는다., 4. 읽은 내용을 반환한다."
+    },
     "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:49.744598"
+    "timestamp": "2025-08-31T16:22:41.313489"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 205,
+      "end_line": 220
+    },
+    "llm_analysis": {
+      "summary": "데이터 검증을 수행하는 내부 함수.",
+      "responsibility": "이 함수는 데이터 처리 엔진 내에서 입력 데이터를 검증하는 역할을 합니다. 데이터의 유효성을 확인하고, 규칙에 따라 데이터가 적합한지 판단합니다.",
+      "design_notes": "함수는 전달된 데이터(`data`)를 검증 규칙에 따라 확인하며, 검증 결과를 반환하거나 오류를 기록할 가능성이 있습니다. 검증 규칙은 클래스의 `validation_rules` 속성에 저장된 규칙을 활용할 것으로 예상됩니다.",
+      "collaboration": "1. 데이터(`data`)를 입력으로 받음., 2. 클래스의 `validation_rules`를 참조하여 검증 규칙을 확인., 3. 데이터에 검증 규칙을 적용., 4. 검증 결과를 반환하거나 오류를 기록."
+    },
     "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:49.995452"
+    "timestamp": "2025-08-31T16:22:41.313492"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 222,
+      "end_line": 252
+    },
+    "llm_analysis": {
+      "summary": "데이터 레코드의 유효성을 검증하는 함수.",
+      "responsibility": "이 함수는 데이터 처리 엔진에서 개별 데이터 레코드가 사전에 정의된 검증 규칙을 만족하는지 확인하는 역할을 합니다. 이를 통해 데이터의 품질을 보장하고 오류를 방지합니다.",
+      "design_notes": "함수는 입력된 `record`를 검증 규칙에 따라 평가하고, 유효한 경우 특정 값을 반환하거나, 그렇지 않은 경우 오류를 처리합니다.",
+      "collaboration": "1. 입력된 `record`를 수신., 2. 사전 정의된 검증 규칙을 로드하거나 참조., 3. 각 검증 규칙을 순차적으로 적용., 4. 모든 규칙을 통과하면 유효성을 확인., 5. 검증 실패 시 오류 처리 또는 로그 기록."
+    },
     "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:50.250163"
+    "timestamp": "2025-08-31T16:22:41.313494"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 254,
+      "end_line": 280
+    },
+    "llm_analysis": {
+      "summary": "데이터 필드 값이 주어진 제약 조건을 만족하는지 검증하는 함수.",
+      "responsibility": "이 함수는 데이터 처리 과정에서 특정 필드 값이 사전에 정의된 제약 조건을 충족하는지 확인하기 위해 사용됩니다. 이를 통해 데이터의 유효성을 검증하고 처리 오류를 방지합니다.",
+      "design_notes": "함수는 입력 값(value)과 제약 조건(constraints)을 받아, 제약 조건에 따라 값이 유효한지 확인합니다. 제약 조건은 다양한 형태(예: 값의 범위, 데이터 타입, 정규식 등)일 수 있습니다.",
+      "collaboration": "1. 입력 값(value)과 제약 조건(constraints)을 수신., 2. 제약 조건을 순회하며 각 조건을 평가., 3. 조건을 만족하지 못하는 경우 처리(예: 오류 반환 또는 예외 발생)., 4. 모든 조건을 만족하면 성공적으로 종료."
+    },
     "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:50.502876"
+    "timestamp": "2025-08-31T16:22:41.313506"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 282,
+      "end_line": 288
+    },
+    "llm_analysis": {
+      "summary": "주어진 타임스탬프를 검증하는 함수.",
+      "responsibility": "이 함수는 입력된 `timestamp` 값이 유효한지 확인하고, 필요에 따라 변환하거나 검증 실패 시 예외를 발생시키는 역할을 수행합니다. 데이터 처리 파이프라인에서 시간 관련 데이터의 무결성을 보장하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 제공되지 않았으므로 구체적인 로직은 알 수 없으나, 함수 이름과 컨텍스트로 보아 `timestamp` 값의 형식, 범위, 또는 데이터 타입을 확인하는 검증 로직이 포함될 것으로 추정됩니다.",
+      "collaboration": "1. `timestamp` 값이 함수에 전달됨., 2. `timestamp` 값의 유효성을 확인하는 검증 로직 실행., 3. 유효한 경우, 검증된 값을 반환하거나 다음 단계로 전달., 4. 유효하지 않은 경우, 예외를 발생시키거나 오류를 기록."
+    },
     "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:50.756923"
+    "timestamp": "2025-08-31T16:22:41.313508"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 290,
+      "end_line": 293
+    },
+    "llm_analysis": {
+      "summary": "이메일 주소를 검증하는 함수입니다.",
+      "responsibility": "이 함수는 입력된 이메일 주소가 유효한 형식인지 확인하는 역할을 합니다. 데이터 처리 과정에서 이메일 주소의 유효성을 검증하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 제공되지 않아 구체적인 로직은 확인할 수 없지만, 일반적으로 이메일 검증 함수는 정규 표현식 또는 특정 규칙을 사용하여 이메일 형식을 확인합니다.",
+      "collaboration": "1. 이메일 주소를 입력받습니다., 2. 이메일 주소의 형식을 검증합니다., 3. 검증 결과를 반환합니다."
+    },
     "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:51.011348"
+    "timestamp": "2025-08-31T16:22:41.313511"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 295,
+      "end_line": 298
+    },
+    "llm_analysis": {
+      "summary": "전화번호를 검증하는 함수로 추정됩니다.",
+      "responsibility": "이 함수는 입력된 전화번호(`phone`)가 특정 형식 또는 규칙을 만족하는지 확인하는 역할을 할 것으로 보입니다. 데이터 검증의 일환으로 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 확인할 수 없으나, 일반적으로 정규 표현식(`re`) 또는 다른 검증 규칙을 사용하여 전화번호의 유효성을 확인할 것으로 예상됩니다.",
+      "collaboration": "1. 전화번호(`phone`)를 입력으로 받습니다., 2. 전화번호가 검증 규칙을 만족하는지 확인합니다., 3. 검증 결과를 반환합니다."
+    },
     "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:51.333663"
+    "timestamp": "2025-08-31T16:22:41.313513"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 300,
+      "end_line": 310
+    },
+    "llm_analysis": {
+      "summary": "데이터를 변환하는 내부 함수로 보이나, 현재 함수 본문이 비어 있어 구체적인 기능은 정의되지 않음.",
+      "responsibility": "이 함수는 데이터 변환 작업을 수행하기 위해 설계된 것으로 보이며, `DataProcessor` 클래스의 내부 메서드로 사용될 가능성이 높음. 그러나 현재 구현이 비어 있어 실제 목적은 명확하지 않음.",
+      "design_notes": "함수 본문이 비어 있어 로직이 정의되지 않았으며, 데이터 변환과 관련된 작업이 추가될 것으로 예상됨."
+    },
     "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:51.591432"
+    "timestamp": "2025-08-31T16:22:41.313516"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 312,
+      "end_line": 318
+    },
+    "llm_analysis": {
+      "summary": "주어진 데이터를 문자열로 정규화하는 함수입니다.",
+      "responsibility": "이 함수는 입력 데이터에서 문자열을 정규화하여 일관된 형식으로 변환하는 역할을 합니다. 데이터 처리 파이프라인에서 데이터의 일관성을 유지하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 제공되지 않아 구체적인 로직은 알 수 없지만, 함수 이름과 컨텍스트를 기반으로 문자열 데이터를 정규화하거나 변환하는 작업을 수행할 것으로 추정됩니다.",
+      "collaboration": "1. 입력 데이터(data)를 수신합니다., 2. 문자열 정규화 작업을 수행합니다., 3. 정규화된 데이터를 반환합니다."
+    },
     "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:51.848206"
+    "timestamp": "2025-08-31T16:22:41.313518"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 320,
+      "end_line": 334
+    },
+    "llm_analysis": {
+      "summary": "데이터의 타입을 변환하는 내부 유틸리티 함수.",
+      "responsibility": "이 함수는 입력 데이터의 타입을 특정 규칙에 따라 변환하는 역할을 합니다. 데이터 처리 파이프라인에서 데이터의 일관성을 유지하거나, 특정 타입으로 변환하여 후속 처리를 용이하게 하기 위해 사용됩니다.",
+      "design_notes": "함수는 입력 데이터의 타입을 확인하고, 사전 정의된 규칙에 따라 변환을 수행합니다. 변환된 데이터는 후속 처리 단계에서 사용될 수 있도록 반환됩니다.",
+      "collaboration": "1. 입력 데이터의 타입 확인., 2. 사전 정의된 변환 규칙에 따라 데이터 변환., 3. 변환된 데이터 반환."
+    },
     "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:52.106175"
+    "timestamp": "2025-08-31T16:22:41.313520"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 336,
+      "end_line": 350
+    },
+    "llm_analysis": {
+      "summary": "데이터에 파생 필드를 추가하는 함수입니다.",
+      "responsibility": "이 함수는 입력 데이터에 기반하여 추가적인 파생 필드를 계산하거나 생성하여 데이터를 확장하는 역할을 합니다. 데이터 처리 파이프라인에서 데이터 변환의 일부로 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 제공되지 않았으므로 구체적인 로직은 알 수 없지만, 함수 이름과 컨텍스트를 기반으로 데이터의 기존 필드를 활용하여 새로운 필드를 계산하거나 추가하는 작업을 수행할 것으로 추정됩니다.",
+      "collaboration": "1. 입력 데이터(`data`)를 수신합니다., 2. 데이터의 기존 필드를 분석하거나 처리합니다., 3. 파생 필드를 계산하거나 생성합니다., 4. 수정된 데이터를 반환합니다."
+    },
     "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:52.409016"
+    "timestamp": "2025-08-31T16:22:41.313523"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 352,
+      "end_line": 359
+    },
+    "llm_analysis": {
+      "summary": "주어진 카테고리에 따라 그룹을 반환하는 함수로 추정됨.",
+      "responsibility": "이 함수는 입력된 'category' 값을 기반으로 특정 그룹을 결정하거나 반환하는 역할을 수행할 것으로 보입니다. 이는 데이터 처리 파이프라인에서 카테고리별로 데이터를 분류하거나 그룹화하는 데 사용될 가능성이 높습니다.",
+      "design_notes": "함수의 본문이 제공되지 않았으나, 함수 이름과 시그니처를 고려할 때, 'category' 값을 입력받아 이를 처리하거나 매핑하여 적절한 그룹 값을 반환하는 로직이 포함될 것으로 예상됩니다.",
+      "collaboration": "1. 'category' 매개변수를 입력으로 받음., 2. 내부 로직에 따라 'category' 값을 처리하거나 매핑., 3. 처리 결과로 적절한 그룹 값을 반환."
+    },
     "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:52.766412"
+    "timestamp": "2025-08-31T16:22:41.313525"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 361,
+      "end_line": 371
+    },
+    "llm_analysis": {
+      "summary": "데이터를 정리(clean)하거나 전처리하는 함수로 추정됨.",
+      "responsibility": "이 함수는 입력 데이터(`data`)를 정리하거나 전처리하여, 이후 데이터 처리 파이프라인에서 사용할 수 있는 상태로 만드는 역할을 수행할 것으로 보입니다.",
+      "design_notes": "함수의 본문이 제공되지 않아 구체적인 로직은 알 수 없으나, 함수 이름과 컨텍스트를 고려할 때 데이터의 유효성 검증, 중복 제거, 형식 변환 등의 작업을 포함할 가능성이 높습니다.",
+      "collaboration": "1. 입력 데이터(`data`)를 수신., 2. 데이터 정리 또는 전처리 작업 수행 (예: 유효성 검증, 중복 제거, 형식 변환 등)., 3. 정리된 데이터를 반환."
+    },
     "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:53.025045"
+    "timestamp": "2025-08-31T16:22:41.313528"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 373,
+      "end_line": 394
+    },
+    "llm_analysis": {
+      "summary": "데이터를 추가적인 정보로 보강(enrich)하는 함수.",
+      "responsibility": "주어진 데이터(`data`)를 입력으로 받아, 이를 변환하거나 추가적인 정보를 결합하여 보강된 데이터를 반환하는 역할을 수행합니다. 데이터 처리 파이프라인의 일부로 사용될 가능성이 높습니다.",
+      "design_notes": "함수의 내부 로직은 제공되지 않았으나, 함수 이름과 컨텍스트를 기반으로 데이터를 변환하거나 외부 소스에서 정보를 가져와 데이터를 보강하는 작업을 수행할 것으로 추정됩니다.",
+      "collaboration": "1. 입력 데이터(`data`)를 수신., 2. 데이터를 변환하거나 외부 정보를 결합하여 보강., 3. 보강된 데이터를 반환."
+    },
     "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:53.282045"
+    "timestamp": "2025-08-31T16:22:41.313530"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 396,
+      "end_line": 403
+    },
+    "llm_analysis": {
+      "summary": "데이터를 파일 경로와 연관된 캐시에 업데이트하는 함수.",
+      "responsibility": "이 함수는 주어진 파일 경로와 데이터를 기반으로 캐시를 업데이트하는 역할을 합니다. 데이터 처리 엔진의 일부로, 데이터 캐싱을 통해 성능 최적화 또는 데이터 재사용을 지원할 가능성이 있습니다.",
+      "design_notes": "구체적인 구현은 제공되지 않았지만, 함수는 `file_path`를 키로 사용하여 `data`를 캐시에 저장하거나 갱신하는 로직을 포함할 것으로 예상됩니다.",
+      "collaboration": "1. `file_path`와 `data`를 입력으로 받음., 2. 캐시 데이터 구조를 확인하거나 초기화., 3. `file_path`를 키로 사용하여 `data`를 캐시에 저장 또는 갱신., 4. 성공적으로 캐시가 업데이트되었음을 반환하거나 로그 기록."
+    },
     "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:53.539149"
+    "timestamp": "2025-08-31T16:22:41.313533"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 405,
+      "end_line": 414
+    },
+    "llm_analysis": {
+      "summary": "데이터 처리 통계 정보를 반환하는 함수입니다.",
+      "responsibility": "이 함수는 데이터 처리 작업의 통계 정보를 제공하여 처리된 데이터의 총 개수, 성공 및 실패 건수, 시작 시간 등을 확인할 수 있도록 합니다.",
+      "design_notes": "함수는 내부적으로 저장된 처리 통계 데이터를 반환하며, 별도의 계산이나 데이터 변환 작업은 수행하지 않습니다.",
+      "collaboration": "클래스의 `processing_stats` 속성에 접근, 속성 데이터를 반환"
+    },
     "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:53.892689"
+    "timestamp": "2025-08-31T16:22:41.313536"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 416,
+      "end_line": 439
+    },
+    "llm_analysis": {
+      "summary": "함수의 주요 기능을 알 수 없습니다.",
+      "responsibility": "함수 본문이 비어 있어 주요 목적과 역할을 파악할 수 없습니다.",
+      "design_notes": "함수 내부에 로직이 없으므로 동작 방식에 대한 정보가 없습니다."
+    },
     "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:54.142421"
+    "timestamp": "2025-08-31T16:22:41.313538"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 441,
+      "end_line": 462
+    },
+    "llm_analysis": {
+      "summary": "데이터를 지정된 형식으로 파일에 내보내는 함수입니다.",
+      "responsibility": "함수는 처리된 데이터를 지정된 파일(output_file)에 저장하며, 저장 형식(format)을 선택할 수 있도록 설계되었습니다. 데이터 처리 엔진의 결과물을 외부 파일로 내보내는 역할을 합니다.",
+      "design_notes": "함수는 처리된 데이터를 특정 형식(format)에 맞게 변환한 후, 지정된 파일(output_file)에 저장합니다. 형식에 따라 JSON, CSV 등 다양한 저장 방식을 지원할 가능성이 있습니다.",
+      "collaboration": "1. 처리된 데이터를 가져옵니다., 2. 저장 형식(format)을 확인합니다., 3. 데이터를 지정된 형식으로 변환합니다., 4. 변환된 데이터를 지정된 파일(output_file)에 저장합니다., 5. 저장 성공 여부를 반환하거나 로그에 기록합니다."
+    },
     "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:55.175583"
+    "timestamp": "2025-08-31T16:22:41.313578"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 464,
+      "end_line": 467
+    },
+    "llm_analysis": {
+      "summary": "clear_cache 함수는 데이터 캐시를 초기화하는 역할을 합니다.",
+      "responsibility": "이 함수는 DataProcessor 클래스에서 사용되는 데이터 캐시를 비우는 데 사용됩니다. 이를 통해 메모리 관리와 데이터 처리 상태를 초기화할 수 있습니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 구현되지 않았지만, 이름과 컨텍스트로 보아 캐시를 초기화하거나 삭제하는 작업을 수행할 것으로 예상됩니다."
+    },
     "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:55.432132"
+    "timestamp": "2025-08-31T16:22:41.313618"
   },
   {
     "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
     "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
+    "location": {
+      "start_line": 469,
+      "end_line": 479
+    },
+    "llm_analysis": {
+      "summary": "데이터 처리 통계 정보를 초기화하는 함수",
+      "responsibility": "이 함수는 데이터 처리 클래스의 통계 정보를 초기 상태로 재설정하는 역할을 합니다. 이를 통해 데이터 처리 작업을 새로 시작할 때 기존 통계 데이터를 초기화할 수 있습니다.",
+      "design_notes": "함수는 클래스 내부의 `processing_stats` 속성을 초기 상태로 재설정합니다. 초기화된 상태는 총 처리 건수, 성공 건수, 실패 건수 등을 0으로 설정하고, 시작 시간을 현재 시간으로 갱신합니다.",
+      "collaboration": "1. 클래스의 `processing_stats` 속성에 접근한다., 2. `processing_stats` 속성을 초기 상태로 재설정한다., 3. 초기화된 상태는 총 처리 건수, 성공 건수, 실패 건수를 0으로 설정하고, 시작 시간을 현재 시간으로 갱신한다."
+    },
     "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:10:55.688644"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:18:11.777670"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:18:12.016856"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:18:12.265823"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:18:12.505155"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:18:12.745363"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:12.983661"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:13.221609"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:13.462342"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:13.697737"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:14.006604"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:14.312985"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:14.695981"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:15.544250"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:15.782618"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:16.054698"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:16.299571"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:16.536465"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:16.775946"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:17.079759"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:17.385576"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:17.690633"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:17.930780"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:18.208560"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:18.511473"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:18.751357"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:19.024099"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:19.331226"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:19.640755"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:19.945319"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:20.252721"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:20.560445"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:20.867321"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:21.105258"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:18:21.341726"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:19:05.461202"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:19:05.721539"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:19:06.024739"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:19:06.269109"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:19:06.512954"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:06.761203"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:07.006329"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:07.254857"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:07.562777"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:07.870357"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:08.121677"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:08.389305"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:08.689316"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:08.995630"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:09.303110"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:09.611248"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:09.852958"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:10.215897"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:10.535157"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:10.841528"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:11.088654"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:11.334394"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:11.577615"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:11.845270"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:12.090474"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:12.374972"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:12.615431"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:12.861243"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:13.172648"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:13.502754"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:13.808922"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:14.116154"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:14.423881"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:19:15.448530"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:20:39.589706"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:20:39.841986"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:20:40.095728"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:20:40.442081"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:20:40.696632"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:41.056827"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:41.322667"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:41.575590"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:41.876186"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:42.123850"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:42.386270"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:42.636642"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:42.888884"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:43.142994"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:43.399943"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:43.717066"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:44.027551"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:44.333136"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:44.640045"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:44.947718"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:45.257149"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:45.562671"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:45.815091"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:46.073536"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:46.321791"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:46.578679"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:46.830221"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:47.099692"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:47.405459"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:47.713148"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:48.017951"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:48.325137"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:48.635338"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:20:48.882516"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:28:15.897972"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:28:16.155109"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:28:16.410260"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:28:16.664599"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:28:16.916934"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:17.258306"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:17.509554"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:17.766079"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:18.023918"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:18.283066"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:18.539667"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:18.786592"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:19.103191"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:19.352699"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:19.602043"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:19.858367"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:20.126378"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:20.433550"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:20.687520"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:20.933102"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:21.177274"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:21.428702"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:21.736020"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:21.986666"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:22.243038"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:22.487422"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:22.790026"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:23.087287"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:23.338082"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:23.587678"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:23.838102"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:24.090601"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:24.428040"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:28:24.736915"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:40:44.498701"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:40:44.733917"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:40:45.002908"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:40:45.920605"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:40:46.158154"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:46.393632"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:46.634462"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:46.946465"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:47.256099"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:47.559502"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:47.868064"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:48.108973"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:48.350187"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:48.686117"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:48.921734"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:49.154764"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:49.414241"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:49.649127"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:49.889420"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:50.222732"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:50.529325"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:50.765450"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:51.005258"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:51.248570"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:51.489385"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:51.737118"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:51.972347"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:52.216374"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:52.457438"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:52.785158"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:53.018454"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:53.256472"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:53.504406"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:40:53.803707"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:50:30.082559"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:50:30.326275"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:50:30.638989"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:50:30.947581"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T11:50:31.255572"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:31.509242"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:31.757744"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:32.010545"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:32.276965"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:32.521910"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:32.791809"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:33.089928"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:33.337076"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:33.608238"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:33.918851"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:34.224551"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:34.471921"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:34.781323"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:35.044657"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:35.347013"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:35.656366"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:35.909855"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:36.159178"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:36.402273"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:36.647649"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:36.987927"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:37.295154"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:37.603978"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:37.845929"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:38.116959"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:38.358927"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:38.624340"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:38.870398"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T11:50:39.139153"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:02:04.037840"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:02:05.926620"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:02:10.690656"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:02:12.469795"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:02:12.789395"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:13.069072"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:13.315879"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:13.565769"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:13.914819"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:14.172725"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:14.419769"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:14.669641"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:14.937627"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:16.088188"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:16.387215"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:16.641013"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:16.987569"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:17.296241"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:17.552358"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:17.909099"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:18.165451"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:18.413410"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:18.662451"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:18.932484"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:19.182587"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:19.444984"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:19.695802"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:20.220470"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:20.465793"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:20.775758"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:21.082793"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:21.336763"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:21.603801"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:02:21.900859"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:16:42.265014"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:16:42.502326"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:16:42.762981"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:16:43.036964"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:16:43.276379"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:43.512031"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:43.750243"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:44.093016"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:44.326124"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:44.569734"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:44.911625"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:45.150196"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:45.423321"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:45.666264"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:45.912558"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:46.147127"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:46.391658"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:46.639376"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:46.883333"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:47.115092"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:47.357207"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:47.613123"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:47.850578"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:48.099468"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:48.355099"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:48.699662"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:48.941009"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:49.179871"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:49.518532"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:49.761020"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:49.997635"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:50.238574"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:50.482152"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:16:50.979817"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "simple_function",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:27:07.628187"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "class",
-    "symbol_name": "SimpleClass",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:27:07.903307"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "main",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:27:08.211291"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:27:08.517496"
-  },
-  {
-    "file_path": "test_files/test_simple.py",
-    "symbol_type": "function",
-    "symbol_name": "get_value",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
-    "timestamp": "2025-08-24T12:27:08.762437"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "class",
-    "symbol_name": "DataProcessor",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:09.017547"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "__init__",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:09.336259"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_load_validation_rules",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:09.592845"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_setup_transformation_pipeline",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:09.924410"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "process_data_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:10.258226"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_detect_file_type",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:10.511353"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:10.759526"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_json_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:11.073035"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_csv_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:11.327647"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_read_text_file",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:11.579483"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:11.830673"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_is_valid_record",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:12.082540"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_check_field_constraints",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:12.339898"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_timestamp",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:12.585176"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_email",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:12.835527"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_validate_phone",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:13.087613"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_transform_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:13.340290"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_normalize_strings",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:13.587837"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_convert_data_types",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:13.837750"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_add_derived_fields",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:14.083363"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_get_category_group",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:14.334183"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_clean_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:14.586689"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_enrich_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:14.869133"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "_update_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:15.122069"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_processing_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:15.480030"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "get_data_summary",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:15.733112"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "export_processed_data",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:16.057559"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "clear_cache",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:16.312013"
-  },
-  {
-    "file_path": "test_files/data_processor.py",
-    "symbol_type": "function",
-    "symbol_name": "reset_stats",
-    "location": {},
-    "llm_analysis": {},
-    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
-    "timestamp": "2025-08-24T12:27:16.577766"
+    "timestamp": "2025-08-31T16:22:41.313626"
   }
 ]
