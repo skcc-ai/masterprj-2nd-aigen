@@ -26,6 +26,10 @@ class SearchResult:
     content: str
     source: str
     similarity_score: float
+    input_types: Optional[str] = None
+    output_types: Optional[str] = None
+    dependencies: Optional[List[str]] = None
+    usage_examples: Optional[str] = None
 
 @dataclass
 class ChatResponse:
@@ -233,15 +237,15 @@ class CodeChatAgent:
             query = query.strip()
             logger.info(f"채팅 요청 처리 시작: '{query}'")
             
-            # 1. 일반적인 질문인지 감지
-            if self._detect_general_query(query):
-                logger.info("일반적인 질문 감지 - 전체 분석 모드로 전환")
-                answer = self._handle_general_analysis(query)
-                return ChatResponse(
-                    answer=answer,
-                    evidence=[],
-                    confidence=0.8
-                )
+            # # 1. 일반적인 질문인지 감지
+            # if self._detect_general_query(query):
+            #     logger.info("일반적인 질문 감지 - 전체 분석 모드로 전환")
+            #     answer = self._handle_general_analysis(query)
+            #     return ChatResponse(
+            #         answer=answer,
+            #         evidence=[],
+            #         confidence=0.8
+            #     )
             
             # 2. 하이브리드 검색 수행
             logger.info("하이브리드 검색 시작")
@@ -394,73 +398,77 @@ class CodeChatAgent:
             logger.info(f"structsynth_agent 존재 여부: {hasattr(self, 'structsynth_agent')}")
             logger.info(f"structsynth_agent 값: {self.structsynth_agent}")
             
-            # 1. StructSynthAgent 검색 우선 시도 (개선된 검색 기능)
-            if hasattr(self, 'structsynth_agent') and self.structsynth_agent is not None:
-                try:
-                    logger.info("StructSynthAgent를 사용한 검색 시도")
-                    structsynth_results = self.structsynth_agent.search_symbols(query, top_k)
+            # # 1. StructSynthAgent 검색 우선 시도 (개선된 검색 기능)
+            # if hasattr(self, 'structsynth_agent') and self.structsynth_agent is not None:
+            #     try:
+            #         logger.info("StructSynthAgent를 사용한 검색 시도")
+            #         structsynth_results = self.structsynth_agent.search_symbols(query, top_k)
                     
-                    logger.info(f"StructSynthAgent 검색 결과: {len(structsynth_results)}개")
-                    if structsynth_results:
-                        logger.info(f"첫 번째 결과 타입: {type(structsynth_results[0])}")
-                        logger.info(f"첫 번째 결과 내용: {structsynth_results[0]}")
+            #         logger.info(f"StructSynthAgent 검색 결과: {len(structsynth_results)}개")
+            #         if structsynth_results:
+            #             logger.info(f"첫 번째 결과 타입: {type(structsynth_results[0])}")
+            #             logger.info(f"첫 번째 결과 내용: {structsynth_results[0]}")
                     
-                    if structsynth_results:
-                        # StructSynthAgent 결과를 SearchResult로 변환
-                        search_results = []
-                        for i, result in enumerate(structsynth_results):
-                            try:
-                                # result가 딕셔너리인지 확인
-                                if not isinstance(result, dict):
-                                    logger.warning(f"결과 {i+1}이 딕셔너리가 아님: {type(result)}")
-                                    continue
+            #         if structsynth_results:
+            #             # StructSynthAgent 결과를 SearchResult로 변환
+            #             search_results = []
+            #             for i, result in enumerate(structsynth_results):
+            #                 try:
+            #                     # result가 딕셔너리인지 확인
+            #                     if not isinstance(result, dict):
+            #                         logger.warning(f"결과 {i+1}이 딕셔너리가 아님: {type(result)}")
+            #                         continue
                                 
-                                # symbol_info 추출 (여러 가능한 키 시도)
-                                symbol_info = result.get("symbol_info", {})
-                                if not symbol_info:
-                                    # result 자체가 symbol_info일 수 있음
-                                    symbol_info = result
+            #                     # symbol_info 추출 (여러 가능한 키 시도)
+            #                     symbol_info = result.get("symbol_info", {})
+            #                     if not symbol_info:
+            #                         # result 자체가 symbol_info일 수 있음
+            #                         symbol_info = result
                                 
-                                # 필수 필드 추출 및 기본값 설정
-                                symbol_name = symbol_info.get("name", "unknown")
-                                symbol_type = symbol_info.get("type", "unknown")
-                                file_path = symbol_info.get("file_path", "unknown")
-                                start_line = symbol_info.get("start_line", 0)
-                                end_line = symbol_info.get("end_line", 0)
-                                content = result.get("chunk_content", result.get("content", ""))
-                                similarity = result.get("similarity", 0.0)
+            #                     # 필수 필드 추출 및 기본값 설정
+            #                     symbol_name = symbol_info.get("name", "unknown")
+            #                     symbol_type = symbol_info.get("type", "unknown")
+            #                     file_path = symbol_info.get("file_path", "unknown")
+            #                     start_line = symbol_info.get("start_line", 0)
+            #                     end_line = symbol_info.get("end_line", 0)
+            #                     content = result.get("chunk_content", result.get("content", ""))
+            #                     similarity = result.get("similarity", 0.0)
                                 
-                                # file_path가 None인 경우 처리
-                                if file_path is None:
-                                    file_path = "unknown"
+            #                     # file_path가 None인 경우 처리
+            #                     if file_path is None:
+            #                         file_path = "unknown"
                                 
-                                search_result = SearchResult(
-                                    symbol_name=symbol_name,
-                                    symbol_type=symbol_type,
-                                    file_path=str(file_path),
-                                    start_line=int(start_line),
-                                    end_line=int(end_line),
-                                    content=str(content),
-                                    source="structsynth",
-                                    similarity_score=float(similarity)
-                                )
-                                search_results.append(search_result)
-                                logger.info(f"결과 {i+1} 변환 완료: {search_result.symbol_name} ({search_result.file_path})")
+            #                     search_result = SearchResult(
+            #                         symbol_name=symbol_name,
+            #                         symbol_type=symbol_type,
+            #                         file_path=str(file_path),
+            #                         start_line=int(start_line),
+            #                         end_line=int(end_line),
+            #                         content=str(content),
+            #                         source="structsynth",
+            #                         similarity_score=float(similarity),
+            #                         input_types=result.get("input_types"),
+            #                         output_types=result.get("output_types"),
+            #                         dependencies=result.get("dependencies"),
+            #                         usage_examples=result.get("usage_examples")
+            #                     )
+            #                     search_results.append(search_result)
+            #                     logger.info(f"결과 {i+1} 변환 완료: {search_result.symbol_name} ({search_result.file_path})")
                                 
-                            except Exception as e:
-                                logger.warning(f"결과 {i+1} 변환 실패: {e}")
-                                continue
+            #                 except Exception as e:
+            #                     logger.warning(f"결과 {i+1} 변환 실패: {e}")
+            #                     continue
                         
-                        if search_results:
-                            logger.info(f"StructSynthAgent 검색 완료: {len(search_results)}개 결과")
-                            return search_results
-                        else:
-                            logger.warning("StructSynthAgent 결과 변환 실패 - 빈 결과")
+            #             if search_results:
+            #                 logger.info(f"StructSynthAgent 검색 완료: {len(search_results)}개 결과")
+            #                 return search_results
+            #             else:
+            #                 logger.warning("StructSynthAgent 결과 변환 실패 - 빈 결과")
                     
-                except Exception as e:
-                    logger.warning(f"StructSynthAgent 검색 실패: {e}")
-                    import traceback
-                    logger.warning(f"상세 오류: {traceback.format_exc()}")
+            #     except Exception as e:
+            #         logger.warning(f"StructSynthAgent 검색 실패: {e}")
+            #         import traceback
+            #         logger.warning(f"상세 오류: {traceback.format_exc()}")
             
             # 2. 기존 방식으로 fallback (FTS + FAISS)
             logger.info("기존 검색 방식으로 fallback")
@@ -470,6 +478,11 @@ class CodeChatAgent:
             
             # FAISS 검색 (벡터 유사도)
             faiss_results = self._faiss_search(query, top_k)
+            
+            # None 체크 및 안전 처리
+            if faiss_results is None:
+                logger.warning("FAISS 검색 결과가 None입니다. 빈 리스트로 초기화합니다.")
+                faiss_results = []
             
             # 결과 병합 및 중복 제거
             merged_results = self._merge_search_results(fts_results, faiss_results, top_k)
@@ -504,7 +517,11 @@ class CodeChatAgent:
                     end_line=result.get("end_line", 0),
                     content=result.get("content", ""),
                     source="fts",
-                    similarity_score=result.get("relevance_score", 0.0)
+                    similarity_score=result.get("relevance_score", 0.0),
+                    input_types=result.get("input_types"),
+                    output_types=result.get("output_types"),
+                    dependencies=result.get("dependencies"),
+                    usage_examples=result.get("usage_examples")
                 )
                 fts_results.append(search_result)
             
@@ -523,12 +540,35 @@ class CodeChatAgent:
                 logger.warning("FAISS 검색 무효: query가 비어 있음")
                 return []
             
+            logger.info(f"=== FAISS 검색 시작: '{query}', top_k={top_k} ===")
+            
+            # FAISS 인덱스 상태 로깅
+            if hasattr(self, 'faiss_store'):
+                logger.info(f"FAISS 인덱스 존재: {self.faiss_store is not None}")
+                if self.faiss_store is not None:
+                    logger.info(f"FAISS 인덱스 타입: {type(self.faiss_store)}")
+                    logger.info(f"FAISS 인덱스 메서드: {[method for method in dir(self.faiss_store) if not method.startswith('_')]}")
+            else:
+                logger.info("FAISS 인덱스 속성이 없음")
+            
+            # 로컬 벡터 상태 로깅
+            logger.info(f"로컬 벡터 존재: {self.vectors is not None}")
+            if self.vectors is not None:
+                logger.info(f"로컬 벡터 개수: {len(self.vectors)}")
+                logger.info(f"로컬 벡터 차원: {self.vectors[0].shape if len(self.vectors) > 0 else 'N/A'}")
+            
+            logger.info(f"로컬 메타데이터 존재: {self.metadata is not None}")
+            if self.metadata is not None:
+                logger.info(f"로컬 메타데이터 개수: {len(self.metadata)}")
+            
             # 1. FAISS 인덱스가 있으면 우선 사용
             if hasattr(self, 'faiss_store') and self.faiss_store is not None:
+                logger.info("FAISS 인덱스를 사용한 검색 시도")
                 return self._faiss_index_search(query, top_k)
             
             # 2. fallback: 로컬 벡터 배열 사용
             if self.vectors is not None and self.metadata is not None:
+                logger.info("로컬 벡터 배열을 사용한 검색 시도")
                 return self._local_vector_search(query, top_k)
             
             logger.warning("벡터 스토어가 로드되지 않았습니다")
@@ -553,9 +593,52 @@ class CodeChatAgent:
                 return []
             
             # FAISS 인덱스에서 검색
-            if hasattr(self.faiss_store, 'search'):
-                # FAISSStore의 search 메서드 사용
-                search_results = self.faiss_store.search(query_embedding, top_k)
+            logger.info(f"FAISS 인덱스 검색 시도 - 임베딩 차원: {query_embedding.shape}")
+            
+            if hasattr(self.faiss_store, 'search_vector'):
+                logger.info("search_vector 메서드 사용")
+                # FAISSStore의 search_vector 메서드 사용 (numpy 배열 지원)
+                search_results = self.faiss_store.search_vector(query_embedding.tolist(), top_k)
+                logger.info(f"search_vector 결과: {len(search_results) if search_results else 0}개")
+                
+                # search_vector 결과를 SearchResult로 변환
+                if search_results:
+                    faiss_results = []
+                    for result in search_results:
+                        # result에서 doc_id와 similarity 추출
+                        doc_id = result.get('doc_id', 0)
+                        similarity = result.get('similarity', 0.0)
+                        
+                        # chunks 테이블에서 메타데이터 조회
+                        chunk_info = self.sqlite_store.get_chunk_info(doc_id)
+                        if chunk_info:
+                            search_result = SearchResult(
+                                symbol_name=chunk_info.get('symbol_name', ''),
+                                symbol_type=chunk_info.get('symbol_type', ''),
+                                file_path=chunk_info.get('file_path', ''),
+                                start_line=chunk_info.get('start_line', 0),
+                                end_line=chunk_info.get('end_line', 0),
+                                content=chunk_info.get('content', ''),
+                                source="faiss_index",
+                                similarity_score=float(similarity),
+                                input_types=chunk_info.get('input_types'),
+                                output_types=chunk_info.get('output_types'),
+                                dependencies=chunk_info.get('dependencies'),
+                                usage_examples=chunk_info.get('usage_examples')
+                            )
+                            faiss_results.append(search_result)
+                    
+                    logger.info(f"search_vector 변환 완료: {len(faiss_results)}개 결과")
+                    return faiss_results
+                else:
+                    logger.warning("search_vector 결과가 비어있습니다")
+                    return []
+                    
+            elif hasattr(self.faiss_store, 'search'):
+                logger.info("search 메서드 사용 (fallback)")
+                # fallback: search 메서드 사용
+                search_results = self.faiss_store.search(query_embedding.tolist(), top_k)
+                logger.info(f"search 결과: {len(search_results) if search_results else 0}개")
                 
                 # SearchResult로 변환
                 faiss_results = []
@@ -575,7 +658,11 @@ class CodeChatAgent:
                             end_line=chunk_info.get('end_line', 0),
                             content=chunk_info.get('content', ''),
                             source="faiss_index",
-                            similarity_score=float(similarity)
+                            similarity_score=float(similarity),
+                            input_types=chunk_info.get('input_types'),
+                            output_types=chunk_info.get('output_types'),
+                            dependencies=chunk_info.get('dependencies'),
+                            usage_examples=chunk_info.get('usage_examples')
                         )
                         faiss_results.append(search_result)
                 
@@ -609,11 +696,20 @@ class CodeChatAgent:
                 return []
             
             # 벡터 유사도 계산
+            logger.info(f"로컬 벡터 유사도 계산 시작 - 총 {len(self.vectors)}개 벡터")
             similarities = []
             for i, vector in enumerate(self.vectors):
                 try:
+                    # numpy 배열을 리스트로 변환
+                    if isinstance(vector, np.ndarray):
+                        vector = vector.tolist()
                     similarity = self._cosine_similarity(query_embedding, vector)
                     similarities.append((i, similarity))
+                    
+                    # 진행 상황 로깅 (100개마다)
+                    if (i + 1) % 100 == 0:
+                        logger.info(f"벡터 유사도 계산 진행: {i + 1}/{len(self.vectors)}")
+                        
                 except Exception as e:
                     logger.warning(f"벡터 {i} 유사도 계산 실패: {e}")
                     continue
@@ -638,7 +734,11 @@ class CodeChatAgent:
                         end_line=metadata.get("end_line", 0),
                         content=metadata.get("content", ""),
                         source="faiss_local",
-                        similarity_score=float(similarity)
+                        similarity_score=float(similarity),
+                        input_types=metadata.get("input_types"),
+                        output_types=metadata.get("output_types"),
+                        dependencies=metadata.get("dependencies"),
+                        usage_examples=metadata.get("usage_examples")
                     )
                     faiss_results.append(search_result)
             
@@ -712,35 +812,56 @@ class CodeChatAgent:
             return f"답변 생성 중 오류가 발생했습니다: {str(e)}"
     
     def _build_context(self, search_results: List[SearchResult]) -> str:
-        """검색 결과로부터 컨텍스트 구성"""
+        """검색 결과로부터 컨텍스트 구성 (위치, 사용법, 활용 정보 포함)"""
         context_parts = []
         
+        logger.info(f"컨텍스트 구성 시작: {len(search_results)}개 검색 결과")
+        
         for i, result in enumerate(search_results, 1):
+            logger.info(f"결과 {i} 디버깅: file_path={result.file_path}, symbol_name={result.symbol_name}, content_length={len(result.content) if result.content else 0}")
+            
             context_part = f"""
             [참조 {i}]
-            파일: {result.file_path}
+            위치: {result.file_path}의 {result.start_line}-{result.end_line} 라인
             심볼: {result.symbol_name} ({result.symbol_type})
-            라인: {result.start_line}-{result.end_line}
-            내용:
+            
+            코드 내용:
             {result.content}
             """
+            
+            # 추가 메타데이터가 있으면 포함
+            if result.input_types or result.output_types or result.dependencies or result.usage_examples:
+                context_part += "\n추가 정보:\n"
+                
+                if result.input_types:
+                    context_part += f"입력: {result.input_types}\n"
+                if result.output_types:
+                    context_part += f"출력: {result.output_types}\n"
+                if result.dependencies:
+                    deps = ", ".join(result.dependencies) if isinstance(result.dependencies, list) else str(result.dependencies)
+                    context_part += f"의존성: {deps}\n"
+                if result.usage_examples:
+                    context_part += f"사용 예시: {result.usage_examples}\n"
+            
             context_parts.append(context_part)
         
         return "\n".join(context_parts)
     
     def _build_prompt(self, query: str, context: str) -> str:
-        """프롬프트 구성"""
+        """프롬프트 구성 (자유로운 대화와 깊이 있는 분석 지원)"""
         return f"""
         사용자 질문: {query}
         
         다음 코드 컨텍스트를 참조하여 답변해주세요:
         {context}
         
-        요구사항:
-        1. 코드 컨텍스트를 바탕으로 정확한 답변을 제공하세요
-        2. 관련 코드의 위치와 기능을 명확히 설명하세요
-        3. 필요시 코드 예시를 포함하세요
-        4. 한국어로 답변하세요
+        답변 요구사항:
+        1. 사용자의 질문에 맞는 적절한 수준의 답변을 제공하세요
+        2. 코드의 위치, 사용법, 기능을 명확히 설명하세요
+        3. 필요에 따라 추가적인 세부사항이나 예시를 포함하세요
+        4. 사용자가 더 깊은 질문을 할 수 있도록 충분한 정보를 제공하세요
+        5. 자연스럽고 대화하듯이 답변하세요
+        6. 한국어로 답변하세요
         """
     
     def _create_embedding(self, text: str) -> Optional[np.ndarray]:
@@ -766,10 +887,10 @@ class CodeChatAgent:
             # 임베딩 실패 시 None 반환하여 벡터 검색 건너뛰기
             return None
     
-    def _cosine_similarity(self, vec1: np.ndarray, vec2: np.ndarray) -> float:
-        """코사인 유사도 계산"""
+    def _cosine_similarity(self, vec1, vec2) -> float:
+        """코사인 유사도 계산 (numpy 배열 또는 리스트 지원)"""
         try:
-            # numpy 배열을 float로 변환하여 비교 문제 해결
+            # numpy 배열 또는 리스트를 numpy 배열로 변환
             vec1 = np.asarray(vec1, dtype=np.float64)
             vec2 = np.asarray(vec2, dtype=np.float64)
             
