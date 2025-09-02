@@ -3,6 +3,7 @@ from typing import Any, Dict, List
 
 from tools import get_tools
 from agents.insightgen.planner import LLMPlanner
+import os
 
 
 class InsightGenAgent:
@@ -93,6 +94,74 @@ class InsightGenAgent:
                     "symbol_count_same_lang": len(file_symbols),
                 })
 
+        # 4) 산출물별 프롬프트/툴 호출 계획을 LLM이 설계
+        try:
+            tool_specs = [
+                {"name": n, "description": (getattr(t, "description", "") or "").strip()}
+                for n, t in self.tools.items()
+            ]
+            plans = self._llm_planner.plan_artifact_prompts(outputs, stats if isinstance(stats, dict) else {}, tool_specs)
+        except Exception as e:
+            return {
+                "status": "artifact_planner_failed",
+                "notice": "산출물 프롬프트/툴 계획 수립 실패. 환경설정 또는 응답 포맷을 확인하세요.",
+                "error": str(e),
+                "selected_outputs": outputs,
+            }
+
+        # 5) 계획에 따라 selected_outputs를 실제 산출물로 생성/저장
+        artifacts_dir = os.path.join(self.data_dir, "insightgen")
+        os.makedirs(artifacts_dir, exist_ok=True)
+
+        artifact_paths: List[str] = []
+
+        # LLM 요약 보강 헬퍼
+        def _llm_summarize_json(title: str, payload: Any) -> str:
+            try:
+                # 간단히 search_symbols_fts를 재활용한지 여부와 무관하게 텍스트 생성
+                from agents.structsynth.llm_analyzer import LLMAnalyzer  # type: ignore
+                analyzer = LLMAnalyzer()
+                # analyzer는 텍스트 기반이므로 JSON을 문자열로 변환하여 일반 청크 분석을 활용
+                text = f"{title}\n\n" + json.dumps(payload, ensure_ascii=False, indent=2)
+                return analyzer._get_llm_response(text)  # type: ignore
+            except Exception:
+                return ""
+
+        # 계획된 각 산출물에 대해: 지정된 tool_invocations 실행 → ToolResults를 사용해 LLM 프롬프트 템플릿으로 생성
+        for i, plan in enumerate(plans):
+            name = plan.get("name", f"artifact_{i+1}")
+            ext = plan.get("file_ext", "md")
+            invocations = plan.get("tool_invocations", []) or []
+            prompt_template = plan.get("prompt_template", "")
+
+            tool_results = {}
+            for inv in invocations:
+                tname = inv.get("name")
+                params = inv.get("params", {})
+                alias = inv.get("alias", tname)
+                if not tname:
+                    continue
+                result = self._invoke(tname, {**params, "data_dir": self.data_dir, "repo_path": self.repo_path})
+                tool_results[alias] = result
+
+            # 산출물 생성용 프롬프트를 LLM이 준 템플릿과 ToolResults로 구성하여 요약
+            try:
+                from agents.structsynth.llm_analyzer import LLMAnalyzer  # type: ignore
+                analyzer = LLMAnalyzer()
+                full_prompt = (
+                    f"산출물: {name}\n\n[요구 템플릿]\n{prompt_template}\n\n[ToolResults]\n"
+                    + json.dumps(tool_results, ensure_ascii=False, indent=2)
+                )
+                output_text = analyzer._get_llm_response(full_prompt)  # type: ignore
+            except Exception:
+                output_text = json.dumps({"template": prompt_template, "ToolResults": tool_results}, ensure_ascii=False, indent=2)
+
+            filename = f"{i+1:02d}-{name}".replace(" ", "-")
+            outpath = os.path.join(artifacts_dir, f"{filename}.{ext}")
+            with open(outpath, "w", encoding="utf-8") as f:
+                f.write(output_text)
+            artifact_paths.append(outpath)
+
         return {
             "inputs": {"stats": stats},
             "selected_outputs": outputs,
@@ -101,6 +170,8 @@ class InsightGenAgent:
                 "calls_overview": calls_overview,
                 "file_catalog": catalog,
             },
+            "artifacts": artifact_paths,
+            "plans": plans,
         }
 
 

@@ -81,4 +81,68 @@ class LLMPlanner:
         except Exception:
             raise RuntimeError("LLM planner returned invalid JSON")
 
+    def plan_artifact_prompts(
+        self,
+        outputs: List[Dict[str, Any]],
+        stats: Dict[str, Any],
+        tools: List[Dict[str, str]],
+    ) -> List[Dict[str, Any]]:
+        """
+        각 산출물에 대해 사용할 tool 호출 계획(이름/파라미터/목적)과 산출물 생성용 프롬프트 템플릿을 생성.
+        반환: [{name, file_ext, prompt_template, tool_invocations: [{name, params, alias, purpose}]}]
+        """
+        sys_prompt = (
+            "당신은 코드 분석 결과 리포트를 자동 생성하는 시니어 프롬프트 엔지니어입니다. "
+            "각 산출물에 대해 다음을 설계하세요: 1) 사용할 도구 호출 계획, 2) 최종 산출물 생성을 위한 프롬프트 템플릿. "
+            "템플릿은 툴 결과가 채워질 자리표시자를 사용하지 말고, '다음 섹션의 ToolResults를 참고하여 작성하라'는 명시적 지시를 포함하세요. "
+            "반드시 JSON만 반환하세요."
+        )
+
+        schema_example = {
+            "plans": [
+                {
+                    "name": "핵심 심볼 인덱스",
+                    "file_ext": "md",
+                    "tool_invocations": [
+                        {"name": "search_symbols_fts", "params": {"query": "init", "top_k": 5}, "alias": "init_results", "purpose": "생성자 관련 심볼 수집"}
+                    ],
+                    "prompt_template": (
+                        "당신은 코드 인덱스 작성자입니다. 아래 ToolResults를 참고하여 핵심 심볼 인덱스를 작성하세요.\n"
+                        "- 각 항목: 이름/타입/파일/요약/랭크\n- 중요도 순 정렬 근거를 간단히 기술\n- 마지막에 간단 요약 3줄\n"
+                    ),
+                }
+            ]
+        }
+
+        user_payload = {
+            "selected_outputs": outputs,
+            "stats": stats,
+            "tools": tools,
+            "requirements": [
+                "각 산출물마다 file_ext를 md 또는 json 등으로 지정",
+                "tool_invocations의 params는 간결한 기본값 사용",
+                "prompt_template는 한국어로 작성",
+                "총 plans는 selected_outputs와 동일한 순서/개수",
+            ],
+        }
+
+        resp = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": sys_prompt},
+                {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False) + "\n\n[스키마 예시]\n" + json.dumps(schema_example, ensure_ascii=False)},
+            ],
+            temperature=0.3,
+            max_tokens=1200,
+        )
+        content = resp.choices[0].message.content
+        try:
+            start = content.find("{")
+            end = content.rfind("}") + 1
+            data = json.loads(content[start:end])
+            plans = data.get("plans", [])
+            return plans
+        except Exception:
+            raise RuntimeError("LLM artifact prompt planning returned invalid JSON")
+
 
