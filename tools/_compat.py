@@ -1,37 +1,37 @@
 from typing import Any, Callable
 
 
-try:
-    from langchain.tools import tool as _lc_tool  # type: ignore
+def tool(*args, **kwargs):  # type: ignore
+    """Lightweight tool decorator compatible with various call styles.
 
-    def tool(name: str, return_direct: bool = False):
-        return _lc_tool(name=name, return_direct=return_direct)
+    Accepts either: @tool("name", return_direct=False) or @tool(name="name", ...)
+    Always returns a wrapper with .name and .invoke(kwargs).
+    """
 
-except Exception:
+    # Extract name and return_direct from positional/keyword args
+    name: str = ""
+    if args and isinstance(args[0], str):
+        name = args[0]
+    else:
+        name = kwargs.get("name", "")
+    return_direct: bool = bool(kwargs.get("return_direct", False))
 
-    def tool(name: str, return_direct: bool = False):  # type: ignore
-        """Lightweight fallback decorator when LangChain is unavailable.
+    def decorator(func: Callable[..., Any]):
+        class _DummyTool:
+            def __init__(self, f: Callable[..., Any]):
+                self.name = name or f.__name__
+                self.description = (f.__doc__ or "").strip()
+                self._func = f
 
-        Wraps a function into an object with `.name` and `.invoke(kwargs)` for demo/testing.
-        """
+            def invoke(self, input: Any) -> Any:
+                if isinstance(input, dict):
+                    return self._func(**input)
+                return self._func(input)
 
-        def decorator(func: Callable[..., Any]):
-            class _DummyTool:
-                def __init__(self, f: Callable[..., Any]):
-                    self.name = name or f.__name__
-                    self.description = (f.__doc__ or "").strip()
-                    self._func = f
+            def __call__(self, *cargs: Any, **ckwargs: Any) -> Any:
+                return self._func(*cargs, **ckwargs)
 
-                def invoke(self, input: Any) -> Any:
-                    if isinstance(input, dict):
-                        return self._func(**input)
-                    return self._func(input)
+        return _DummyTool(func)
 
-                def __call__(self, *args: Any, **kwargs: Any) -> Any:
-                    return self._func(*args, **kwargs)
-
-            return _DummyTool(func)
-
-        return decorator
-
+    return decorator
 

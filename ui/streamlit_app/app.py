@@ -120,6 +120,10 @@ class CodeAnalyticaUI:
     
     def render_tabs(self):
         """탭 렌더링"""
+        try:
+            from ui.streamlit_app.Docs import render as docs_render
+        except Exception:
+            docs_render = None
         tab1, tab2, tab3, tab4 = st.tabs([
             "Code Analysis", "Code Chat", "Docs", "Status"
         ])
@@ -129,7 +133,10 @@ class CodeAnalyticaUI:
         with tab2:
             self.render_code_chat()
         with tab3:
-            self.render_docs()
+            if docs_render:
+                docs_render(self)
+            else:
+                self.render_docs()
         with tab4:
             self.render_status()
     

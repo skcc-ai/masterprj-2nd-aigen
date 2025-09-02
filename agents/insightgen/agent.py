@@ -27,6 +27,205 @@ class InsightGenAgent:
         except Exception as e:
             return {"error": str(e), "tool": name}
 
+    def _normalize_params(
+        self,
+        tool_name: str,
+        params: Dict[str, Any],
+        symbols_snapshot: list | None = None,
+    ) -> Dict[str, Any]:
+        """LLM이 제안한 파라미터 키/타입을 각 tool 시그니처에 맞게 정규화한다.
+        - get_calls_from: caller_id 필요
+        - get_calls_to: callee_id 필요
+        - analyze_chunk_llm: chunk_id 필요 (symbol_id만 있으면 첫 청크를 조회하여 사용)
+        - 공통: *_id 값은 int 캐스팅 시도
+        """
+
+        def _as_int(value: Any) -> Any:
+            try:
+                return int(value)
+            except Exception:
+                return value
+
+        normalized = dict(params or {})
+
+        # get_calls_from: map symbol_id/id/caller -> caller_id
+        if tool_name == "get_calls_from":
+            if "caller_id" not in normalized:
+                for alt in ("symbol_id", "id", "caller"):
+                    if alt in normalized:
+                        normalized["caller_id"] = normalized.pop(alt)
+                        break
+            if "caller_id" in normalized:
+                normalized["caller_id"] = _as_int(normalized["caller_id"])
+
+        # get_calls_to: map symbol_id/id/callee -> callee_id
+        if tool_name == "get_calls_to":
+            if "callee_id" not in normalized:
+                for alt in ("symbol_id", "id", "callee"):
+                    if alt in normalized:
+                        normalized["callee_id"] = normalized.pop(alt)
+                        break
+            if "callee_id" in normalized:
+                normalized["callee_id"] = _as_int(normalized["callee_id"])
+
+        # analyze_chunk_llm: need chunk_id; allow id/chunk/chunkId, or derive from symbol_id
+        if tool_name == "analyze_chunk_llm":
+            # rename to chunk_id if needed
+            if "chunk_id" not in normalized:
+                for alt in ("id", "chunk", "chunkId"):
+                    if alt in normalized:
+                        normalized["chunk_id"] = normalized.pop(alt)
+                        break
+            # derive from symbol_id if still missing
+            if "chunk_id" not in normalized and "symbol_id" in normalized:
+                symbol_id_val = _as_int(normalized.get("symbol_id"))
+                # 첫 번째 청크를 조회하여 사용
+                chunks = self._invoke("get_chunks_by_symbol", {"symbol_id": symbol_id_val, "data_dir": self.data_dir})
+                if isinstance(chunks, list) and chunks:
+                    normalized["chunk_id"] = chunks[0].get("id")
+                # 사용 후 불필요 키 제거
+                normalized.pop("symbol_id", None)
+            if "chunk_id" in normalized:
+                normalized["chunk_id"] = _as_int(normalized["chunk_id"])
+
+        # get_symbol/get_chunks_by_symbol: ensure int id
+        if tool_name in ("get_symbol", "get_chunks_by_symbol"):
+            if "symbol_id" in normalized:
+                normalized["symbol_id"] = _as_int(normalized["symbol_id"])
+
+        # list_symbols: rename limit/top_k to limit
+        if tool_name == "list_symbols":
+            if "limit" not in normalized:
+                if "top_k" in normalized:
+                    normalized["limit"] = normalized.pop("top_k")
+            if "limit" in normalized:
+                normalized["limit"] = _as_int(normalized["limit"])
+
+        return normalized
+
+    def _safe_invoke_with_fallback(
+        self,
+        tool_name: str,
+        params: Dict[str, Any],
+        symbols: list | None,
+        tool_call_log: list,
+    ) -> Any:
+        """Invoke tool with normalized params and apply pragmatic fallbacks if result is empty.
+        Adds detailed entries to tool_call_log for debugging.
+        """
+        norm_params = self._normalize_params(tool_name, params, symbols)
+
+        # 허용 파라미터 화이트리스트 구성
+        allowed_map = {
+            "search_symbols_semantic": {"query", "top_k", "repo_path", "data_dir"},
+            "search_symbols_fts": {"query", "top_k", "data_dir"},
+            "get_symbol": {"symbol_id", "data_dir"},
+            "get_chunks_by_symbol": {"symbol_id", "data_dir"},
+            "get_chunk": {"chunk_id", "data_dir"},
+            "get_calls_from": {"caller_id", "data_dir"},
+            "get_calls_to": {"callee_id", "data_dir"},
+            "list_files": {"data_dir"},
+            "list_symbols": {"type", "language", "limit", "data_dir"},
+            "get_database_stats": {"data_dir"},
+            "get_vector_store_stats": {"repo_path", "data_dir"},
+            "get_analysis_summary": {"repo_path", "data_dir"},
+            "run_repository_analysis": {"repo_path", "artifacts_dir", "data_dir"},
+            "get_latest_run": {"agent_name", "data_dir"},
+            "analyze_file_llm": {"file_path", "data_dir"},
+            "analyze_symbol_llm": {"symbol_id", "data_dir"},
+            "analyze_chunk_llm": {"chunk_id", "data_dir"},
+        }
+
+        # repo_path는 지원 도구에만 유지
+        tools_need_repo_path = {
+            "search_symbols_semantic",
+            "get_vector_store_stats",
+            "get_analysis_summary",
+            "run_repository_analysis",
+        }
+
+        # 불필요 키 제거 및 기본 키 추가(data_dir)
+        filtered = {k: v for k, v in (norm_params or {}).items() if k in allowed_map.get(tool_name, set())}
+        filtered["data_dir"] = self.data_dir
+        if tool_name in tools_need_repo_path:
+            filtered["repo_path"] = self.repo_path
+
+        base_payload = filtered
+        result = self._invoke(tool_name, base_payload)
+        tool_call_log.append({
+            "tool": tool_name,
+            "params": base_payload,
+            "result_preview": (result if isinstance(result, dict) else (result[:3] if isinstance(result, list) else result)),
+        })
+
+        # If result is empty and we can fallback, try once
+        def _is_empty(res: Any) -> bool:
+            if res is None:
+                return True
+            if isinstance(res, list):
+                return len(res) == 0
+            if isinstance(res, dict) and res.get("error"):
+                return False  # surface error instead of fallback
+            return False
+
+        if not _is_empty(result):
+            return result
+
+        # Fallbacks for specific tools
+        if tool_name in ("get_calls_from", "get_calls_to") and isinstance(symbols, list):
+            # scan up to first 50 symbols to find one with calls
+            limit_scan = min(50, len(symbols))
+            if tool_name == "get_calls_from":
+                for s in symbols[:limit_scan]:
+                    sid = s.get("id")
+                    if sid is None:
+                        continue
+                    res = self._invoke("get_calls_from", {"caller_id": int(sid), "data_dir": self.data_dir})
+                    if isinstance(res, list) and res:
+                        tool_call_log.append({
+                            "tool": tool_name,
+                            "fallback_applied": True,
+                            "fallback_params": {"caller_id": int(sid)},
+                            "result_preview": res[:3],
+                        })
+                        return res
+            else:
+                for s in symbols[:limit_scan]:
+                    sid = s.get("id")
+                    if sid is None:
+                        continue
+                    res = self._invoke("get_calls_to", {"callee_id": int(sid), "data_dir": self.data_dir})
+                    if isinstance(res, list) and res:
+                        tool_call_log.append({
+                            "tool": tool_name,
+                            "fallback_applied": True,
+                            "fallback_params": {"callee_id": int(sid)},
+                            "result_preview": res[:3],
+                        })
+                        return res
+
+        if tool_name == "analyze_chunk_llm":
+            # If chunk_id invalid or missing, try to derive from first symbol having chunks
+            # Attempt scan of symbols to get a chunk
+            if isinstance(symbols, list):
+                limit_scan = min(50, len(symbols))
+                for s in symbols[:limit_scan]:
+                    sid = s.get("id")
+                    if sid is None:
+                        continue
+                    chunks = self._invoke("get_chunks_by_symbol", {"symbol_id": int(sid), "data_dir": self.data_dir})
+                    if isinstance(chunks, list) and chunks:
+                        res = self._invoke("analyze_chunk_llm", {"chunk_id": int(chunks[0].get("id")), "data_dir": self.data_dir})
+                        tool_call_log.append({
+                            "tool": tool_name,
+                            "fallback_applied": True,
+                            "fallback_params": {"chunk_id": int(chunks[0].get("id"))},
+                            "result_preview": res if isinstance(res, dict) else res,
+                        })
+                        return res
+
+        return result
+
     def analyze(self) -> Dict[str, Any]:
         # 1) 규모/구조 파악
         stats = self._invoke("get_database_stats", {"data_dir": self.data_dir})
@@ -114,6 +313,7 @@ class InsightGenAgent:
         os.makedirs(artifacts_dir, exist_ok=True)
 
         artifact_paths: List[str] = []
+        tool_call_log: List[Dict[str, Any]] = []
 
         # LLM 요약 보강 헬퍼
         def _llm_summarize_json(title: str, payload: Any) -> str:
@@ -141,7 +341,12 @@ class InsightGenAgent:
                 alias = inv.get("alias", tname)
                 if not tname:
                     continue
-                result = self._invoke(tname, {**params, "data_dir": self.data_dir, "repo_path": self.repo_path})
+                result = self._safe_invoke_with_fallback(
+                    tname,
+                    params,
+                    symbols if isinstance(symbols, list) else None,
+                    tool_call_log,
+                )
                 tool_results[alias] = result
 
             # 산출물 생성용 프롬프트를 LLM이 준 템플릿과 ToolResults로 구성하여 요약
@@ -172,6 +377,7 @@ class InsightGenAgent:
             },
             "artifacts": artifact_paths,
             "plans": plans,
+            "tool_call_log": tool_call_log,
         }
 
 

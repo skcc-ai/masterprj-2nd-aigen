@@ -17,6 +17,7 @@ services:
     volumes:
       - ./agents:/app/agents
       - ./common:/app/common
+      - ./tools:/app/tools
       - ./ui:/app/ui
       - ./artifacts:/app/artifacts
       - ./data:/app/data
@@ -50,6 +51,7 @@ services:
     volumes:
       - ./agents:/app/agents
       - ./common:/app/common
+      - ./tools:/app/tools
       - ./ui:/app/ui
       - ./artifacts:/app/artifacts
       - ./data:/app/data
