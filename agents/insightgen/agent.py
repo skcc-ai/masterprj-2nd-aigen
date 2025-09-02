@@ -2,6 +2,7 @@ import json
 from typing import Any, Dict, List
 
 from tools import get_tools
+from agents.insightgen.planner import LLMPlanner
 
 
 class InsightGenAgent:
@@ -14,6 +15,7 @@ class InsightGenAgent:
         self.data_dir = data_dir
         self.repo_path = repo_path
         self.tools = {t.name: t for t in get_tools()}
+        self._llm_planner = None
 
     def _invoke(self, name: str, payload: Dict[str, Any]) -> Any:
         tool = self.tools.get(name)
@@ -30,24 +32,38 @@ class InsightGenAgent:
         files = self._invoke("list_files", {"data_dir": self.data_dir})
         symbols = self._invoke("list_symbols", {"limit": 5000, "data_dir": self.data_dir})
 
+        total_files = stats.get("total_files", 0) if isinstance(stats, dict) else 0
+        total_symbols = stats.get("total_symbols", 0) if isinstance(stats, dict) else 0
+        total_functions = 0
+        if isinstance(stats, dict):
+            st = stats.get("symbol_types", {}) or {}
+            if isinstance(st, dict):
+                total_functions = st.get("function", 0) or 0
+
         # 2) 산출물 3가지 선택
-        outputs = [
-            {
-                "name": "핵심 심볼 인덱스",
-                "tools": ["search_symbols_fts", "get_symbol"],
-                "reason": "심볼 수와 타입 분포를 바탕으로 핵심 엔트리포인트/클래스를 빠르게 탐색하기 위함",
-            },
-            {
-                "name": "호출 그래프 개요",
-                "tools": ["get_calls_from", "get_calls_to"],
-                "reason": "함수 수가 존재하고 외부/내부 호출이 혼재하므로 의존성 흐름을 파악하기 위함",
-            },
-            {
-                "name": "파일별 요약 카탈로그",
-                "tools": ["list_files", "get_symbol", "get_chunks_by_symbol"],
-                "reason": "파일 단위로 빠르게 역할과 관련 심볼을 훑어볼 수 있도록 제공",
-            },
-        ]
+        # LLM이 결정하도록 시도 (환경변수/모델 설정 필요). 실패 시 안내 후 중단 (임의의 고정 답변 금지)
+        outputs = []
+        try:
+            tool_specs = [
+                {"name": n, "description": (getattr(t, "description", "") or "").strip()}
+                for n, t in self.tools.items()
+            ]
+            if self._llm_planner is None:
+                self._llm_planner = LLMPlanner()
+            outputs = self._llm_planner.plan(stats if isinstance(stats, dict) else {}, tool_specs)
+        except Exception as e:
+            notice = (
+                "LLM 기반 계획 수립(planner.py) 단계에서 실패했습니다. 환경변수/모델 설정을 확인하고 다시 시도해 주세요. "
+                "임의의 고정 답변은 제공하지 않습니다."
+            )
+            return {
+                "status": "planner_failed",
+                "notice": notice,
+                "error": str(e),
+                "inputs": {"stats": stats},
+                "selected_outputs": [],
+                "drafts": {},
+            }
 
         # 3) 각 산출물 초안 생성(도구 호출 샘플)
         # 핵심 심볼 인덱스: 검색어 몇 개로 샘플 인덱스 생성
