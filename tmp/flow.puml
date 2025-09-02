@@ -1,0 +1,26 @@
+@startuml
+title acmeshop – 대표 시나리오(검증 통과)
+
+== Flow #1: 주문 생성 ==
+API -> Service : create_order(request)
+Service -> ExternalHTTP : charge(payment_request)
+ExternalHTTP --> Service : approved(auth_code)
+Service -> Repository : save(order, payment=approved)
+Repository --> Service : ok
+Service --> API : 201 Created (order_id)
+
+== Flow #2: 사용자 로그인 ==
+API -> Service : login(email, password)
+Service -> Repository : get_user_by_email(email)
+Repository --> Service : user
+Service -> Service : verify_password(user, password)
+Service --> API : 200 OK (jwt_token)
+
+== Flow #3: 카탈로그 재색인(배치) ==
+CLI -> Service : reindex_catalog()
+Service -> ExternalDB : fetch_all_products()
+ExternalDB --> Service : rows
+Service -> Repository : upsert_batch(rows)
+Repository --> Service : ok
+Service --> CLI : done
+@enduml

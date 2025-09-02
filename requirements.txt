@@ -35,3 +35,7 @@ markdown2>=2.4
 
 # Note: 개발용 패키지들은 로컬에서만 설치
 # pytest, black, flake8 등은 로컬 개발 환경에서만 필요 
+ 
+# LLM Orchestration
+langchain>=0.2.16
+langgraph>=0.2.35
