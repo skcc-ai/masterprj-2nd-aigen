@@ -1,498 +1,575 @@
 [
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
-    "symbol_type": "class",
-    "symbol_name": "CodeAnalyticaUI",
+    "file_path": "test_files/test_simple.py",
+    "symbol_type": "function",
+    "symbol_name": "simple_function",
     "location": {
-      "start_line": 81,
-      "end_line": 589
+      "start_line": 1,
+      "end_line": 3
     },
     "llm_analysis": {
-      "summary": "CodeAnalyticaUI 클래스는 Streamlit 기반의 사용자 인터페이스를 제공하며, 코드 분석 및 AI 기반 채팅 기능을 포함한 다양한 상호작용을 처리합니다.",
-      "responsibility": "CodeAnalyticaUI 클래스는 사용자와 상호작용하는 UI를 관리하며, 코드 분석 요청, 디렉토리 입력, 분석 상태 표시, AI 채팅 인터페이스 렌더링, 그리고 백엔드와의 데이터 교환을 담당합니다.",
-      "design_notes": "클래스는 Streamlit을 활용한 UI 중심 설계로, 단일 책임 원칙을 준수하려 노력했으나, UI 렌더링과 백엔드 통신 로직이 혼재되어 있어 SRP(단일 책임 원칙) 위반 가능성이 있습니다. 메서드 분리가 잘 되어 있지만, 유지보수성을 높이기 위해 UI와 비즈니스 로직을 분리하는 MVC 또는 MVVM 패턴을 고려할 수 있습니다.",
-      "collaboration": "Streamlit (st) - UI 구성 및 렌더링, requests - 백엔드 API 호출, pathlib.Path - 파일 경로 관리, datetime - 시간 관련 데이터 처리, Optional, Dict, Any (typing) - 타입 힌팅"
+      "summary": "간단한 문자열을 반환하는 함수",
+      "responsibility": "이 함수는 호출 시 'Hello, World!'라는 문자열을 반환합니다. 주로 테스트나 기본적인 동작 확인을 위해 사용될 수 있습니다.",
+      "design_notes": "함수는 매개변수를 받지 않으며, 호출되면 정적인 문자열 'Hello, World!'를 반환합니다.",
+      "collaboration": "함수가 호출된다., 반환문이 실행되어 'Hello, World!' 문자열이 반환된다."
     },
-    "text_content": "Symbol: CodeAnalyticaUI | Type: class | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612020"
+    "text_content": "Symbol: simple_function | Type: function | File: test_files/test_simple.py",
+    "timestamp": "2025-09-06T09:26:12.940190"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/test_simple.py",
+    "symbol_type": "class",
+    "symbol_name": "SimpleClass",
+    "location": {
+      "start_line": 5,
+      "end_line": 12
+    },
+    "llm_analysis": {
+      "summary": "SimpleClass는 정수 값을 저장하고 이를 반환하는 간단한 기능을 제공하는 클래스입니다.",
+      "responsibility": "SimpleClass는 단일 책임 원칙을 준수하며, 내부적으로 정수 값을 관리하고 이를 반환하는 역할만 수행합니다.",
+      "design_notes": "클래스는 매우 간단한 구조로 설계되어 있으며, 객체 지향 프로그래밍의 기본 원칙을 따릅니다. 추가적인 디자인 패턴은 사용되지 않았습니다.",
+      "collaboration": "simple_function (외부 함수와 협력하여 main 함수에서 결과를 생성)"
+    },
+    "text_content": "Symbol: SimpleClass | Type: class | File: test_files/test_simple.py",
+    "timestamp": "2025-09-06T09:26:12.940204"
+  },
+  {
+    "file_path": "test_files/test_simple.py",
+    "symbol_type": "function",
+    "symbol_name": "main",
+    "location": {
+      "start_line": 14,
+      "end_line": 17
+    },
+    "llm_analysis": {
+      "summary": "main 함수는 SimpleClass 객체와 simple_function 호출 결과를 반환합니다.",
+      "responsibility": "main 함수는 SimpleClass의 메서드 호출 결과와 별도의 함수 호출 결과를 결합하여 반환하는 역할을 합니다. 이를 통해 클래스와 함수의 동작을 간단히 테스트합니다.",
+      "design_notes": "SimpleClass 객체를 생성하고, simple_function을 호출하여 두 결과를 튜플 형태로 반환합니다.",
+      "collaboration": "SimpleClass 객체 생성, simple_function 호출, SimpleClass의 get_value 메서드 호출, 두 결과를 튜플로 반환"
+    },
+    "text_content": "Symbol: main | Type: function | File: test_files/test_simple.py",
+    "timestamp": "2025-09-06T09:26:12.940208"
+  },
+  {
+    "file_path": "test_files/test_simple.py",
     "symbol_type": "function",
     "symbol_name": "__init__",
     "location": {
-      "start_line": 84,
-      "end_line": 87
+      "start_line": 8,
+      "end_line": 9
     },
     "llm_analysis": {
-      "summary": "이 함수는 클래스의 생성자로, 초기화 작업을 수행합니다.",
-      "responsibility": "클래스의 인스턴스를 생성할 때 호출되며, 필요한 초기화 작업을 수행하기 위해 설계되었습니다. 그러나 현재 함수 본문이 비어 있어 구체적인 초기화 작업은 정의되어 있지 않습니다.",
-      "design_notes": "함수 본문이 비어 있으므로, 현재로서는 아무 작업도 수행하지 않습니다.",
-      "collaboration": "클래스의 인스턴스가 생성될 때 __init__ 함수가 호출됩니다., 현재 함수 본문이 비어 있으므로, 아무 작업도 수행하지 않고 종료됩니다."
+      "summary": "__init__ 메서드는 클래스의 인스턴스를 초기화하는 생성자 역할을 합니다.",
+      "responsibility": "SimpleClass의 인스턴스를 생성할 때 기본 속성인 'value'를 42로 설정합니다. 이는 클래스의 초기 상태를 정의합니다.",
+      "design_notes": "self.value 속성을 42로 설정하여 클래스 인스턴스가 기본값을 가지도록 합니다.",
+      "collaboration": "SimpleClass의 인스턴스 생성 요청, __init__ 메서드 호출, self.value를 42로 설정"
     },
-    "text_content": "Symbol: __init__ | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612038"
+    "text_content": "Symbol: __init__ | Type: function | File: test_files/test_simple.py",
+    "timestamp": "2025-09-06T09:26:12.940211"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/test_simple.py",
     "symbol_type": "function",
-    "symbol_name": "_get_api_url",
+    "symbol_name": "get_value",
     "location": {
-      "start_line": 89,
-      "end_line": 90
+      "start_line": 11,
+      "end_line": 12
     },
     "llm_analysis": {
-      "summary": "API URL을 반환하는 함수로 보이나, 구현이 비어 있음.",
-      "responsibility": "이 함수는 API URL을 생성하거나 반환하는 역할을 수행할 의도로 정의된 것으로 보입니다. 그러나 현재 함수 본문이 비어 있어 실제 동작을 수행하지 않습니다.",
-      "design_notes": "함수 본문이 비어 있어 로직이 존재하지 않습니다. 따라서 API URL을 반환하거나 생성하는 동작이 구현되지 않은 상태입니다."
+      "summary": "클래스 인스턴스의 'value' 속성을 반환하는 간단한 메서드입니다.",
+      "responsibility": "이 함수는 클래스의 인스턴스 변수 'value'에 저장된 값을 외부에서 접근할 수 있도록 반환하는 역할을 합니다.",
+      "design_notes": "클래스의 인스턴스 변수 'value'를 반환하는 단일 반환문으로 구성되어 있습니다.",
+      "collaboration": "클래스 인스턴스의 'value' 속성에 접근합니다., 해당 속성의 값을 반환합니다."
     },
-    "text_content": "Symbol: _get_api_url | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612043"
+    "text_content": "Symbol: get_value | Type: function | File: test_files/test_simple.py",
+    "timestamp": "2025-09-06T09:26:12.940214"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
-    "symbol_type": "function",
-    "symbol_name": "init_session_state",
+    "file_path": "test_files/data_processor.py",
+    "symbol_type": "class",
+    "symbol_name": "DataProcessor",
     "location": {
-      "start_line": 92,
-      "end_line": 103
+      "start_line": 24,
+      "end_line": 479
     },
     "llm_analysis": {
-      "summary": "Streamlit 세션 상태를 초기화하는 함수",
-      "responsibility": "이 함수는 Streamlit 애플리케이션에서 세션 상태를 초기화하거나 기본값을 설정하는 역할을 합니다. 이는 사용자 인터페이스의 상태를 관리하고, 애플리케이션의 일관된 동작을 보장하기 위해 사용됩니다.",
-      "design_notes": "함수는 Streamlit의 세션 상태를 확인하고, 특정 키가 존재하지 않을 경우 기본값을 설정합니다. 이를 통해 세션 상태가 항상 예상된 구조와 데이터를 가지도록 보장합니다.",
-      "collaboration": "Streamlit 세션 상태 객체를 확인한다., 필요한 키가 세션 상태에 존재하는지 확인한다., 키가 없으면 기본값을 설정한다., 모든 키가 초기화되었는지 확인하고 종료한다."
+      "summary": "DataProcessor 클래스는 다양한 데이터 소스에서 데이터를 읽고, 검증하며, 변환 및 처리하는 기능을 제공하는 데이터 처리 엔진입니다.",
+      "responsibility": "단일 책임 원칙 관점에서 DataProcessor 클래스는 데이터 파일을 읽고, 검증 규칙을 적용하며, 데이터를 변환 및 정리하는 작업을 수행합니다. 또한 처리된 데이터를 캐싱하고 통계 정보를 제공하는 역할을 담당합니다.",
+      "design_notes": "DataProcessor 클래스는 데이터 처리 파이프라인을 설정하고, 검증 및 변환 작업을 단계적으로 수행하는 구조를 통해 전략 패턴을 활용합니다. 또한, 데이터 캐싱과 통계 제공을 통해 책임 분리를 유지하며, 유틸리티 메서드를 통해 재사용성을 높였습니다.",
+      "collaboration": "json 모듈: JSON 파일 읽기 및 쓰기, csv 모듈: CSV 파일 읽기 및 쓰기, datetime 모듈: 날짜 및 시간 처리, logging 모듈: 로그 기록 및 관리, hashlib 모듈: 데이터 해싱 및 무결성 확인, re 모듈: 정규 표현식 기반 데이터 검증, statistics 모듈: 데이터 통계 계산, collections 모듈: 데이터 구조 관리 (defaultdict, Counter 등), pathlib.Path: 파일 경로 관리"
     },
-    "text_content": "Symbol: init_session_state | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612047"
+    "text_content": "Symbol: DataProcessor | Type: class | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940220"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "run",
+    "symbol_name": "__init__",
     "location": {
-      "start_line": 105,
-      "end_line": 109
+      "start_line": 27,
+      "end_line": 46
     },
     "llm_analysis": {
-      "summary": "빈 함수로, 현재 아무런 동작을 수행하지 않습니다.",
-      "responsibility": "함수는 정의되어 있지만 구현되지 않았으며, 향후 특정 기능을 추가하기 위한 자리표시자 역할을 할 가능성이 있습니다.",
-      "design_notes": "함수 본문이 비어 있어 로직이 존재하지 않습니다."
+      "summary": "DataProcessor 클래스의 초기화 메서드로, 객체의 기본 설정과 초기 상태를 구성합니다.",
+      "responsibility": "이 함수는 DataProcessor 클래스의 인스턴스를 초기화하며, 설정(config)을 받아 내부 속성을 초기화하고 데이터 처리에 필요한 구성 요소를 준비합니다.",
+      "design_notes": "config 매개변수를 통해 전달된 설정을 저장하고, 데이터 처리에 필요한 검증 규칙과 변환 파이프라인을 설정하며, 데이터 캐시와 처리 통계를 초기화합니다.",
+      "collaboration": "config 매개변수를 받아 내부 속성(self.config)으로 저장하거나 기본값 {}으로 초기화, self.processed_data와 self.error_log를 빈 리스트로 초기화, self.validation_rules를 _load_validation_rules 메서드를 호출하여 초기화, self.transformation_pipeline을 _setup_transformation_pipeline 메서드를 호출하여 초기화, self.data_cache를 빈 딕셔너리로 초기화, self.processing_stats를 처리 통계 정보를 담은 딕셔너리로 초기화"
     },
-    "text_content": "Symbol: run | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612051"
+    "text_content": "Symbol: __init__ | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940224"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_header",
+    "symbol_name": "_load_validation_rules",
     "location": {
-      "start_line": 111,
-      "end_line": 119
+      "start_line": 48,
+      "end_line": 70
     },
     "llm_analysis": {
-      "summary": "render_header 함수는 Streamlit 애플리케이션의 헤더를 렌더링하는 역할을 수행합니다.",
-      "responsibility": "이 함수는 사용자 인터페이스의 상단 헤더를 생성하여 애플리케이션의 시각적 구조를 개선하고 사용자 경험을 향상시키는 데 목적이 있습니다. 헤더는 스타일링된 텍스트와 레이아웃을 포함할 가능성이 있습니다.",
-      "design_notes": "함수 본문이 비어 있어 현재는 아무 작업도 수행하지 않지만, Streamlit의 UI 구성 요소를 사용하여 헤더를 렌더링하는 로직이 추가될 것으로 예상됩니다.",
-      "collaboration": "함수가 호출된다., 현재는 아무 작업도 수행하지 않고 종료된다."
+      "summary": "데이터 검증 규칙을 로드하는 함수입니다.",
+      "responsibility": "이 함수는 데이터 처리 및 검증을 위한 규칙을 로드하여 DataProcessor 클래스에서 사용할 수 있도록 준비합니다. 검증 규칙은 데이터의 유효성을 확인하는 데 사용됩니다.",
+      "design_notes": "함수는 검증 규칙을 정의하거나 외부 소스에서 로드하여 반환합니다. 현재 함수 본문이 비어 있어 구체적인 로직은 확인할 수 없습니다.",
+      "collaboration": "검증 규칙을 정의하거나 외부 소스에서 로드, 검증 규칙 반환"
     },
-    "text_content": "Symbol: render_header | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612054"
+    "text_content": "Symbol: _load_validation_rules | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940228"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_tabs",
+    "symbol_name": "_setup_transformation_pipeline",
     "location": {
-      "start_line": 121,
-      "end_line": 141
+      "start_line": 72,
+      "end_line": 80
     },
     "llm_analysis": {
-      "summary": "The function 'render_tabs' is defined but contains no implementation.",
-      "responsibility": "The function appears to be a placeholder for rendering tabs in the Streamlit UI, but its purpose is unclear due to the absence of any logic or content.",
-      "design_notes": "There is no logic implemented within the function, as the body is empty."
+      "summary": "데이터 변환 파이프라인을 설정하는 함수입니다.",
+      "responsibility": "이 함수는 데이터 처리 클래스(DataProcessor)에서 사용할 데이터 변환 파이프라인을 초기화하거나 설정하는 역할을 합니다. 이를 통해 데이터 변환 작업의 일관성과 재사용성을 보장합니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 정의되지 않았으나, 클래스의 초기화 과정에서 호출되어 변환 파이프라인을 설정하는 데 사용될 것으로 보입니다."
     },
-    "text_content": "Symbol: render_tabs | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612058"
+    "text_content": "Symbol: _setup_transformation_pipeline | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940231"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_code_analysis",
+    "symbol_name": "process_data_file",
     "location": {
-      "start_line": 143,
-      "end_line": 158
+      "start_line": 82,
+      "end_line": 134
     },
     "llm_analysis": {
-      "summary": "The function 'render_code_analysis' is defined but contains no implementation.",
-      "responsibility": "The purpose of the function cannot be determined as it has no content. Based on the context, it might be intended to render a code analysis interface or output in the Streamlit application.",
-      "design_notes": "The function does not contain any logic or operations."
+      "summary": "파일 경로와 파일 유형을 입력받아 데이터를 처리하는 함수.",
+      "responsibility": "이 함수는 주어진 파일 경로와 파일 유형에 따라 데이터를 읽고, 검증하거나 변환하는 역할을 수행할 가능성이 높습니다. 이는 데이터 처리 엔진의 일부로 작동하며, 다양한 데이터 소스에서 데이터를 처리하는 데 사용됩니다.",
+      "design_notes": "함수는 파일 경로를 통해 데이터를 로드하고, 파일 유형에 따라 적절한 처리 로직을 적용할 것으로 보입니다. 처리 과정에는 데이터 검증, 변환, 또는 통계 계산 등이 포함될 수 있습니다.",
+      "collaboration": "1. 파일 경로와 파일 유형을 입력으로 받음., 2. 파일 경로를 통해 데이터를 로드., 3. 파일 유형에 따라 처리 로직을 분기., 4. 데이터를 검증하거나 변환., 5. 처리된 데이터를 반환하거나 저장."
     },
-    "text_content": "Symbol: render_code_analysis | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612065"
+    "text_content": "Symbol: process_data_file | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940235"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "get_directory_input",
+    "symbol_name": "_detect_file_type",
     "location": {
-      "start_line": 160,
-      "end_line": 167
+      "start_line": 136,
+      "end_line": 149
     },
     "llm_analysis": {
-      "summary": "사용자로부터 디렉토리 입력을 받는 함수로 추정됨.",
-      "responsibility": "사용자가 입력한 디렉토리 경로를 처리하거나 반환하는 역할을 수행할 것으로 예상됨. 함수 이름과 컨텍스트를 기반으로, Streamlit UI를 통해 디렉토리 입력을 받는 기능일 가능성이 높음.",
-      "design_notes": "함수 본문이 비어 있어 로직을 분석할 수 없음. 그러나 이름과 컨텍스트를 고려할 때, Streamlit의 입력 위젯을 사용하여 디렉토리 경로를 입력받고 이를 반환하거나 처리하는 로직이 포함될 가능성이 있음.",
-      "collaboration": "사용자로부터 디렉토리 입력을 받음 (추정)., 입력값을 검증하거나 처리함 (추정)., 최종적으로 디렉토리 경로를 반환함 (추정)."
+      "summary": "파일 경로를 기반으로 파일 유형을 감지하는 함수입니다.",
+      "responsibility": "이 함수는 주어진 파일 경로를 분석하여 파일의 유형을 결정하는 역할을 합니다. 데이터 처리 엔진에서 파일 유형에 따라 적절한 처리 로직을 적용하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "함수는 파일 경로를 입력으로 받아 파일의 확장자 또는 내용을 분석하여 파일 유형을 반환할 것으로 예상됩니다. 구체적인 로직은 제공되지 않았으나, 파일 확장자 기반의 간단한 매핑 또는 파일 내용의 패턴 분석을 포함할 수 있습니다.",
+      "collaboration": "1. 파일 경로를 입력으로 받습니다., 2. 파일의 확장자 또는 내용을 분석합니다., 3. 파일 유형을 결정합니다., 4. 결정된 파일 유형을 반환합니다."
     },
-    "text_content": "Symbol: get_directory_input | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612070"
+    "text_content": "Symbol: _detect_file_type | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940238"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "handle_directory_analysis",
+    "symbol_name": "_read_file",
     "location": {
-      "start_line": 169,
-      "end_line": 179
+      "start_line": 151,
+      "end_line": 164
     },
     "llm_analysis": {
-      "summary": "디렉토리 분석을 처리하는 함수로 추정됨.",
-      "responsibility": "주어진 디렉토리 경로를 입력받아 해당 디렉토리의 분석 작업을 수행하거나 결과를 반환하는 역할을 할 것으로 예상됨.",
-      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 확인할 수 없으나, 함수 이름과 매개변수로 보아 디렉토리 내 파일이나 구조를 분석하는 작업을 수행할 가능성이 높음."
+      "summary": "파일 경로와 파일 타입을 입력받아 데이터를 읽어오는 함수로 추정됨.",
+      "responsibility": "이 함수는 주어진 파일 경로와 파일 타입에 따라 파일을 읽고, 그 내용을 반환하는 역할을 수행할 것으로 보입니다. 파일 타입에 따라 JSON, CSV 등 다양한 형식을 처리할 가능성이 있습니다.",
+      "design_notes": "파일 경로를 확인하고, 파일 타입에 따라 적절한 읽기 메커니즘을 선택하여 데이터를 읽어오는 로직이 포함될 것으로 예상됩니다.",
+      "collaboration": "1. 파일 경로(file_path) 유효성 확인, 2. 파일 타입(file_type)에 따른 처리 분기, 3. 파일 읽기 작업 수행, 4. 읽은 데이터를 반환"
     },
-    "text_content": "Symbol: handle_directory_analysis | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612074"
+    "text_content": "Symbol: _read_file | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940242"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "show_directory_preview",
+    "symbol_name": "_read_json_file",
     "location": {
-      "start_line": 181,
-      "end_line": 195
+      "start_line": 166,
+      "end_line": 176
     },
     "llm_analysis": {
-      "summary": "디렉토리의 미리보기를 표시하는 함수로 추정됨.",
-      "responsibility": "주어진 경로 객체(`path_obj`)를 기반으로 디렉토리의 내용을 시각적으로 표시하거나 요약 정보를 제공하는 역할을 할 것으로 예상됨.",
-      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 확인할 수 없으나, 함수 이름과 매개변수로 보아 디렉토리의 내용을 탐색하고 이를 사용자 인터페이스에 표시하는 작업을 수행할 가능성이 높음.",
-      "collaboration": "1. `path_obj` 매개변수를 입력으로 받음., 2. 경로가 유효한지 확인., 3. 디렉토리 내용을 탐색., 4. 탐색 결과를 사용자 인터페이스에 표시."
+      "summary": "JSON 파일을 읽고 파싱하여 데이터를 반환하는 함수",
+      "responsibility": "이 함수는 주어진 파일 경로에서 JSON 파일을 읽고, 해당 데이터를 파싱하여 반환하는 역할을 합니다. 파일이 존재하지 않거나 읽기 중 오류가 발생하면 예외를 발생시킬 가능성이 있습니다.",
+      "design_notes": "파일 경로를 입력받아 JSON 파일을 열고, 이를 파이썬 객체로 변환하여 반환합니다. JSON 파싱을 위해 표준 라이브러리인 `json` 모듈을 사용할 가능성이 높습니다.",
+      "collaboration": "1. 파일 경로를 입력으로 받습니다., 2. 파일을 열고 내용을 읽습니다., 3. 읽은 내용을 JSON 형식으로 파싱합니다., 4. 파싱된 데이터를 반환합니다."
     },
-    "text_content": "Symbol: show_directory_preview | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612077"
+    "text_content": "Symbol: _read_json_file | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940245"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "start_analysis",
+    "symbol_name": "_read_csv_file",
     "location": {
-      "start_line": 197,
-      "end_line": 205
+      "start_line": 178,
+      "end_line": 185
     },
     "llm_analysis": {
-      "summary": "The function `start_analysis` is defined but contains no implementation.",
-      "responsibility": "The function is likely intended to perform some form of analysis on a directory specified by the `directory_path` parameter, but its purpose is unclear due to the absence of any logic or comments in the function body.",
-      "design_notes": "The function currently has no logic or operations defined, making it a placeholder or incomplete implementation."
+      "summary": "CSV 파일을 읽어들이는 함수로 보이나, 함수 본문이 비어 있어 구현되지 않음.",
+      "responsibility": "주어진 파일 경로를 통해 CSV 파일을 읽고 데이터를 반환하는 역할을 수행할 것으로 예상되지만, 현재 함수 본문이 비어 있어 실제 동작은 정의되지 않음.",
+      "design_notes": "함수 본문이 비어 있어 로직이 구현되지 않았으나, 함수 이름과 매개변수로 보아 파일 경로를 입력받아 CSV 데이터를 처리하는 기능을 수행할 가능성이 있음."
     },
-    "text_content": "Symbol: start_analysis | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612080"
+    "text_content": "Symbol: _read_csv_file | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940248"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_analysis_status",
+    "symbol_name": "_read_text_file",
     "location": {
-      "start_line": 207,
-      "end_line": 232
+      "start_line": 187,
+      "end_line": 203
     },
     "llm_analysis": {
-      "summary": "The function `render_analysis_status` is intended to render the analysis status in the Streamlit UI.",
-      "responsibility": "The primary purpose of the function is to display the current status of code analysis within the user interface of the Code Analytica application. It likely interacts with Streamlit components to provide visual feedback to the user.",
-      "design_notes": "The function is currently empty, with no implemented logic or nodes. It is likely a placeholder for future development where Streamlit components will be used to render analysis status information."
+      "summary": "파일 경로를 입력받아 텍스트 파일을 읽는 함수입니다.",
+      "responsibility": "이 함수는 주어진 파일 경로에서 텍스트 데이터를 읽어와 반환하는 역할을 합니다. 데이터 처리 클래스 내에서 파일 읽기 작업을 수행하기 위한 유틸리티로 사용될 가능성이 높습니다.",
+      "design_notes": "함수는 파일 경로를 매개변수로 받아 해당 파일을 열고 내용을 읽어 반환합니다. 파일이 존재하지 않거나 읽기 중 오류가 발생하면 예외 처리를 통해 문제를 처리할 수 있습니다.",
+      "collaboration": "1. 파일 경로를 매개변수로 받음., 2. 파일 열기 시도., 3. 파일 내용을 읽음., 4. 읽은 내용을 반환."
     },
-    "text_content": "Symbol: render_analysis_status | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612084"
+    "text_content": "Symbol: _read_text_file | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940252"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_code_chat",
+    "symbol_name": "_validate_data",
     "location": {
-      "start_line": 234,
-      "end_line": 248
+      "start_line": 205,
+      "end_line": 220
     },
     "llm_analysis": {
-      "summary": "The function 'render_code_chat' is defined but contains no implementation.",
-      "responsibility": "The function appears to be a placeholder for rendering a code-related chat interface in the Streamlit application, but its purpose cannot be fully determined due to the lack of implementation.",
-      "design_notes": "There is no logic or operations defined within the function body, making it non-functional at this stage."
+      "summary": "데이터 유효성을 검증하는 함수",
+      "responsibility": "이 함수는 입력된 데이터를 검증하여 유효한 데이터인지 확인하는 역할을 합니다. 데이터 처리 파이프라인에서 데이터의 품질을 보장하기 위해 사용됩니다.",
+      "design_notes": "구체적인 구현 내용은 제공되지 않았으나, 함수 이름과 컨텍스트를 기반으로 볼 때, 데이터의 형식, 값 범위, 필수 필드 존재 여부 등을 확인하는 로직이 포함될 가능성이 높습니다.",
+      "collaboration": "1. 입력 데이터 수신, 2. 검증 규칙 로드 또는 참조, 3. 데이터의 형식 및 값 검증, 4. 검증 결과 반환 또는 오류 처리"
     },
-    "text_content": "Symbol: render_code_chat | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612087"
+    "text_content": "Symbol: _validate_data | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940255"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "check_agent_status",
+    "symbol_name": "_is_valid_record",
     "location": {
-      "start_line": 250,
-      "end_line": 264
+      "start_line": 222,
+      "end_line": 252
     },
     "llm_analysis": {
-      "summary": "이 함수는 현재 에이전트의 상태를 확인하는 역할을 수행합니다.",
-      "responsibility": "함수의 주요 목적은 에이전트의 상태를 확인하고, 이를 기반으로 사용자 인터페이스에서 적절한 정보를 표시하거나 후속 작업을 수행하는 것입니다. 이는 AI 기반 시스템의 상태 모니터링과 관련이 있을 가능성이 높습니다.",
-      "design_notes": "함수 본문이 제공되지 않았으므로 로직을 분석할 수 없습니다. 그러나 함수 이름과 컨텍스트를 기반으로, 에이전트 상태를 확인하는 로직이 포함될 것으로 예상됩니다.",
-      "collaboration": "에이전트 상태 확인 요청 수행, 상태 정보 처리, 결과 반환 또는 UI 업데이트"
+      "summary": "데이터 레코드의 유효성을 검증하는 함수.",
+      "responsibility": "이 함수는 데이터 처리 엔진에서 개별 레코드가 유효한지 확인하는 역할을 합니다. 이를 통해 데이터 처리 파이프라인에서 잘못된 데이터를 걸러낼 수 있습니다.",
+      "design_notes": "함수는 입력된 레코드의 특정 조건을 확인하여 유효성을 판단합니다. 조건은 사전 정의된 검증 규칙(validation rules) 또는 레코드의 구조적/내용적 특성에 기반할 가능성이 높습니다.",
+      "collaboration": "1. 레코드가 함수에 전달됨., 2. 검증 규칙 또는 조건을 적용하여 레코드의 유효성을 평가., 3. 유효성 결과를 반환."
     },
-    "text_content": "Symbol: check_agent_status | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612091"
+    "text_content": "Symbol: _is_valid_record | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940258"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "init_codechat_agent",
+    "symbol_name": "_check_field_constraints",
     "location": {
-      "start_line": 266,
+      "start_line": 254,
+      "end_line": 280
+    },
+    "llm_analysis": {
+      "summary": "데이터 필드 값이 주어진 제약 조건을 만족하는지 검증하는 함수.",
+      "responsibility": "이 함수는 데이터 처리 과정에서 특정 필드 값이 사전에 정의된 제약 조건을 충족하는지 확인하기 위해 사용됩니다. 이를 통해 데이터의 유효성을 검증하고, 처리 오류를 방지합니다.",
+      "design_notes": "함수는 입력 값(`value`)과 제약 조건(`constraints`)을 받아, 제약 조건에 따라 값이 유효한지 확인합니다. 제약 조건은 다양한 형태(예: 값의 범위, 데이터 타입, 정규식 등)일 수 있습니다.",
+      "collaboration": "1. 입력 값(`value`)과 제약 조건(`constraints`)을 수신., 2. 제약 조건을 순회하며 각 조건을 평가., 3. 조건을 만족하지 못하면 오류를 기록하거나 예외를 발생., 4. 모든 조건을 만족하면 정상적으로 반환."
+    },
+    "text_content": "Symbol: _check_field_constraints | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940262"
+  },
+  {
+    "file_path": "test_files/data_processor.py",
+    "symbol_type": "function",
+    "symbol_name": "_validate_timestamp",
+    "location": {
+      "start_line": 282,
       "end_line": 288
     },
     "llm_analysis": {
-      "summary": "init_codechat_agent 함수는 코드 분석 및 채팅 에이전트를 초기화하는 역할을 수행합니다.",
-      "responsibility": "이 함수는 Code Analytica 애플리케이션에서 코드 분석 및 AI 기반 채팅 기능을 제공하는 에이전트를 설정하거나 초기화하는 데 사용됩니다. 함수의 목적은 에이전트의 초기 상태를 구성하거나 필요한 리소스를 준비하는 것입니다.",
-      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 정의되지 않았습니다. 따라서 현재로서는 함수가 구현되지 않았거나, 추후 구현을 위해 예약된 상태로 보입니다."
+      "summary": "타임스탬프를 검증하는 함수",
+      "responsibility": "이 함수는 입력된 타임스탬프 값이 유효한지 확인하고, 필요에 따라 변환하거나 검증 실패 시 예외를 발생시키는 역할을 수행할 가능성이 있습니다. 그러나 함수 본문이 비어 있어 구체적인 동작은 정의되지 않았습니다.",
+      "design_notes": "현재 함수 본문이 비어 있으므로, 타임스탬프 검증과 관련된 로직이 구현되지 않았습니다. 일반적으로 이러한 함수는 입력값의 형식, 범위, 또는 데이터 타입을 확인하는 로직을 포함할 것으로 예상됩니다.",
+      "collaboration": "1. 함수가 호출되면 `timestamp` 매개변수를 입력으로 받습니다., 2. 입력값에 대한 검증 로직이 실행될 것으로 예상됩니다., 3. 검증 결과에 따라 유효한 값이 반환되거나, 검증 실패 시 예외가 발생할 가능성이 있습니다."
     },
-    "text_content": "Symbol: init_codechat_agent | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612095"
+    "text_content": "Symbol: _validate_timestamp | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940266"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_chat_interface",
+    "symbol_name": "_validate_email",
     "location": {
       "start_line": 290,
-      "end_line": 312
+      "end_line": 293
     },
     "llm_analysis": {
-      "summary": "render_chat_interface 함수는 사용자 인터페이스에서 채팅 기능을 렌더링하는 역할을 합니다.",
-      "responsibility": "이 함수는 Streamlit을 사용하여 AI 기반 코드 분석 및 채팅 시스템의 UI를 구성하는 데 필요한 요소를 렌더링합니다. 사용자와의 상호작용을 위한 채팅 인터페이스를 제공하는 것이 주요 목적입니다.",
-      "design_notes": "함수 내부에 로직이 정의되지 않았으며, 현재는 빈 상태입니다. 따라서 UI 구성이나 데이터 처리 로직이 포함되어 있지 않습니다."
+      "summary": "이 함수는 이메일 주소를 검증하는 역할을 합니다.",
+      "responsibility": "함수의 주요 목적은 입력된 이메일 주소가 유효한 형식인지 확인하는 것입니다. 이를 통해 데이터 처리 과정에서 이메일 형식 오류를 방지합니다.",
+      "design_notes": "함수는 이메일 주소를 검증하기 위해 정규 표현식을 사용할 가능성이 높습니다. 그러나 본문이 제공되지 않아 구체적인 검증 로직은 확인할 수 없습니다.",
+      "collaboration": "1. 이메일 주소를 입력으로 받습니다., 2. 이메일 주소의 형식을 검증합니다., 3. 검증 결과를 반환합니다."
     },
-    "text_content": "Symbol: render_chat_interface | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612098"
+    "text_content": "Symbol: _validate_email | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940269"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "process_chat_query",
+    "symbol_name": "_validate_phone",
     "location": {
-      "start_line": 314,
-      "end_line": 361
+      "start_line": 295,
+      "end_line": 298
     },
     "llm_analysis": {
-      "summary": "주어진 쿼리를 처리하고 상위 K개의 결과를 반환하는 함수로 추정됩니다.",
-      "responsibility": "사용자가 입력한 쿼리를 처리하여 AI 기반 분석 또는 검색 결과를 제공하는 역할을 수행할 것으로 예상됩니다.",
-      "design_notes": "함수의 로직은 주어진 쿼리를 분석하거나 처리하고, 상위 K개의 결과를 반환하는 방식으로 동작할 가능성이 있습니다.",
-      "collaboration": "1. 사용자 입력 쿼리(query)를 수신., 2. 쿼리를 처리하는 내부 로직 수행., 3. 결과를 정렬하거나 필터링., 4. 상위 K개의 결과를 반환."
+      "summary": "전화번호를 검증하는 함수로 보이지만, 구현 내용이 비어 있음.",
+      "responsibility": "전화번호 형식 또는 유효성을 확인하기 위한 함수로 설계된 것으로 추정되지만, 함수 본문이 비어 있어 실제 목적을 명확히 알 수 없음.",
+      "design_notes": "현재 함수 본문이 비어 있어 로직이 정의되지 않았음. 전화번호를 입력받아 특정 검증 규칙을 적용할 것으로 예상됨.",
+      "collaboration": "함수가 호출됨, 입력 매개변수 'phone'이 전달됨, 현재는 아무 작업도 수행하지 않음"
     },
-    "text_content": "Symbol: process_chat_query | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612101"
+    "text_content": "Symbol: _validate_phone | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940272"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_chat_history",
+    "symbol_name": "_transform_data",
     "location": {
-      "start_line": 363,
-      "end_line": 378
+      "start_line": 300,
+      "end_line": 310
     },
     "llm_analysis": {
-      "summary": "render_chat_history 함수는 채팅 기록을 렌더링하는 역할을 합니다.",
-      "responsibility": "이 함수는 Streamlit 기반 사용자 인터페이스에서 채팅 기록을 시각적으로 표시하기 위해 설계되었습니다. 사용자가 이전 대화 내용을 확인할 수 있도록 돕는 역할을 합니다.",
-      "design_notes": "함수는 Streamlit 라이브러리를 활용하여 채팅 기록 데이터를 가져오고, 이를 적절한 형식으로 렌더링하여 사용자 인터페이스에 표시합니다.",
-      "collaboration": "채팅 기록 데이터를 가져옵니다., 데이터를 적절한 형식으로 변환하거나 정리합니다., Streamlit UI 컴포넌트를 사용하여 데이터를 렌더링합니다., 렌더링된 결과를 사용자 인터페이스에 표시합니다."
+      "summary": "데이터를 변환하는 내부 함수로 보이나, 현재 함수 본문이 비어 있음.",
+      "responsibility": "이 함수는 주어진 데이터를 특정 방식으로 변환하기 위해 설계된 것으로 보입니다. 그러나 함수 본문이 비어 있어 실제 목적과 역할을 파악할 수 없습니다.",
+      "design_notes": "함수 본문이 비어 있어 로직이나 동작 방식을 분석할 수 없습니다."
     },
-    "text_content": "Symbol: render_chat_history | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612104"
+    "text_content": "Symbol: _transform_data | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940275"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_user_message",
+    "symbol_name": "_normalize_strings",
     "location": {
-      "start_line": 380,
-      "end_line": 395
+      "start_line": 312,
+      "end_line": 318
     },
     "llm_analysis": {
-      "summary": "사용자 메시지를 렌더링하는 함수.",
-      "responsibility": "사용자가 입력한 메시지를 UI에 표시하거나 처리하기 위해 렌더링하는 역할을 수행합니다. Streamlit 기반의 사용자 인터페이스에서 메시지를 시각적으로 표현하는 데 사용될 가능성이 높습니다.",
-      "design_notes": "함수는 'message' 매개변수를 입력으로 받아, 이를 Streamlit UI에 적절히 렌더링하거나 출력하는 로직을 포함할 것으로 예상됩니다.",
-      "collaboration": "1. 'message' 매개변수를 입력으로 받음., 2. Streamlit의 UI 구성 요소를 사용하여 메시지를 렌더링., 3. 렌더링된 메시지를 화면에 출력."
+      "summary": "주어진 데이터를 문자열로 정규화하는 함수입니다.",
+      "responsibility": "이 함수는 입력 데이터에서 문자열을 정규화하여 일관된 형식으로 변환하는 역할을 합니다. 데이터 처리 파이프라인에서 데이터의 일관성을 유지하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 확인할 수 없지만, 함수 이름과 컨텍스트를 고려할 때 문자열 데이터를 특정 규칙에 따라 변환하거나 정리하는 작업을 수행할 것으로 예상됩니다.",
+      "collaboration": "1. 입력 데이터(data)를 수신합니다., 2. 문자열 정규화 작업을 수행합니다. (구체적인 로직은 본문이 비어 있어 확인 불가), 3. 정규화된 데이터를 반환합니다."
     },
-    "text_content": "Symbol: render_user_message | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612107"
+    "text_content": "Symbol: _normalize_strings | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940279"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_assistant_message",
+    "symbol_name": "_convert_data_types",
     "location": {
-      "start_line": 397,
-      "end_line": 416
+      "start_line": 320,
+      "end_line": 334
     },
     "llm_analysis": {
-      "summary": "Streamlit 기반 UI에서 AI 어시스턴트 메시지를 렌더링하는 함수로 추정됩니다.",
-      "responsibility": "이 함수는 AI 어시스턴트가 생성한 메시지를 사용자 인터페이스에 표시하는 역할을 할 것으로 보입니다. Streamlit을 활용하여 메시지를 시각적으로 표현할 가능성이 있습니다.",
-      "design_notes": "함수 이름과 파일 컨텍스트를 고려할 때, 메시지를 받아 Streamlit의 UI 컴포넌트를 사용하여 화면에 출력하는 로직이 포함될 것으로 예상됩니다.",
-      "collaboration": "1. 메시지 입력을 받음., 2. Streamlit UI 컴포넌트를 사용하여 메시지를 렌더링., 3. 렌더링된 메시지가 사용자 인터페이스에 표시됨."
+      "summary": "데이터의 타입을 변환하는 함수로 추정됨.",
+      "responsibility": "이 함수는 입력 데이터의 타입을 특정 규칙에 따라 변환하거나 표준화하는 역할을 수행할 것으로 보입니다. 이는 데이터 처리 파이프라인에서 데이터의 일관성을 유지하거나, 특정 형식으로 변환하기 위해 사용될 가능성이 높습니다.",
+      "design_notes": "구체적인 구현이 제공되지 않았으나, 함수 이름과 컨텍스트를 고려할 때, 데이터의 타입을 검사하고, 필요에 따라 변환 작업을 수행하는 로직이 포함될 것으로 예상됩니다.",
+      "collaboration": "1. 입력 데이터 수신., 2. 데이터의 타입 확인., 3. 변환 규칙에 따라 데이터 변환., 4. 변환된 데이터 반환."
     },
-    "text_content": "Symbol: render_assistant_message | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612110"
+    "text_content": "Symbol: _convert_data_types | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940282"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_evidence",
+    "symbol_name": "_add_derived_fields",
     "location": {
-      "start_line": 418,
-      "end_line": 457
+      "start_line": 336,
+      "end_line": 350
     },
     "llm_analysis": {
-      "summary": "render_evidence 함수는 evidence_list를 기반으로 데이터를 처리하거나 UI에 렌더링하는 역할을 수행합니다.",
-      "responsibility": "이 함수는 주어진 evidence_list를 사용하여 특정 데이터를 렌더링하거나 시각적으로 표현하는 데 사용됩니다. Streamlit 기반의 사용자 인터페이스에서 데이터를 표시하는 기능을 제공할 가능성이 있습니다.",
-      "design_notes": "함수 본문이 제공되지 않아 정확한 로직을 분석할 수는 없지만, 함수 이름과 컨텍스트를 고려할 때 evidence_list를 순회하거나 처리하여 UI에 표시하는 작업을 수행할 것으로 예상됩니다.",
-      "collaboration": "evidence_list를 입력으로 받음, evidence_list를 처리하거나 순회, Streamlit을 사용하여 데이터를 렌더링하거나 표시"
+      "summary": "데이터에 파생 필드를 추가하는 함수.",
+      "responsibility": "함수 `_add_derived_fields`는 입력 데이터(`data`)를 처리하여 추가적인 파생 필드를 생성하고 이를 데이터에 포함시키는 역할을 합니다. 이는 데이터의 분석 및 활용을 위한 확장성을 제공합니다.",
+      "design_notes": "함수는 입력 데이터의 구조를 기반으로 새로운 필드를 계산하거나 생성하여 기존 데이터에 추가합니다. 파생 필드의 생성 로직은 함수 내부에서 정의되며, 데이터의 변환 및 확장을 수행합니다.",
+      "collaboration": "1. 입력 데이터(`data`)를 함수에 전달., 2. 데이터의 각 항목을 순회하며 파생 필드를 계산., 3. 계산된 파생 필드를 데이터에 추가., 4. 수정된 데이터를 반환."
     },
-    "text_content": "Symbol: render_evidence | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612114"
+    "text_content": "Symbol: _add_derived_fields | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940286"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_docs",
+    "symbol_name": "_get_category_group",
     "location": {
-      "start_line": 459,
-      "end_line": 461
+      "start_line": 352,
+      "end_line": 359
     },
     "llm_analysis": {
-      "summary": "The function `render_docs` is defined but contains no implementation.",
-      "responsibility": "The function appears to be a placeholder for rendering documentation or related content in the Streamlit UI, but it currently lacks any functionality.",
-      "design_notes": "The function body is empty, with no nodes or comments, indicating that no logic has been implemented yet."
+      "summary": "주어진 카테고리 값을 기반으로 그룹을 반환하는 함수로 추정됨.",
+      "responsibility": "이 함수는 입력된 'category' 값을 처리하여 특정 그룹(예: 카테고리 그룹 또는 분류)을 반환하는 역할을 수행할 것으로 보입니다. 이는 데이터 처리 파이프라인에서 카테고리 기반의 분류 작업에 사용될 가능성이 높습니다.",
+      "design_notes": "함수의 본문이 비어 있어 구체적인 로직은 확인할 수 없으나, 함수 이름과 시그니처를 고려할 때, 입력된 'category' 값을 기준으로 사전 정의된 그룹 매핑 또는 규칙에 따라 적절한 그룹을 반환할 것으로 예상됩니다.",
+      "collaboration": "1. 'category' 매개변수를 입력으로 받음., 2. 내부적으로 정의된 매핑 또는 규칙을 참조하여 'category'에 해당하는 그룹을 결정., 3. 결정된 그룹 값을 반환."
     },
-    "text_content": "Symbol: render_docs | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612117"
+    "text_content": "Symbol: _get_category_group | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940289"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_status",
+    "symbol_name": "_clean_data",
     "location": {
-      "start_line": 463,
-      "end_line": 484
+      "start_line": 361,
+      "end_line": 371
     },
     "llm_analysis": {
-      "summary": "The function `render_status` is defined but currently contains no implementation.",
-      "responsibility": "The function appears to be a placeholder for rendering some kind of status information in the Streamlit UI, but its purpose is not yet implemented or defined.",
-      "design_notes": "The function has no logic or operations implemented, as its body is empty."
+      "summary": "데이터를 정리(clean)하는 내부 유틸리티 함수.",
+      "responsibility": "이 함수는 입력된 데이터를 정리하거나 전처리하여, 이후의 데이터 처리 파이프라인에서 사용할 수 있도록 준비하는 역할을 합니다. 함수 이름과 컨텍스트로 보아, 데이터의 유효성 검증, 정규화, 또는 불필요한 요소 제거를 수행할 가능성이 높습니다.",
+      "design_notes": "함수 본문이 제공되지 않았으므로 구체적인 로직은 알 수 없으나, 함수 이름과 컨텍스트로 보아 데이터 정리(cleaning)와 관련된 작업을 수행할 것으로 예상됩니다. 예를 들어, 공백 제거, 데이터 형식 변환, 또는 결측값 처리 등이 포함될 수 있습니다.",
+      "collaboration": "1. 입력 데이터(data)를 함수에 전달., 2. 데이터 정리(cleaning) 작업 수행., 3. 정리된 데이터를 반환."
     },
-    "text_content": "Symbol: render_status | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612121"
+    "text_content": "Symbol: _clean_data | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940293"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render_footer",
+    "symbol_name": "_enrich_data",
     "location": {
-      "start_line": 486,
-      "end_line": 495
+      "start_line": 373,
+      "end_line": 394
     },
     "llm_analysis": {
-      "summary": "render_footer 함수는 현재 비어 있으며, 기능이 정의되지 않은 상태입니다.",
-      "responsibility": "함수는 파일 내에서 하단 UI 구성 요소를 렌더링하는 역할을 할 것으로 예상되지만, 현재 구현되지 않았습니다.",
-      "design_notes": "함수 본문이 비어 있어 로직이 존재하지 않으며, 실행 시 아무 작업도 수행하지 않습니다."
+      "summary": "데이터를 풍부하게 변환하거나 보강하는 함수.",
+      "responsibility": "주어진 데이터를 입력으로 받아, 추가적인 정보나 변환을 통해 데이터를 보강(enrich)하는 역할을 수행합니다. 이는 데이터 처리 파이프라인의 일부로 사용될 가능성이 높습니다.",
+      "design_notes": "함수의 내부 로직은 제공되지 않았으나, 함수 이름과 컨텍스트로 보아 입력 데이터를 가공하거나 추가 정보를 결합하여 데이터를 확장하는 작업을 수행할 것으로 보입니다.",
+      "collaboration": "1. 데이터를 입력으로 받는다., 2. 데이터를 변환하거나 보강하는 내부 로직을 수행한다., 3. 변환된 데이터를 반환한다."
     },
-    "text_content": "Symbol: render_footer | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612124"
+    "text_content": "Symbol: _enrich_data | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940298"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "run_structsynth_analysis",
+    "symbol_name": "_update_cache",
     "location": {
-      "start_line": 497,
-      "end_line": 545
+      "start_line": 396,
+      "end_line": 403
     },
     "llm_analysis": {
-      "summary": "주어진 디렉토리 경로를 기반으로 구조적 분석을 실행하는 함수.",
-      "responsibility": "함수는 디렉토리 경로를 입력으로 받아 특정 구조적 분석 작업을 수행하는 역할을 합니다. 이는 코드 분석 또는 데이터 처리와 관련된 작업일 가능성이 높습니다.",
-      "design_notes": "함수는 입력된 디렉토리 경로를 처리하여 구조적 분석을 실행하고, 결과를 반환하는 것으로 보입니다. 구체적인 로직은 본문이 비어 있어 확인할 수 없습니다.",
-      "collaboration": "1. 디렉토리 경로를 입력으로 받음., 2. 디렉토리 경로를 기반으로 분석 작업을 수행., 3. 분석 결과를 반환."
+      "summary": "캐시를 업데이트하는 내부 유틸리티 함수",
+      "responsibility": "파일 경로와 데이터를 입력받아 캐시를 갱신하거나 저장하는 역할을 수행할 것으로 추정됩니다. 이는 데이터 처리 과정에서 중복 작업을 방지하거나 성능을 최적화하기 위한 목적으로 사용될 가능성이 높습니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 확인할 수 없으나, 함수 이름과 매개변수로 보아 파일 경로(`file_path`)를 키로 사용하여 데이터를 캐시에 저장하거나 갱신하는 작업을 수행할 것으로 보입니다.",
+      "collaboration": "1. `file_path`와 `data`를 입력으로 받음, 2. 캐시 데이터 구조를 확인하거나 초기화, 3. `file_path`를 키로 사용하여 `data`를 저장 또는 갱신, 4. 필요 시 캐시 갱신 결과를 반환"
     },
-    "text_content": "Symbol: run_structsynth_analysis | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612128"
+    "text_content": "Symbol: _update_cache | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940301"
   },
   {
-    "file_path": "/app/ui/streamlit_app/app.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "_send_chat_request_to_backend",
+    "symbol_name": "get_processing_stats",
     "location": {
-      "start_line": 547,
-      "end_line": 589
+      "start_line": 405,
+      "end_line": 414
     },
     "llm_analysis": {
-      "summary": "백엔드에 채팅 요청을 보내는 함수입니다.",
-      "responsibility": "사용자가 입력한 쿼리와 top_k 값을 기반으로 백엔드에 요청을 보내고, 결과를 반환하는 역할을 합니다. 이 함수는 AI 기반 채팅 시스템의 데이터 처리 흐름에서 중요한 부분을 담당합니다.",
-      "design_notes": "함수는 입력된 쿼리와 top_k 값을 사용하여 백엔드 API 또는 서버에 요청을 보내고, 응답 데이터를 처리하여 반환합니다.",
-      "collaboration": "1. 사용자 입력으로부터 query와 top_k 값을 수신., 2. 백엔드 API 또는 서버에 HTTP 요청을 생성., 3. 요청을 전송하고 응답을 수신., 4. 응답 데이터를 처리하여 반환."
+      "summary": "get_processing_stats 함수는 데이터 처리 통계 정보를 반환하는 역할을 합니다.",
+      "responsibility": "이 함수는 DataProcessor 클래스에서 데이터 처리 작업의 통계 정보를 제공하기 위해 설계되었습니다. 이를 통해 처리된 데이터의 성공 및 실패 비율, 총 처리량 등을 확인할 수 있습니다.",
+      "design_notes": "함수는 내부적으로 DataProcessor 클래스의 processing_stats 속성에 저장된 통계 데이터를 반환합니다. 별도의 계산이나 데이터 변환 로직은 포함되어 있지 않습니다.",
+      "collaboration": "DataProcessor 클래스의 processing_stats 속성에 접근, processing_stats 데이터를 반환"
     },
-    "text_content": "Symbol: _send_chat_request_to_backend | Type: function | File: /app/ui/streamlit_app/app.py",
-    "timestamp": "2025-09-02T05:13:03.612132"
+    "text_content": "Symbol: get_processing_stats | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940305"
   },
   {
-    "file_path": "/app/ui/streamlit_app/Docs.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "render",
+    "symbol_name": "get_data_summary",
     "location": {
-      "start_line": 11,
-      "end_line": 49
+      "start_line": 416,
+      "end_line": 439
     },
     "llm_analysis": {
-      "summary": "Streamlit 기반 UI를 렌더링하여 InsightGen 에이전트 실행 및 결과를 표시하는 함수.",
-      "responsibility": "이 함수는 Streamlit을 사용하여 InsightGen 에이전트를 실행하는 버튼과 관련 정보를 표시하고, 실행 결과를 UI에 렌더링하는 역할을 합니다. 사용자가 에이전트를 실행하고 결과를 확인할 수 있도록 인터페이스를 제공합니다.",
-      "design_notes": "Streamlit의 UI 구성 요소를 사용하여 버튼, 텍스트, 결과 데이터를 표시하며, 버튼 클릭 시 에이전트를 실행하는 동작을 트리거합니다. 실행 결과는 세션 상태에서 가져와 UI에 표시됩니다.",
-      "collaboration": "Streamlit의 subheader와 info를 사용하여 기본 설명 텍스트를 표시., 두 개의 열(col1, col2)을 생성하여 버튼과 설명을 배치., col1에서 버튼을 생성하고 클릭 시 run_insightgen() 함수를 호출., col2에서 버튼 동작에 대한 설명을 표시., 세션 상태에서 'insightgen_result'를 가져와 결과가 존재하는지 확인., 결과가 존재하면 Planner 결과와 최종 산출물을 각각 렌더링., 최종 산출물(artifacts)을 반복 처리하여 show_artifact() 함수를 호출."
+      "summary": "The function `get_data_summary` is defined but lacks implementation details.",
+      "responsibility": "The purpose of the function is unclear due to the absence of any logic or comments in its body. Based on its name, it is likely intended to summarize or provide an overview of some data.",
+      "design_notes": "The function currently has no logic or operations implemented, as indicated by the empty 'nodes' and 'comments' in its body."
     },
-    "text_content": "Symbol: render | Type: function | File: /app/ui/streamlit_app/Docs.py",
-    "timestamp": "2025-09-02T05:13:03.612136"
+    "text_content": "Symbol: get_data_summary | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940309"
   },
   {
-    "file_path": "/app/ui/streamlit_app/Docs.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "run_insightgen",
+    "symbol_name": "export_processed_data",
     "location": {
-      "start_line": 52,
-      "end_line": 65
+      "start_line": 441,
+      "end_line": 462
     },
     "llm_analysis": {
-      "summary": "run_insightgen 함수는 InsightGen 에이전트를 실행하는 역할을 담당합니다.",
-      "responsibility": "이 함수는 Streamlit 기반의 UI에서 InsightGen 에이전트를 실행하기 위해 호출되며, 실행 결과를 세션 상태에 저장하거나 다른 처리를 수행할 가능성이 있습니다. 그러나 함수 본문이 비어 있어 구체적인 동작은 정의되지 않았습니다.",
-      "design_notes": "현재 함수 본문이 비어 있으므로, 실행 시 아무런 동작을 수행하지 않습니다. 호출만 가능하며, 내부 로직은 구현되지 않은 상태입니다."
+      "summary": "데이터를 지정된 형식으로 파일에 내보내는 함수입니다.",
+      "responsibility": "함수는 처리된 데이터를 파일로 저장하며, 저장 형식은 사용자가 지정한 형식에 따라 달라집니다. 이를 통해 데이터의 저장 및 공유를 용이하게 합니다.",
+      "design_notes": "함수는 'output_file'과 'format' 매개변수를 받아 데이터를 지정된 형식으로 변환한 후 파일에 저장합니다. 지원되는 형식은 JSON, CSV 등일 가능성이 있습니다.",
+      "collaboration": "1. 'output_file'과 'format' 매개변수를 확인합니다., 2. 처리된 데이터를 지정된 형식으로 변환합니다., 3. 변환된 데이터를 'output_file' 경로에 저장합니다., 4. 저장 성공 여부를 반환하거나 로그에 기록합니다."
     },
-    "text_content": "Symbol: run_insightgen | Type: function | File: /app/ui/streamlit_app/Docs.py",
-    "timestamp": "2025-09-02T05:13:03.612140"
+    "text_content": "Symbol: export_processed_data | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940313"
   },
   {
-    "file_path": "/app/ui/streamlit_app/Docs.py",
+    "file_path": "test_files/data_processor.py",
     "symbol_type": "function",
-    "symbol_name": "show_artifact",
+    "symbol_name": "clear_cache",
     "location": {
-      "start_line": 68,
-      "end_line": 83
+      "start_line": 464,
+      "end_line": 467
     },
     "llm_analysis": {
-      "summary": "show_artifact 함수는 파일 경로를 받아 해당 파일의 내용을 표시하는 역할을 합니다.",
-      "responsibility": "이 함수는 주어진 파일 경로(fp)를 기반으로 파일의 내용을 읽고, 이를 Streamlit을 통해 사용자 인터페이스에 표시하는 데 사용됩니다. 주로 최종 산출물(artifact)을 시각적으로 확인하기 위한 목적으로 설계되었습니다.",
-      "design_notes": "함수는 파일 경로를 입력받아 파일을 열고 내용을 읽은 뒤, Streamlit의 UI 컴포넌트를 사용하여 내용을 출력합니다. 파일의 형식에 따라 적절히 처리될 가능성이 있습니다.",
-      "collaboration": "1. 파일 경로(fp)를 Path 객체로 변환., 2. 파일을 열고 내용을 읽음., 3. 읽은 내용을 Streamlit UI를 통해 출력."
+      "summary": "clear_cache 함수는 데이터 캐시를 초기화하는 역할을 합니다.",
+      "responsibility": "이 함수는 DataProcessor 클래스에서 사용되는 데이터 캐시를 비우거나 초기화하여 메모리 관리 및 데이터 갱신을 지원합니다.",
+      "design_notes": "함수 본문이 비어 있어 구체적인 로직은 정의되지 않았지만, 일반적으로 캐시 초기화는 데이터 구조를 재설정하거나 비우는 작업을 포함합니다."
     },
-    "text_content": "Symbol: show_artifact | Type: function | File: /app/ui/streamlit_app/Docs.py",
-    "timestamp": "2025-09-02T05:13:03.612143"
+    "text_content": "Symbol: clear_cache | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940317"
+  },
+  {
+    "file_path": "test_files/data_processor.py",
+    "symbol_type": "function",
+    "symbol_name": "reset_stats",
+    "location": {
+      "start_line": 469,
+      "end_line": 479
+    },
+    "llm_analysis": {
+      "summary": "데이터 처리 통계 정보를 초기화하는 함수",
+      "responsibility": "reset_stats 함수는 DataProcessor 클래스의 데이터 처리 통계 정보를 초기 상태로 재설정하는 역할을 합니다. 이를 통해 데이터 처리 작업을 새로 시작할 때 통계 정보를 초기화할 수 있습니다.",
+      "design_notes": "함수는 DataProcessor 클래스의 processing_stats 속성을 초기값으로 재설정합니다. 초기값은 처리된 데이터 수, 성공 및 실패 횟수, 그리고 시작 시간을 포함합니다.",
+      "collaboration": "processing_stats['total_processed']를 0으로 설정, processing_stats['successful']를 0으로 설정, processing_stats['failed']를 0으로 설정, processing_stats['start_time']를 현재 시간(datetime.now())으로 설정"
+    },
+    "text_content": "Symbol: reset_stats | Type: function | File: test_files/data_processor.py",
+    "timestamp": "2025-09-06T09:26:12.940321"
   }
 ]

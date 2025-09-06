@@ -15,6 +15,9 @@ class InsightGenAgent:
     def __init__(self, data_dir: str = "./data", repo_path: str = "."):
         self.data_dir = data_dir
         self.repo_path = repo_path
+        # Tools 중 repo_path를 필요로 하는 호출에서 사용할 실제 대상 경로
+        # (StructSynth 최신 실행의 repo_path가 있으면 그것을 우선 사용)
+        self._effective_repo_path: str | None = None
         self.tools = {t.name: t for t in get_tools()}
         self._llm_planner = None
 
@@ -172,7 +175,7 @@ class InsightGenAgent:
         filtered = {k: v for k, v in (norm_params or {}).items() if k in allowed_map.get(tool_name, set())}
         filtered["data_dir"] = self.data_dir
         if tool_name in tools_need_repo_path:
-            filtered["repo_path"] = self.repo_path
+            filtered["repo_path"] = self._effective_repo_path or self.repo_path
 
         base_payload = filtered
         result = self._invoke(tool_name, base_payload)
@@ -285,6 +288,21 @@ class InsightGenAgent:
         return result
 
     def analyze(self) -> Dict[str, Any]:
+        # 0) 가능한 경우 StructSynth 최신 실행으로부터 대상 repo_path를 가져와 반영
+        try:
+            latest_run = self._invoke("get_latest_run", {"agent_name": "StructSynth", "data_dir": self.data_dir})
+            if isinstance(latest_run, dict):
+                # 다양한 저장 형태를 고려하여 repo_path 후보를 탐색
+                candidate = (
+                    latest_run.get("repo_path")
+                    or (latest_run.get("params", {}) or {}).get("repo_path")
+                    or (latest_run.get("config", {}) or {}).get("repo_path")
+                )
+                if isinstance(candidate, str) and candidate.strip():
+                    self._effective_repo_path = candidate.strip()
+        except Exception:
+            pass
+
         # 1) 규모/구조 파악
         stats = self._invoke("get_database_stats", {"data_dir": self.data_dir})
         files = self._invoke("list_files", {"data_dir": self.data_dir})
@@ -299,7 +317,7 @@ class InsightGenAgent:
                 total_functions = st.get("function", 0) or 0
 
         # 2) 산출물 3가지 선택
-        # LLM이 결정하도록 시도 (환경변수/모델 설정 필요). 실패 시 안내 후 중단 (임의의 고정 답변 금지)
+        # LLM이 결정하도록 시도 (환경변수/모델 설정 필요). 실패 시 사용자에게 실패를 표기하고 중단
         outputs = []
         try:
             tool_specs = [
@@ -351,7 +369,7 @@ class InsightGenAgent:
                     "symbol_count_same_lang": len(file_symbols),
                 })
 
-        # 4) 산출물별 프롬프트/툴 호출 계획을 LLM이 설계
+        # 4) 산출물별 프롬프트/툴 호출 계획을 LLM이 설계 (chunk_id 필요 도구 금지)
         try:
             tool_specs = [
                 {"name": n, "description": (getattr(t, "description", "") or "").strip()}
@@ -366,50 +384,50 @@ class InsightGenAgent:
                 "selected_outputs": outputs,
             }
 
-        # 첫 번째 산출물은 항상 프로젝트 개요가 되도록 고정 계획을 적용
+        # 첫 번째 산출물은 "분석 대상 소스"에 대한 개요가 되도록 고정 계획을 적용
         overview_plan = {
-            "name": "프로젝트 개요",
+            "name": "분석 대상 소스 개요",
             "file_ext": "md",
             "tool_invocations": [
-                {"name": "get_database_stats", "params": {}, "alias": "db_stats", "purpose": "DB 규모/구조 요약"},
-                {"name": "get_vector_store_stats", "params": {}, "alias": "vector_stats", "purpose": "벡터 스토어 상태"},
-                {"name": "get_analysis_summary", "params": {}, "alias": "analysis_summary", "purpose": "최근 분석 상태"},
-                {"name": "list_files", "params": {}, "alias": "files", "purpose": "파일 목록 및 샘플"},
+                {"name": "get_database_stats", "params": {}, "alias": "db_stats", "purpose": "분석 대상 DB 규모/구조 요약"},
+                {"name": "list_files", "params": {}, "alias": "files", "purpose": "파일 목록/언어/디렉토리 분석"},
                 {"name": "list_symbols", "params": {"limit": 100}, "alias": "symbols", "purpose": "심볼 분포 샘플"},
+                {"name": "search_symbols_fts", "params": {"query": "service", "top_k": 20}, "alias": "sym_service", "purpose": "핵심 기능 단서(서비스 계층)"},
+                {"name": "search_symbols_fts", "params": {"query": "controller", "top_k": 20}, "alias": "sym_controller", "purpose": "핵심 기능 단서(컨트롤러/엔드포인트)"},
+                {"name": "search_symbols_fts", "params": {"query": "handler", "top_k": 20}, "alias": "sym_handler", "purpose": "핵심 기능 단서(이벤트/요청 처리)"},
+                {"name": "search_symbols_fts", "params": {"query": "model", "top_k": 20}, "alias": "sym_model", "purpose": "핵심 기능 단서(데이터/도메인 모델)"},
+                {"name": "search_symbols_fts", "params": {"query": "api", "top_k": 20}, "alias": "sym_api", "purpose": "핵심 기능 단서(API/라우팅)"},
+                {"name": "get_calls_from", "params": {}, "alias": "sample_out_calls", "purpose": "대표 함수의 외부 호출 예시"},
+                {"name": "get_calls_to", "params": {}, "alias": "sample_in_calls", "purpose": "대표 함수로의 내부 호출 예시"},
+                {"name": "get_vector_store_stats", "params": {}, "alias": "vector_stats", "purpose": "(선택) 벡터 인덱스 상태"},
+                {"name": "get_analysis_summary", "params": {}, "alias": "analysis_summary", "purpose": "(선택) 최근 분석 요약"},
             ],
             "prompt_template": (
-                "[목적] 신규 개발자/운영자가 본 프로젝트의 목적, 구성요소, 실행 방법을 빠르게 이해하도록 돕습니다.\n"
-                "[대상] 이 프로젝트에 처음 투입된 개발자/운영자.\n"
-                "[출력 형식] 마크다운. 한국어. 불필요한 수사는 배제하고, 사실 기반으로 간결하게 작성.\n"
+                "[목적] 분석 대상 소스 코드베이스의 구조와 특성을 빠르게 파악할 수 있도록 요약합니다.\n"
+                "[대상] 이 코드베이스를 처음 접하는 개발자/리뷰어.\n"
+                "[출력 형식] 마크다운. 한국어. ToolResults 근거 기반으로 간결하고 정확하게 작성.\n"
                 "[구성] \n"
-                "# 프로젝트 개요\n"
-                "## 목적과 핵심 기능\n"
-                "- 본 프로젝트의 목표와 해결하려는 문제를 3-5문장으로 요약\n"
-                "- 핵심 기능: 코드 구조 분석(StructSynth), 코드 인사이트/검색, 코드 채팅(CodeChat)\n"
-                "## 시스템 구성\n"
-                "- 백엔드(API, FastAPI) 포트 8000, UI(Streamlit) 포트 8501\n"
-                "- 주요 디렉토리: agents/, api/, ui/, common/, tools/\n"
-                "- 데이터/아티팩트: data/structsynth_code.db, artifacts/faiss.index, artifacts/backend.log 등\n"
-                "- 의존 사항: Azure OpenAI (AZURE_OPENAI_API_KEY/ENDPOINT/API_VERSION/DEPLOYMENT_NAME/EMBEDDING_DEPLOYMENT)\n"
-                "## 실행 방법\n"
-                "- Docker Compose로 실행: docker compose up -d (또는 run_all.sh)\n"
-                "- 백엔드 헬스체크: http://localhost:8000/health, UI: http://localhost:8501\n"
-                "## 데이터베이스/벡터 스토어 상태 요약\n"
-                "- ToolResults의 db_stats, vector_stats, analysis_summary 값을 표로 요약 (파일 수, 심볼 수, 청크 수, 벡터 인덱스 여부 등)\n"
-                "## 주요 컴포넌트 설명\n"
-                "- Agents: StructSynth, CodeChat의 역할과 입력/출력 개요\n"
-                "- API: 핵심 엔드포인트(/, /health, /api/agents, /api/chat 등)와 사용 요약\n"
-                "- UI: 탭 구성(Code Analysis, Code Chat, Docs, Status)과 기본 사용 흐름\n"
-                "## 기본 사용 시나리오\n"
-                "- 코드 디렉토리 분석 → 벡터/DB 구축 → Code Chat 질의 응답 흐름을 단계별로 4-6단계로 정리\n"
-                "## 문제 해결 가이드(요약)\n"
-                "- API 연결 실패, 임베딩/벡터 미로딩, 환경변수 미설정 등 흔한 이슈와 조치\n"
-                "## 다음 액션\n"
-                "- 신규 기여자가 바로 시도할 수 있는 3가지 액션 제안\n"
+                "# 분석 대상 소스 개요\n"
+                "## 전체 요약\n"
+                "- 전체 파일 수, 심볼 수, 언어 분포 등 핵심 지표를 표로 정리 (db_stats, symbols 활용)\n"
+                "## 디렉토리/모듈 구조\n"
+                "- 상위 디렉토리 구조와 역할을 요약 (files 기반, 디렉토리별 파일 수/대표 파일 예시 포함)\n"
+                "## 핵심 기능 요약\n"
+                "- sym_service/sym_controller/sym_handler/sym_model/sym_api 및 symbols, files의 명명 규칙을 근거로\n"
+                "  주요 기능(예: 인증/권한, 데이터 처리, API 제공, 배치/잡, UI/뷰 등)을 항목별로 정리\n"
+                "- 각 항목마다 근거가 된 파일/심볼 예시를 코드 블록 또는 인라인 코드로 제시\n"
+                "## 핵심 엔트리포인트/모듈 추정\n"
+                "- 파일/경로/함수명을 근거로 엔트리포인트 및 핵심 모듈 후보를 제시 (근거를 함께 표기)\n"
+                "## 코드 의존관계 개요\n"
+                "- sample_out_calls, sample_in_calls 결과를 간단히 서술 (어떤 함수가 무엇을 호출/호출받는지)\n"
+                "## 최근 분석/인덱스 상태 (있을 경우)\n"
+                "- vector_stats, analysis_summary가 존재하면 간략히 상태를 요약\n"
+                "## 다음 탐색 가이드\n"
+                "- 코드 이해를 위해 바로 확인하면 좋은 포인트 3-5가지를 제안\n"
                 "[작성 지침]\n"
-                "- 아래 ToolResults를 근거로 수치/상태를 채우고, 근거가 없으면 추정/환상 금지.\n"
-                "- 파일/심볼 수치, 포트, 경로 등은 명확히 숫자/코드 포맷으로 표기.\n"
-                "- 링크는 로컬 실행 기준 URL을 사용.\n"
+                "- 모든 수치/주장은 반드시 ToolResults 근거를 바탕으로 작성. 근거 없으면 생략하고 추정/환상 금지.\n"
+                "- 이 분석 도구(우리 프로젝트)의 구성/포트/실행방법 등은 포함하지 말 것.\n"
+                "- 경로/파일명/언어/숫자는 코드 포맷으로 명확히 표기.\n"
             ),
         }
 
@@ -418,27 +436,30 @@ class InsightGenAgent:
         else:
             plans = [overview_plan]
 
-        # 선택 산출물 메타도 첫 항목을 프로젝트 개요로 정렬
+        # 선택 산출물 메타도 첫 항목을 "분석 대상 소스 개요"로 정렬
         try:
             if outputs:
                 outputs[0] = {
-                    "name": "프로젝트 개요",
+                    "name": "분석 대상 소스 개요",
                     "tools": [
                         "get_database_stats",
-                        "get_vector_store_stats",
-                        "get_analysis_summary",
                         "list_files",
                         "list_symbols",
+                        "search_symbols_fts",
+                        "get_calls_from",
+                        "get_calls_to",
+                        "get_vector_store_stats",
+                        "get_analysis_summary",
                     ],
-                    "reason": "신규 인원의 온보딩을 위해 프로젝트 목적/구성/실행 방법을 즉시 제공",
+                    "reason": "분석 대상 코드베이스의 구조/지표/의존관계를 요약하여 빠른 이해를 지원",
                     "evaluation_criteria": [
-                        "사실성", "구성 명료성", "실행 가능성", "링크/경로 정확도"
+                        "사실성", "근거 제시", "구성 명료성", "경로/수치의 정확도"
                     ],
                 }
         except Exception:
             pass
 
-        # 5) 계획에 따라 selected_outputs를 실제 산출물로 생성/저장
+        # 5) 계획에 따라 selected_outputs를 실제 산출물로 생성/저장 (chunk 기반 도구는 사용하지 않음)
         artifacts_dir = os.path.join(self.data_dir, "insightgen")
         os.makedirs(artifacts_dir, exist_ok=True)
 
@@ -548,6 +569,7 @@ class InsightGenAgent:
                 # 최종 산출물은 페이징으로 수집하여 응답 절단 방지
                 output_text = _generate_paged_response(analyzer, full_prompt, per_call_max_tokens=1200, max_pages=12)
             except Exception:
+                # LLM 불가 시: 고정 응답을 생성하지 않고, 템플릿/도구결과 원본만 남김
                 output_text = json.dumps({"template": prompt_template, "ToolResults": tool_results}, ensure_ascii=False, indent=2)
 
             filename = f"{i+1:02d}-{name}".replace(" ", "-")

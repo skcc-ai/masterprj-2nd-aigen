@@ -121,7 +121,8 @@ def run_insightgen():
             load_dotenv()
         from agents.insightgen.agent import InsightGenAgent
         project_root = Path(__file__).parent.parent.parent
-        agent = InsightGenAgent(data_dir=str(project_root / "data"), repo_path=str(project_root))
+        # DB 기반으로 최신 분석 대상(repo_path)을 내부에서 추론하도록 설정 (UI 경로 의존 제거)
+        agent = InsightGenAgent(data_dir=str(project_root / "data"), repo_path=".")
         with st.spinner("InsightGen Agent 실행 중..."):
             result = agent.analyze()
         st.session_state.insightgen_result = result
