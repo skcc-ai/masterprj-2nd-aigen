@@ -12,6 +12,8 @@ import numpy as np
 
 from openai import AzureOpenAI
 from common.store.sqlite_store import SQLiteStore
+from .simple_context_manager import SimpleContextManager, ConversationContext
+from .simple_evaluator import SimpleSelfEvaluator, SimpleEvaluation
 
 logger = logging.getLogger(__name__)
 
@@ -59,6 +61,12 @@ class CodeChatAgent:
         
         # 데이터베이스 및 벡터 스토어 초기화
         self._init_data_sources()
+        
+        # AI 컨텍스트 관리 초기화
+        self._init_ai_context_manager()
+        
+        # AI 자율 평가 시스템 초기화
+        self._init_self_evaluator()
         
         logger.info(f"CodeChatAgent 초기화 완료: {self.repo_path}")
     
@@ -119,6 +127,35 @@ class CodeChatAgent:
         except Exception as e:
             logger.error(f"데이터 소스 초기화 실패: {e}")
             raise
+    
+    def _init_ai_context_manager(self):
+        """단순 대화 컨텍스트 관리자 초기화"""
+        try:
+            # 단순 대화 컨텍스트 관리자 초기화
+            self.context_manager = SimpleContextManager(max_context_size=10)
+            
+            logger.info("대화 컨텍스트 관리자 초기화 완료")
+            
+        except Exception as e:
+            logger.error(f"대화 컨텍스트 관리자 초기화 실패: {e}")
+            # 컨텍스트 관리자 실패 시에도 기본 기능은 동작하도록 함
+            self.context_manager = None
+    
+    def _init_self_evaluator(self):
+        """AI 자율 평가 시스템 초기화"""
+        try:
+            # 간단한 AI 자율 평가 시스템 초기화
+            self.self_evaluator = SimpleSelfEvaluator(
+                self.openai_client,
+                self.deployment_name
+            )
+            
+            logger.info("AI 자율 평가 시스템 초기화 완료")
+            
+        except Exception as e:
+            logger.error(f"AI 자율 평가 시스템 초기화 실패: {e}")
+            # 평가 시스템 실패 시에도 기본 기능은 동작하도록 함
+            self.self_evaluator = None
     
     def _load_vector_store(self):
         """벡터 스토어를 SQLite와 FAISS에서 로드"""
@@ -203,8 +240,9 @@ class CodeChatAgent:
             logger.error(f"FAISS 인덱스 로드 실패: {e}")
             self.faiss_store = None
     
-    def chat(self, query: str, top_k: int = 10) -> ChatResponse:
-        """채팅 응답 생성"""
+    def chat(self, query: str, top_k: int = 10, session_id: str = "default", 
+             user_id: Optional[str] = None) -> ChatResponse:
+        """개선된 채팅 응답 생성 - AI 기반 도구 선택"""
         try:
             # query 검증 및 상세 로깅
             logger.info(f"채팅 요청 수신 - query 타입: {type(query)}, 값: '{query}'")
@@ -235,42 +273,94 @@ class CodeChatAgent:
             
             # 공백 제거된 query 사용
             query = query.strip()
-            logger.info(f"채팅 요청 처리 시작: '{query}'")
+            logger.info(f"채팅 요청 처리 시작: '{query}' (세션: {session_id})")
             
-            # # 1. 일반적인 질문인지 감지
-            # if self._detect_general_query(query):
-            #     logger.info("일반적인 질문 감지 - 전체 분석 모드로 전환")
-            #     answer = self._handle_general_analysis(query)
-            #     return ChatResponse(
-            #         answer=answer,
-            #         evidence=[],
-            #         confidence=0.8
-            #     )
+            # 1. 대화 컨텍스트 정보 가져오기
+            context = {}
+            if self.context_manager:
+                try:
+                    context = self.context_manager.get_context_for_query(session_id, query)
+                    logger.info(f"💬 대화 컨텍스트 로드: {context.get('total_conversations', 0)}개 대화 기록")
+                    if context.get('mentioned_symbols'):
+                        logger.info(f"   - 언급된 심볼들: {context['mentioned_symbols'][:3]}")
+                    if context.get('mentioned_files'):
+                        logger.info(f"   - 언급된 파일들: {context['mentioned_files'][:3]}")
+                except Exception as e:
+                    logger.warning(f"대화 컨텍스트 로드 실패: {e}")
             
-            # 2. 하이브리드 검색 수행
-            logger.info("하이브리드 검색 시작")
-            search_results = self._hybrid_search(query, top_k)
-            logger.info(f"하이브리드 검색 결과: {len(search_results)}개")
+            # 2. AI 기반 질문 분석 및 도구 선택 (컨텍스트 활용)
+            logger.info("AI 기반 질문 분석 시작")
+            tool_selection = self._analyze_query_and_select_tools(query, context)
             
-            if not search_results:
-                logger.info("검색 결과가 없습니다")
-                return ChatResponse(
-                    answer="관련 코드를 찾을 수 없습니다. 더 구체적인 질문을 해주세요.",
-                    evidence=[],
-                    confidence=0.0
-                )
+            # 도구 선택 결과 로깅
+            logger.info(f"🔍 질문 분석 결과:")
+            logger.info(f"   - 질문 유형: {tool_selection['query_type']}")
+            logger.info(f"   - 선택된 도구: {tool_selection['selected_tools']}")
+            logger.info(f"   - 선택 이유: {tool_selection['reasoning']}")
+            if tool_selection.get('artifact_name'):
+                logger.info(f"   - 산출물 파일: {tool_selection['artifact_name']}")
             
-            # 3. RAG 기반 답변 생성
-            answer = self._generate_rag_answer(query, search_results)
+            # 3. 질문 유형에 따른 처리
+            if tool_selection["query_type"] == "overview":
+                # 개요/전반적 질문: get_artifact 사용
+                logger.info("📄 개요 질문 감지 - 산출물 기반 답변 생성")
+                response = self._handle_overview_query(query, tool_selection)
+            else:
+                # 특정 코드 질문: 하이브리드 검색 + LLM 분석
+                logger.info("🔍 특정 코드 질문 감지 - 하이브리드 검색 수행")
+                response = self._handle_specific_query(query, tool_selection, top_k)
             
-            # 4. 응답 구성
-            response = ChatResponse(
-                answer=answer,
-                evidence=search_results,
-                confidence=self._calculate_confidence(search_results)
-            )
+            # 4. AI 자율 평가 및 개선
+            if self.self_evaluator:
+                try:
+                    logger.info("🤖 AI 자율 평가 시작")
+                    improved_answer, evaluation = self.self_evaluator.evaluate_and_improve(
+                        question=query,
+                        answer=response.answer,
+                        context=context,
+                        codechat_agent=self
+                    )
+                    
+                    # 개선된 답변으로 업데이트
+                    response.answer = improved_answer
+                    
+                    # 평가 결과 로깅
+                    logger.info(f"📊 AI 평가 결과:")
+                    logger.info(f"   - 점수: {evaluation.score:.1f}/100")
+                    logger.info(f"   - 충분함: {evaluation.is_sufficient}")
+                    if evaluation.missing_parts:
+                        logger.info(f"   - 부족한 부분: {', '.join(evaluation.missing_parts)}")
+                    if evaluation.feedback:
+                        logger.info(f"   - 피드백: {evaluation.feedback}")
+                    
+                except Exception as e:
+                    logger.warning(f"AI 자율 평가 실패: {e}")
             
-            logger.info("채팅 응답 생성 완료")
+            # 5. 대화 컨텍스트 업데이트
+            if self.context_manager:
+                try:
+                    # SearchResult를 딕셔너리로 변환
+                    search_results = []
+                    for evidence in response.evidence:
+                        search_results.append({
+                            "symbol_name": evidence.symbol_name,
+                            "file_path": evidence.file_path,
+                            "symbol_type": evidence.symbol_type,
+                            "content": evidence.content[:200] + "..." if len(evidence.content) > 200 else evidence.content
+                        })
+                    
+                    self.context_manager.add_conversation(
+                        session_id=session_id,
+                        query=query,
+                        answer=response.answer,
+                        search_results=search_results,
+                        query_type=tool_selection.get("query_type", "specific"),
+                        tools_used=tool_selection.get("selected_tools", [])
+                    )
+                    logger.info("💬 대화 컨텍스트 업데이트 완료")
+                except Exception as e:
+                    logger.warning(f"대화 컨텍스트 업데이트 실패: {e}")
+            
             return response
             
         except Exception as e:
@@ -949,3 +1039,252 @@ class CodeChatAgent:
         except Exception as e:
             logger.error(f"검색 통계 조회 실패: {e}")
             return {"error": str(e)}
+    
+    def _analyze_query_and_select_tools(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """AI 기반 질문 분석 및 도구 선택"""
+        try:
+            logger.info(f"🤖 LLM 질문 분석 시작: '{query}'")
+            
+            # 컨텍스트 정보 준비
+            context_str = ""
+            if context:
+                context_parts = []
+                
+                # 최근 대화 내용
+                if context.get("recent_conversations"):
+                    recent_queries = [conv["query"] for conv in context["recent_conversations"][-3:]]
+                    context_parts.append(f"최근 질문들: {', '.join(recent_queries)}")
+                
+                # 언급된 심볼들
+                if context.get("mentioned_symbols"):
+                    context_parts.append(f"이전에 언급된 심볼들: {', '.join(context['mentioned_symbols'][:5])}")
+                
+                # 언급된 파일들
+                if context.get("mentioned_files"):
+                    context_parts.append(f"이전에 언급된 파일들: {', '.join(context['mentioned_files'][:3])}")
+                
+                context_str = "\n".join(context_parts) if context_parts else ""
+            
+            # 질문 분류 프롬프트 (컨텍스트 포함)
+            classification_prompt = f"""
+다음 질문을 분석하여 적절한 도구를 선택하세요:
+
+질문: {query}
+
+{context_str}
+
+사용 가능한 도구:
+1. get_artifact: 프로젝트 개요, 전체 구조, 흐름 등 전반적 설명
+2. search_symbols_fts/semantic: 특정 심볼/키워드 검색
+3. get_symbol/get_chunks_by_symbol: 심볼/청크 세부 정보
+4. get_calls_from/get_calls_to: 호출 관계 분석
+5. analyze_file_llm/analyze_symbol_llm: LLM 기반 코드 분석
+
+질문 유형:
+- 개요/전반적: "프로젝트 목적", "전체 구조", "개요", "흐름", "무슨 일을 하는", "어떤 시스템" → get_artifact
+- 특정 코드: "함수 X", "클래스 Y", "호출 관계", "어디서 쓰여", "어떻게 동작" → 검색/분석 도구
+
+이전 대화 내용을 참고하여 질문의 맥락을 파악하고 적절한 도구를 선택하세요.
+
+JSON 형식으로 응답:
+{{
+    "query_type": "overview|specific",
+    "selected_tools": ["tool1", "tool2"],
+    "reasoning": "선택 이유 (컨텍스트 고려사항 포함)",
+    "artifact_name": "01-프로젝트-개요.md" (overview인 경우)
+}}
+"""
+            
+            # LLM으로 도구 선택
+            response = self.openai_client.chat.completions.create(
+                model=self.deployment_name,
+                messages=[
+                    {"role": "system", "content": "당신은 코드 분석 도구 선택 전문가입니다. 질문을 정확히 분석하여 적절한 도구를 선택하세요."},
+                    {"role": "user", "content": classification_prompt}
+                ],
+                temperature=0.1,
+                max_tokens=500
+            )
+            
+            llm_response = response.choices[0].message.content
+            logger.info(f"🤖 LLM 응답: {llm_response[:200]}...")
+            
+            result = self._parse_tool_selection(llm_response)
+            logger.info(f"✅ 도구 선택 완료: {result['query_type']} -> {result['selected_tools']}")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"❌ 질문 분석 실패: {e}")
+            logger.info("🔄 기본 검색 도구로 fallback")
+            # 기본값으로 하이브리드 검색 사용
+            return {
+                "query_type": "specific",
+                "selected_tools": ["search_symbols_fts", "search_symbols_semantic"],
+                "reasoning": "분석 실패로 기본 검색 사용",
+                "artifact_name": None
+            }
+    
+    def _parse_tool_selection(self, llm_response: str) -> Dict[str, Any]:
+        """LLM 응답을 파싱하여 도구 선택 정보 추출"""
+        try:
+            import json
+            import re
+            
+            logger.info("🔍 LLM 응답 파싱 시작")
+            
+            # JSON 부분 추출
+            json_match = re.search(r'\{.*\}', llm_response, re.DOTALL)
+            if json_match:
+                data = json.loads(json_match.group())
+                logger.info(f"✅ JSON 파싱 성공: {data}")
+                return {
+                    "query_type": data.get("query_type", "specific"),
+                    "selected_tools": data.get("selected_tools", ["search_symbols_fts"]),
+                    "reasoning": data.get("reasoning", ""),
+                    "artifact_name": data.get("artifact_name", "01-프로젝트-개요.md")
+                }
+            else:
+                # JSON 파싱 실패 시 기본값
+                logger.warning("❌ JSON 파싱 실패 - 기본값 사용")
+                return {
+                    "query_type": "specific",
+                    "selected_tools": ["search_symbols_fts"],
+                    "reasoning": "JSON 파싱 실패",
+                    "artifact_name": None
+                }
+                
+        except Exception as e:
+            logger.error(f"❌ 도구 선택 파싱 실패: {e}")
+            return {
+                "query_type": "specific",
+                "selected_tools": ["search_symbols_fts"],
+                "reasoning": f"파싱 오류: {str(e)}",
+                "artifact_name": None
+            }
+    
+    def _handle_overview_query(self, query: str, tool_selection: Dict[str, Any]) -> ChatResponse:
+        """개요/전반적 질문 처리"""
+        try:
+            # get_artifact 도구 사용
+            from tools.insightgen_tools import get_artifact
+            
+            artifact_name = tool_selection.get("artifact_name", "01-프로젝트-개요.md")
+            logger.info(f"📁 산출물 로드 시작: {artifact_name}")
+            
+            artifact_result = get_artifact.invoke({
+                "artifact_name": artifact_name,
+                "data_dir": str(self.data_dir)
+            })
+            
+            if "error" in artifact_result:
+                # 산출물이 없으면 기본 검색으로 fallback
+                logger.warning(f"❌ 산출물 로드 실패: {artifact_result['error']}")
+                logger.info("🔄 기본 검색으로 fallback")
+                return self._handle_specific_query(query, tool_selection, 10)
+            
+            # 산출물 로드 성공 로깅
+            artifact_content = artifact_result.get("content", "")
+            logger.info(f"✅ 산출물 로드 성공: {len(artifact_content)}자")
+            logger.info(f"📄 산출물 경로: {artifact_result.get('path', 'unknown')}")
+            
+            # 사용자 질문에 맞는 답변 생성
+            logger.info("🤖 LLM 기반 개요 답변 생성 시작")
+            answer = self._generate_overview_answer(query, artifact_content)
+            logger.info("✅ 개요 답변 생성 완료")
+            
+            # SearchResult 형태로 변환
+            evidence = [SearchResult(
+                symbol_name="프로젝트 개요",
+                symbol_type="document",
+                file_path=artifact_result.get("path", ""),
+                start_line=0,
+                end_line=0,
+                content=artifact_content[:500] + "..." if len(artifact_content) > 500 else artifact_content,
+                source="artifact",
+                similarity_score=1.0
+            )]
+            
+            return ChatResponse(
+                answer=answer,
+                evidence=evidence,
+                confidence=0.9
+            )
+            
+        except Exception as e:
+            logger.error(f"개요 질문 처리 실패: {e}")
+            # 실패 시 기본 검색으로 fallback
+            return self._handle_specific_query(query, tool_selection, 10)
+    
+    def _handle_specific_query(self, query: str, tool_selection: Dict[str, Any], top_k: int) -> ChatResponse:
+        """특정 코드 질문 처리"""
+        try:
+            logger.info(f"🔍 하이브리드 검색 수행: top_k={top_k}")
+            
+            # 하이브리드 검색 수행
+            search_results = self._hybrid_search(query, top_k)
+            
+            if not search_results:
+                logger.warning("❌ 검색 결과 없음")
+                return ChatResponse(
+                    answer="관련 코드를 찾을 수 없습니다. 더 구체적인 질문을 해주세요.",
+                    evidence=[],
+                    confidence=0.0
+                )
+            
+            logger.info(f"✅ 검색 결과: {len(search_results)}개")
+            
+            # RAG 기반 답변 생성
+            logger.info("🤖 RAG 기반 답변 생성 시작")
+            answer = self._generate_rag_answer(query, search_results)
+            logger.info("✅ RAG 답변 생성 완료")
+            
+            confidence = self._calculate_confidence(search_results)
+            logger.info(f"📊 응답 신뢰도: {confidence:.2f}")
+            
+            return ChatResponse(
+                answer=answer,
+                evidence=search_results,
+                confidence=confidence
+            )
+            
+        except Exception as e:
+            logger.error(f"특정 코드 질문 처리 실패: {e}")
+            return ChatResponse(
+                answer=f"코드 분석 중 오류가 발생했습니다: {str(e)}",
+                evidence=[],
+                confidence=0.0
+            )
+    
+    def _generate_overview_answer(self, query: str, artifact_content: str) -> str:
+        """산출물 내용을 바탕으로 개요 답변 생성"""
+        try:
+            prompt = f"""
+사용자 질문: {query}
+
+다음은 프로젝트 개요 문서입니다:
+{artifact_content}
+
+사용자의 질문에 맞는 답변을 제공하세요:
+1. 질문의 의도에 맞는 정보를 찾아서 답변
+2. 불필요한 수사는 배제하고 사실 기반으로 답변
+3. 한국어로 자연스럽게 답변
+4. 관련 정보가 없으면 "해당 정보를 찾을 수 없습니다"라고 답변
+"""
+            
+            response = self.openai_client.chat.completions.create(
+                model=self.deployment_name,
+                messages=[
+                    {"role": "system", "content": "당신은 코드베이스 분석 전문가입니다. 프로젝트 개요 문서를 바탕으로 사용자의 질문에 정확히 답변하세요."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=800,
+                temperature=0.3
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            logger.error(f"개요 답변 생성 실패: {e}")
+            # LLM 실패 시 기본 답변
+            return f"프로젝트 개요 정보를 찾았지만, 구체적인 답변을 생성할 수 없습니다. 원본 문서를 확인해주세요.\n\n{artifact_content[:300]}..."

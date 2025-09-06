@@ -35,6 +35,12 @@ try:
 except Exception:
     _has_llm_tools = False
 
+try:
+    from .insightgen_tools import get_artifact, list_artifacts, get_artifact_summary  # type: ignore
+    _has_insightgen_tools = True
+except Exception:
+    _has_insightgen_tools = False
+
 
 def get_tools() -> List[BaseTool]:
     tools: List[BaseTool] = [
@@ -63,6 +69,9 @@ def get_tools() -> List[BaseTool]:
         )
     ):
         tools.extend([analyze_file_llm, analyze_symbol_llm, analyze_chunk_llm])
+
+    if _has_insightgen_tools:
+        tools.extend([get_artifact, list_artifacts, get_artifact_summary])
 
     return tools
 
