@@ -4,6 +4,7 @@ from typing import Any, Dict, List
 from tools import get_tools
 from agents.insightgen.planner import LLMPlanner
 import os
+import shutil
 
 
 class InsightGenAgent:
@@ -431,36 +432,41 @@ class InsightGenAgent:
             ),
         }
 
-        if plans:
-            plans[0] = overview_plan
-        else:
-            plans = [overview_plan]
+        # 총 4개 산출물: 1) 고정 개요 + 2~4) LLM 결정
+        plans = [overview_plan] + (plans or [])
 
         # 선택 산출물 메타도 첫 항목을 "분석 대상 소스 개요"로 정렬
         try:
-            if outputs:
-                outputs[0] = {
-                    "name": "분석 대상 소스 개요",
-                    "tools": [
-                        "get_database_stats",
-                        "list_files",
-                        "list_symbols",
-                        "search_symbols_fts",
-                        "get_calls_from",
-                        "get_calls_to",
-                        "get_vector_store_stats",
-                        "get_analysis_summary",
-                    ],
-                    "reason": "분석 대상 코드베이스의 구조/지표/의존관계를 요약하여 빠른 이해를 지원",
-                    "evaluation_criteria": [
-                        "사실성", "근거 제시", "구성 명료성", "경로/수치의 정확도"
-                    ],
-                }
+            overview_meta = {
+                "name": "분석 대상 소스 개요",
+                "tools": [
+                    "get_database_stats",
+                    "list_files",
+                    "list_symbols",
+                    "search_symbols_fts",
+                    "get_calls_from",
+                    "get_calls_to",
+                    "get_vector_store_stats",
+                    "get_analysis_summary",
+                ],
+                "reason": "분석 대상 코드베이스의 구조/지표/의존관계를 요약하여 빠른 이해를 지원",
+                "evaluation_criteria": [
+                    "사실성", "근거 제시", "구성 명료성", "경로/수치의 정확도"
+                ],
+            }
+            outputs = [overview_meta] + (outputs or [])
         except Exception:
             pass
 
         # 5) 계획에 따라 selected_outputs를 실제 산출물로 생성/저장 (chunk 기반 도구는 사용하지 않음)
         artifacts_dir = os.path.join(self.data_dir, "insightgen")
+        # 기존 산출물 폴더 제거 후 재생성
+        try:
+            if os.path.isdir(artifacts_dir):
+                shutil.rmtree(artifacts_dir, ignore_errors=True)
+        except Exception:
+            # 삭제 실패 시에도 이후 생성 시도
+            pass
         os.makedirs(artifacts_dir, exist_ok=True)
 
         artifact_paths: List[str] = []

@@ -59,14 +59,21 @@ def render(ui):
         selected = result.get("selected_outputs") or []
         meta_by_name = {m.get("name"): m for m in selected if isinstance(m, dict)}
         if plans:
-            # 한 줄에 최대 3개씩 칼럼으로 배치 (Streamlit 권장 방식)
-            max_cols = 3
-            for i in range(0, len(plans), max_cols):
-                row_plans = plans[i:i+max_cols]
-                cols = st.columns(len(row_plans))
-                for idx, plan in enumerate(row_plans):
+            # 1) 1번(분석 대상 소스 개요)은 크게(폭 전체) 카드로 표시
+            first_plan = plans[0]
+            meta_first = meta_by_name.get(first_plan.get('name')) if meta_by_name else None
+            st.markdown("<div class='ig-title'>1) 분석 대상 소스 개요</div>", unsafe_allow_html=True)
+            render_plan_card(first_plan, meta_first, tool_desc_map)
+
+            # 2) 2, 3, 4번은 가로 병렬 카드 배치
+            other_plans = plans[1:4]
+            if other_plans:
+                st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+                st.markdown("<div class='ig-title'>2)~4) 추가 산출물</div>", unsafe_allow_html=True)
+                cols = st.columns(len(other_plans))
+                for idx, plan in enumerate(other_plans):
                     with cols[idx]:
-                        meta = meta_by_name.get(plan.get("name")) if meta_by_name else None
+                        meta = meta_by_name.get(plan.get('name')) if meta_by_name else None
                         render_plan_card(plan, meta, tool_desc_map)
 
         # 선택적: selected_outputs 원본 JSON

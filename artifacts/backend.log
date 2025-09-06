@@ -1292,3 +1292,11 @@
 2025-09-06 10:01:52,383 - __main__ - INFO -  Agent4 (CodeChat) 초기화 완료
 2025-09-06 10:01:52,390 - __main__ - INFO - 🚀 Code Analytica FastAPI Backend 시작 (포트: 8000)
 2025-09-06 10:01:52,390 - __main__ - INFO - 🔄 Reload 모드: 비활성화
+2025-09-06 11:03:21,438 - faiss.loader - INFO - Loading faiss with AVX512 support.
+2025-09-06 11:03:21,475 - faiss.loader - INFO - Successfully loaded faiss with AVX512 support.
+2025-09-06 11:03:21,484 - __main__ - INFO -  Agent1 (StructSynth) 초기화 완료
+2025-09-06 11:03:21,484 - __main__ - INFO -  Agent2 (InsightGen) 초기화 완료 (구현 예정)
+2025-09-06 11:03:21,484 - __main__ - INFO -  Agent3 (EvalGuard) 초기화 완료 (구현 예정)
+2025-09-06 11:03:21,501 - __main__ - INFO -  Agent4 (CodeChat) 초기화 완료
+2025-09-06 11:03:21,506 - __main__ - INFO - 🚀 Code Analytica FastAPI Backend 시작 (포트: 8000)
+2025-09-06 11:03:21,506 - __main__ - INFO - 🔄 Reload 모드: 비활성화
