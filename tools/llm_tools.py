@@ -73,13 +73,43 @@ def analyze_symbol_llm(symbol_id: int, data_dir: str = "./data") -> Dict[str, An
 
 
 @tool("analyze_chunk_llm", return_direct=False)
-def analyze_chunk_llm(chunk_id: int, data_dir: str = "./data") -> Dict[str, Any]:
-    """청크 단위 LLM 요약을 수행합니다."""
+def analyze_chunk_llm(chunk_id: Optional[int] = None, symbol_id: Optional[int] = None, data_dir: str = "./data") -> Dict[str, Any]:
+    """청크 단위 LLM 요약을 수행합니다.
+    - chunk_id가 없으면 symbol_id의 첫 번째 청크를 사용합니다.
+    - 둘 다 없거나 비어 있으면 DB에서 첫 가용 청크를 자동 선택합니다.
+    """
     analyzer = _get_analyzer()
     store = SQLiteStore(db_path=f"{data_dir}/structsynth_code.db")
-    chunk = store.get_chunk_info(chunk_id)
+
+    resolved_chunk_id: Optional[int] = chunk_id
+    try:
+        # 1) chunk_id 직접 사용 가능
+        if resolved_chunk_id is None:
+            # 2) symbol_id 기반으로 유도
+            if symbol_id is not None:
+                chunks = store.get_chunks_by_symbol(int(symbol_id))
+                if isinstance(chunks, list) and chunks:
+                    resolved_chunk_id = int(chunks[0].get("id"))
+            # 3) DB에서 아무 청크나 선택
+            if resolved_chunk_id is None:
+                symbols = store.get_all_symbols()
+                for s in symbols:
+                    sid = s.get("id")
+                    if sid is None:
+                        continue
+                    chunks = store.get_chunks_by_symbol(int(sid))
+                    if isinstance(chunks, list) and chunks:
+                        resolved_chunk_id = int(chunks[0].get("id"))
+                        break
+    except Exception:
+        pass
+
+    if resolved_chunk_id is None:
+        return {"error": "no_chunk_available", "detail": "chunk_id와 symbol_id로도 청크를 찾지 못했습니다."}
+
+    chunk = store.get_chunk_info(resolved_chunk_id)
     if not chunk:
-        return {"error": "청크를 찾을 수 없음", "chunk_id": chunk_id}
+        return {"error": "청크를 찾을 수 없음", "chunk_id": resolved_chunk_id}
     # LLMAnalyzer.analyze_chunk에 필요한 구조로 맞춤
     chunk_payload = {
         "symbol_type": chunk.get("symbol_type", "unknown"),
