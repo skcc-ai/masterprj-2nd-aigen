@@ -54,6 +54,8 @@ class SearchRequest(BaseModel):
 class ChatRequest(BaseModel):
     query: str = Field(..., description="코드 관련 질문")
     top_k: Optional[int] = Field(5, description="검색 결과 수")
+    session_id: Optional[str] = Field("default", description="대화 세션 ID")
+    user_id: Optional[str] = Field(None, description="사용자 ID")
 
 class AgentResponse(BaseModel):
     success: bool
@@ -388,11 +390,17 @@ async def chat_with_code(request: ChatRequest):
             )
             logger.info("CodeChatAgent 초기화 완료")
             
-            # 채팅 요청 처리
-            logger.info("CodeChatAgent.chat() 호출 시작")
-            response = agent.chat(request.query, request.top_k)
+            # 채팅 요청 처리 (AI 컨텍스트 관리 포함)
+            logger.info("CodeChatAgent.chat() 호출 시작 (AI 컨텍스트 모드)")
+            response = agent.chat(
+                query=request.query, 
+                top_k=request.top_k,
+                session_id=request.session_id,
+                user_id=request.user_id
+            )
             logger.info(f"CodeChatAgent.chat() 응답: {response.answer[:100]}...")
             logger.info(f"근거 수: {len(response.evidence)}개")
+            logger.info(f"신뢰도: {response.confidence:.2f}")
             
             return AgentResponse(
                 success=True,
