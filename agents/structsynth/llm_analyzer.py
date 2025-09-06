@@ -233,7 +233,7 @@ class LLMAnalyzer:
                 }
             }
 
-    def _get_llm_response(self, prompt: str) -> str:
+    def _get_llm_response(self, prompt: str, max_tokens: int = 500) -> str:
         """LLM에 프롬프트를 전송하고 응답 받기"""
         try:
             response = self.client.chat.completions.create(
@@ -243,7 +243,7 @@ class LLMAnalyzer:
                     {"role": "user", "content": prompt}
                 ],
                 temperature=0.1,
-                max_tokens=500
+                max_tokens=max_tokens
             )
             
             return response.choices[0].message.content.strip()
