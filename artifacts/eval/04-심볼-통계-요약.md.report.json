@@ -1,0 +1,43 @@
+{
+  "name": "04-심볼-통계-요약",
+  "per_criterion": {
+    "경로/수치 정확도": {
+      "score": 50,
+      "evidence": "no files in snapshot",
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": null
+    },
+    "사실성(서술 근거 명시)": {
+      "score": 85,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "출력 텍스트는 심볼 통계에 대한 명확한 정보를 제공하며, 각 섹션에서 중요한 주석을 추가하여 코드의 구조와 복잡성에 대한 통찰을 제공합니다. 그러나 외부 호출의 비율이 높은 점에 대한 분석이 다소 부족하여, 이 부분에서 더 깊이 있는 설명이 필요할 수 있습니다."
+    },
+    "근거 제시": {
+      "score": 85,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "출력 텍스트는 심볼 통계에 대한 명확한 요약을 제공하며, 각 섹션에서 중요한 정보를 잘 전달하고 있습니다. 그러나 외부 호출의 비율이 높은 점에 대한 분석이 다소 부족하여 코드의 복잡성에 대한 깊이 있는 통찰이 부족합니다. 추가적인 분석이 포함되면 더 높은 점수를 받을 수 있을 것입니다."
+    },
+    "구성 명료성": {
+      "score": 85,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "구성이 명확하고 각 섹션이 잘 구분되어 있어 이해하기 쉽습니다. 그러나 추가적인 분석이 필요하다는 언급이 다소 모호하게 느껴질 수 있습니다."
+    }
+  },
+  "average": 75.0,
+  "passes": false,
+  "iteration": 3,
+  "snapshot_ref": "toolruns/04-심볼-통계-요약.json",
+  "llm_skipped": false,
+  "notice": null
+}

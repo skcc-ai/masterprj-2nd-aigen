@@ -124,8 +124,12 @@ class CodeAnalyticaUI:
             from ui.streamlit_app.Docs import render as docs_render
         except Exception:
             docs_render = None
-        tab1, tab2, tab3, tab4 = st.tabs([
-            "Code Analysis", "Code Chat", "Docs", "Status"
+        try:
+            from ui.streamlit_app.Evaluation import render as eval_render
+        except Exception:
+            eval_render = None
+        tab1, tab2, tab3, tab4, tab5 = st.tabs([
+            "Code Analysis", "Code Chat", "Docs", "Evaluation", "Status"
         ])
         
         with tab1:
@@ -138,6 +142,12 @@ class CodeAnalyticaUI:
             else:
                 self.render_docs()
         with tab4:
+            if eval_render:
+                eval_render(self)
+            else:
+                st.subheader("Evaluation")
+                st.info("평가 UI 모듈을 불러오지 못했습니다.")
+        with tab5:
             self.render_status()
     
     def render_code_analysis(self):
