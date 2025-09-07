@@ -1,0 +1,43 @@
+{
+  "name": "01-분석-대상-소스-개요",
+  "per_criterion": {
+    "경로/수치 정확도": {
+      "score": 50,
+      "evidence": "no files in snapshot",
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": null
+    },
+    "사실성(서술 근거 명시)": {
+      "score": 50,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "invalid JSON from LLM"
+    },
+    "근거 제시": {
+      "score": 50,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "invalid JSON from LLM"
+    },
+    "구성 명료성": {
+      "score": 50,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "invalid JSON from LLM"
+    }
+  },
+  "average": 50.0,
+  "passes": false,
+  "iteration": 10,
+  "snapshot_ref": "toolruns/01-분석-대상-소스-개요.json",
+  "llm_skipped": false,
+  "notice": null
+}

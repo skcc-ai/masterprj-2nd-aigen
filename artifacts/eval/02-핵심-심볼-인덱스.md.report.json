@@ -1,0 +1,43 @@
+{
+  "name": "02-핵심-심볼-인덱스",
+  "per_criterion": {
+    "경로/수치 정확도": {
+      "score": 50,
+      "evidence": "no files in snapshot",
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": null
+    },
+    "사실성(서술 근거 명시)": {
+      "score": 90,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "문서가 신규 개발자를 위한 핵심 심볼 인덱스를 잘 정리하고 있으며, 심볼의 중요도와 활용도를 명확히 설명하고 있습니다. 다만, 요약 부분에서 중복 제거가 이루어졌지만, 더 간결하게 표현할 수 있는 여지가 있습니다."
+    },
+    "근거 제시": {
+      "score": 85,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "문서가 신규 개발자를 위한 핵심 심볼 정보를 잘 정리하고 있으며, 요약과 다음 액션이 명확하게 제시되어 있습니다. 그러나 중복 제거와 요약 수정이 더 명확하게 이루어질 수 있었고, 랭크의 중요성을 강조하는 부분이 다소 부족했습니다."
+    },
+    "구성 명료성": {
+      "score": 85,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "문서의 구성은 명확하고 신규 개발자가 이해하기 쉽게 잘 정리되어 있습니다. 그러나 요약 부분에서 약간의 중복이 있었고, 더 간결하게 표현될 수 있는 여지가 있습니다."
+    }
+  },
+  "average": 76.19,
+  "passes": false,
+  "iteration": 10,
+  "snapshot_ref": "toolruns/02-핵심-심볼-인덱스.json",
+  "llm_skipped": false,
+  "notice": null
+}

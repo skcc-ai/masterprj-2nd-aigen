@@ -1,0 +1,43 @@
+{
+  "name": "04-데이터베이스-통계",
+  "per_criterion": {
+    "경로/수치 정확도": {
+      "score": 50,
+      "evidence": "no files in snapshot",
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": null
+    },
+    "사실성(서술 근거 명시)": {
+      "score": 90,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": null
+    },
+    "근거 제시": {
+      "score": 90,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "근거 제시가 잘 이루어져 있으며, 통계에 대한 구체적인 수치와 설명이 포함되어 있어 평가가 명확합니다."
+    },
+    "구성 명료성": {
+      "score": 90,
+      "evidence": null,
+      "expected": null,
+      "reported": null,
+      "tolerance_pct": null,
+      "llm_comment": "구성이 명확하고 통계가 잘 정리되어 있어 이해하기 쉬움."
+    }
+  },
+  "average": 78.57,
+  "passes": false,
+  "iteration": 10,
+  "snapshot_ref": "toolruns/04-데이터베이스-통계.json",
+  "llm_skipped": false,
+  "notice": null
+}
