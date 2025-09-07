@@ -1,5 +1,5 @@
 {
-  "name": "01-분석-대상-소스-개요",
+  "name": "02-심볼-검색-및-분석",
   "per_criterion": {
     "경로/수치 정확도": {
       "score": 50,
@@ -36,8 +36,8 @@
   },
   "average": 50.0,
   "passes": false,
-  "iteration": 10,
-  "snapshot_ref": "toolruns/01-분석-대상-소스-개요.json",
+  "iteration": 3,
+  "snapshot_ref": "toolruns/02-심볼-검색-및-분석.json",
   "llm_skipped": false,
   "notice": null
 }
