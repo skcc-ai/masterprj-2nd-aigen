@@ -36,7 +36,7 @@
   },
   "average": 50.0,
   "passes": false,
-  "iteration": 3,
+  "iteration": 10,
   "snapshot_ref": "toolruns/02-심볼-검색-및-분석.json",
   "llm_skipped": false,
   "notice": null
