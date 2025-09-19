@@ -289,27 +289,30 @@ class CodeAnalyticaUI:
     
     def render_chat_interface(self):
         """채팅 인터페이스 렌더링"""
-        # 입력 영역
-        col1, col2 = st.columns([4, 1])
-        with col1:
-            user_query = st.text_input(
-                "코드에 대해 질문하세요:",
-                placeholder="예: 데이터 처리 함수는 어떻게 작동하나요?"
-                # key 제거 - 세션 상태와의 충돌 방지
-            )
-        with col2:
-            search_top_k = st.number_input("검색 결과 수", min_value=1, max_value=10, value=5)
-            send_button = st.button("질문하기", type="primary")
+        # 채팅 히스토리 먼저 표시
+        self.render_chat_history()
         
-        # 질문 처리 - 더 엄격한 검증
+        # 채팅 입력 영역 (하단에 배치)
+        st.markdown("---")
+        st.markdown("### 💬 메시지를 입력하세요")
+        
+        with st.form(key="chat_form", clear_on_submit=True):
+            col1, col2 = st.columns([4, 1])
+            with col1:
+                user_query = st.text_input(
+                    "질문:",
+                    placeholder="예: 데이터 처리 함수는 어떻게 작동하나요?",
+                    label_visibility="collapsed"
+                )
+            with col2:
+                send_button = st.form_submit_button("질문하기", type="primary", use_container_width=True)
+        
+        # 질문 처리 - 검색 결과 수는 기본값 5로 고정
         if send_button:
             if user_query and user_query.strip():
-                self.process_chat_query(user_query.strip(), search_top_k)
+                self.process_chat_query(user_query.strip(), 5)  # top_k를 5로 고정
             else:
                 st.error("❌ 질문을 입력해주세요.")
-        
-        # 채팅 히스토리
-        self.render_chat_history()
     
     def process_chat_query(self, query: str, top_k: int):
         """채팅 질문 처리"""
@@ -354,7 +357,11 @@ class CodeAnalyticaUI:
                     
                     st.rerun()
                 else:
-                    st.error(f"❌ 백엔드 응답 실패: {response.get('error', '알 수 없는 오류')}")
+                    # response가 None인 경우 안전 처리
+                    if response is None:
+                        st.error("❌ 백엔드 응답 실패: 응답이 None입니다 (서버 연결 또는 timeout 문제)")
+                    else:
+                        st.error(f"❌ 백엔드 응답 실패: {response.get('error', '알 수 없는 오류')}")
                     
             except Exception as e:
                 st.error(f"❌ 오류 발생: {str(e)}")
@@ -362,30 +369,58 @@ class CodeAnalyticaUI:
     
     def render_chat_history(self):
         """채팅 히스토리 렌더링"""
-        st.markdown("---")
-        st.subheader("채팅 히스토리")
-        
-        for message in st.session_state.chat_history:
-            if message["role"] == "user":
-                self.render_user_message(message)
-            else:
-                self.render_assistant_message(message)
-        
-        # 히스토리 초기화 버튼
         if st.session_state.chat_history:
-            if st.button("채팅 히스토리 초기화"):
-                st.session_state.chat_history = []
-                st.rerun()
+            # 채팅 히스토리 컨테이너
+            chat_container = st.container()
+            with chat_container:
+                for message in st.session_state.chat_history:
+                    if message["role"] == "user":
+                        self.render_user_message(message)
+                    else:
+                        self.render_assistant_message(message)
+            
+            # 자동 스크롤을 위한 JavaScript
+            st.markdown(
+                """
+                <script>
+                setTimeout(function() {
+                    window.scrollTo(0, document.body.scrollHeight);
+                }, 100);
+                </script>
+                """,
+                unsafe_allow_html=True
+            )
+            
+            # 히스토리 초기화 버튼 (작고 깔끔하게)
+            col1, col2, col3 = st.columns([1, 1, 1])
+            with col2:
+                if st.button("채팅 히스토리 초기화", help="모든 채팅 기록을 삭제합니다"):
+                    st.session_state.chat_history = []
+                    st.rerun()
+        else:
+            # 채팅이 없을 때 안내 메시지
+            st.markdown(
+                """
+                <div style="text-align: center; padding: 2rem; color: #666;">
+                    <h4>💬 채팅을 시작해보세요!</h4>
+                    <p>아래에서 코드에 대해 질문하시면 AI가 답변해드립니다.</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
     
     def render_user_message(self, message: Dict[str, Any]):
         """사용자 메시지 렌더링"""
         st.markdown(
             f"""
-            <div style="display: flex; justify-content: flex-start; margin: 0.5rem 0;">
-                <div style="background: #e3f2fd; padding: 1rem; border-radius: 15px; max-width: 70%;">
-                    <strong>사용자</strong><br>
-                    {message["content"]}
-                    <div style="font-size: 0.8rem; color: #666; text-align: right;">
+            <div style="display: flex; justify-content: flex-end; margin: 1rem 0;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                           color: white; padding: 1rem 1.2rem; border-radius: 18px 18px 4px 18px; 
+                           max-width: 70%; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="margin-bottom: 0.5rem; font-weight: 500;">
+                        {message["content"]}
+                    </div>
+                    <div style="font-size: 0.75rem; opacity: 0.8; text-align: right;">
                         {message['timestamp']}
                     </div>
                 </div>
@@ -398,11 +433,18 @@ class CodeAnalyticaUI:
         """어시스턴트 메시지 렌더링"""
         st.markdown(
             f"""
-            <div style="display: flex; justify-content: flex-end; margin: 0.5rem 0;">
-                <div style="background: #f1f8e9; padding: 1rem; border-radius: 15px; max-width: 70%;">
-                    <strong>어시스턴트</strong><br>
-                    {message["content"]}
-                    <div style="font-size: 0.8rem; color: #666; text-align: right;">
+            <div style="display: flex; justify-content: flex-start; margin: 1rem 0;">
+                <div style="background: #ffffff; border: 1px solid #e1e5e9; 
+                           padding: 1rem 1.2rem; border-radius: 18px 18px 18px 4px; 
+                           max-width: 70%; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="background: #4CAF50; color: white; padding: 0.2rem 0.5rem; 
+                                   border-radius: 10px; font-size: 0.7rem; font-weight: bold;">🤖 AI</span>
+                    </div>
+                    <div style="margin-bottom: 0.5rem; line-height: 1.5; color: #333;">
+                        {message["content"]}
+                    </div>
+                    <div style="font-size: 0.75rem; color: #666; text-align: right;">
                         {message['timestamp']}
                     </div>
                 </div>
@@ -441,15 +483,6 @@ class CodeAnalyticaUI:
                     source = evidence.get('source', 'N/A')
                     similarity_score = evidence.get('similarity_score', 0.0)
                     content = evidence.get('content', '')
-                
-                with st.expander(f"근거 {i}: {symbol_name} ({symbol_type})"):
-                    col1, col2 = st.columns([2, 1])
-                    with col1:
-                        st.markdown(f"**파일**: `{file_path}`")
-                        st.markdown(f"**라인**: {start_line}-{end_line}")
-                        st.markdown(f"**소스**: {source} (유사도: {similarity_score:.4f})")
-                    with col2:
-                        st.code(content, language="python")
                         
             except Exception as e:
                 # 오류 발생 시 기본 정보만 표시
@@ -561,11 +594,11 @@ class CodeAnalyticaUI:
             st.info(f"🚀 백엔드 API 호출: {backend_url}")
             st.info(f"📤 요청 데이터: {request_data}")
             
-            # POST 요청 전송
+            # POST 요청 전송 (3번 시도 개선 시스템으로 인해 timeout 증가)
             response = requests.post(
                 backend_url,
                 json=request_data,
-                timeout=30,
+                timeout=120,  # 30초 → 120초로 증가 (3번 시도 × 40초)
                 headers={"Content-Type": "application/json"}
             )
             
@@ -582,7 +615,8 @@ class CodeAnalyticaUI:
             st.info("백엔드 서버가 실행 중인지 확인해주세요.")
             return None
         except requests.exceptions.Timeout:
-            st.error("❌ 백엔드 응답 시간 초과")
+            st.error("❌ 백엔드 응답 시간 초과 (120초)")
+            st.info("💡 AI 자율 평가 시스템이 3번 시도하여 최상의 답변을 생성 중입니다. 시간이 걸릴 수 있습니다.")
             return None
         except Exception as e:
             st.error(f"❌ 백엔드 요청 실패: {str(e)}")

@@ -366,11 +366,21 @@ class SQLiteStore:
                         if call_type == "function_call":
                             callee_name = call.get("name")
                         elif call_type == "method_call":
-                            callee_name = call.get("method")
+                            callee_name = call.get("method") or call.get("name")
                         elif call_type == "constructor_call":
-                            callee_name = call.get("class_name")
+                            callee_name = call.get("class_name") or call.get("name")
                         elif call_type == "chained_call":
-                            callee_name = call.get("method")
+                            callee_name = call.get("method") or call.get("name")
+                        elif call_type == "nested_method_call":
+                            callee_name = call.get("method") or call.get("name")
+                        elif call_type == "attribute_call":
+                            callee_name = call.get("method") or call.get("name")
+                        elif call_type == "import_call":
+                            callee_name = call.get("name")
+                        elif call_type == "import_from_call":
+                            callee_name = call.get("name")
+                        elif call_type == "complex_call":
+                            callee_name = call.get("name", "unknown_call")
                         
                         if callee_name:
                             # 같은 파일 내 호출 관계인지 확인
@@ -793,3 +803,71 @@ class SQLiteStore:
         except Exception as e:
             logger.error(f"청크 {chunk_id}의 embedding_id 업데이트 실패: {e}")
             return False
+    
+    def search_symbols_by_name(self, symbol_name: str) -> List[Dict[str, Any]]:
+        """심볼 이름으로 검색"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT s.id, s.file_id, s.name, s.type, s.language, s.signature,
+                           s.start_line, s.end_line, f.path as file_path
+                    FROM symbols s
+                    JOIN files f ON s.file_id = f.id
+                    WHERE s.name = ?
+                    ORDER BY s.name, f.path
+                """, (symbol_name,))
+                
+                results = []
+                for row in cursor.fetchall():
+                    results.append({
+                        'id': row[0],
+                        'file_id': row[1],
+                        'name': row[2],
+                        'type': row[3],
+                        'language': row[4],
+                        'signature': row[5],
+                        'start_line': row[6],
+                        'end_line': row[7],
+                        'file_path': row[8]
+                    })
+                
+                logger.info(f"심볼 '{symbol_name}' 검색 완료: {len(results)}개 발견")
+                return results
+                
+        except Exception as e:
+            logger.error(f"심볼 이름 검색 실패: {e}")
+            return []
+    
+    def search_symbols_by_name_and_file(self, symbol_name: str, file_path: str) -> List[Dict[str, Any]]:
+        """심볼 이름과 파일 경로로 검색"""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.execute("""
+                    SELECT s.id, s.file_id, s.name, s.type, s.language, s.signature,
+                           s.start_line, s.end_line, f.path as file_path
+                    FROM symbols s
+                    JOIN files f ON s.file_id = f.id
+                    WHERE s.name = ? AND f.path LIKE ?
+                    ORDER BY s.name, f.path
+                """, (symbol_name, f"%{file_path}%"))
+                
+                results = []
+                for row in cursor.fetchall():
+                    results.append({
+                        'id': row[0],
+                        'file_id': row[1],
+                        'name': row[2],
+                        'type': row[3],
+                        'language': row[4],
+                        'signature': row[5],
+                        'start_line': row[6],
+                        'end_line': row[7],
+                        'file_path': row[8]
+                    })
+                
+                logger.info(f"심볼 '{symbol_name}' (파일: {file_path}) 검색 완료: {len(results)}개 발견")
+                return results
+                
+        except Exception as e:
+            logger.error(f"심볼 이름 및 파일 검색 실패: {e}")
+            return []

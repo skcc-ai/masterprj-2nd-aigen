@@ -25,7 +25,7 @@ class SimpleSelfEvaluator:
     def __init__(self, openai_client, deployment_name: str):
         self.openai_client = openai_client
         self.deployment_name = deployment_name
-        self.min_score = 70  # 최소 통과 점수
+        self.min_score = 60  # 최소 통과 점수
         
     def evaluate_answer(self, question: str, answer: str, context: Optional[Dict[str, Any]] = None) -> SimpleEvaluation:
         """질문과 답변만으로 평가"""
@@ -35,7 +35,7 @@ class SimpleSelfEvaluator:
             
             # 컨텍스트 정보 준비
             context_info = ""
-            if context and context.get("recent_conversations"):
+            if context and isinstance(context, dict) and context.get("recent_conversations"):
                 recent_queries = [conv["query"] for conv in context["recent_conversations"][-2:]]
                 context_info = f"최근 대화 맥락: {', '.join(recent_queries)}"
             
@@ -62,6 +62,7 @@ class SimpleSelfEvaluator:
 - 0-100점으로 점수 매기기
 - 70점 이상이면 충분한 답변
 - 부족한 부분이 있다면 구체적으로 지적
+- 각 항목당 100/7 만큼 점수를 부여하여 총점을 계산
 - 개선 방향 제시
 
 **특별 주의사항**:
@@ -110,14 +111,16 @@ JSON 형식으로 응답:
             json_match = re.search(r'\{.*\}', llm_response, re.DOTALL)
             if json_match:
                 eval_data = json.loads(json_match.group())
-                
-                return SimpleEvaluation(
-                    score=float(eval_data.get("score", 0)),
-                    is_sufficient=bool(eval_data.get("is_sufficient", False)),
-                    missing_parts=eval_data.get("missing_parts", []),
-                    feedback=eval_data.get("feedback", ""),
-                    confidence=float(eval_data.get("confidence", 0.5))
-                )
+                if isinstance(eval_data, dict):
+                    return SimpleEvaluation(
+                        score=float(eval_data.get("score", 0)),
+                        is_sufficient=bool(eval_data.get("is_sufficient", False)),
+                        missing_parts=eval_data.get("missing_parts", []),
+                        feedback=eval_data.get("feedback", ""),
+                        confidence=float(eval_data.get("confidence", 0.5))
+                    )
+                else:
+                    return self._create_default_evaluation()
             else:
                 logger.warning("평가 응답에서 JSON을 찾을 수 없습니다.")
                 return self._create_default_evaluation()
@@ -152,14 +155,44 @@ JSON 형식으로 응답:
             
             # 2. 실제 툴을 사용한 추가 검색 (CodeChatAgent가 제공된 경우)
             additional_info = ""
-            if codechat_agent and search_plan:
-                additional_info = self._execute_additional_search(
-                    codechat_agent, search_plan, question, context
-                )
+            if codechat_agent and search_plan and len(search_plan) > 0:
+                logger.info(f"🔍 추가 검색 계획 수립됨: {len(search_plan)}개")
+                try:
+                    additional_info = self._execute_additional_search(
+                        codechat_agent, search_plan, question, context
+                    )
+                except Exception as e:
+                    logger.warning(f"⚠️ 추가 검색 실행 실패: {e}")
+                    additional_info = ""
+            else:
+                logger.info("ℹ️ 추가 검색 없음 (CodeChatAgent 없음 또는 검색 계획 없음)")
+                
+                # fallback: 검색 계획 없으면 간단한 키워드 검색 시도
+                if codechat_agent and evaluation.missing_parts:
+                    logger.info("🔄 fallback 검색 시도")
+                    try:
+                        # 부족한 부분에서 키워드 추출하여 간단 검색
+                        keywords = []
+                        for missing in evaluation.missing_parts[:2]:  # 최대 2개만
+                            if "코드" in missing or "함수" in missing or "클래스" in missing:
+                                keywords.append("main")  # 기본 키워드
+                            elif "분석" in missing:
+                                keywords.append("analysis")
+                            elif "예시" in missing or "사용" in missing:
+                                keywords.append("example")
+                        
+                        if keywords:
+                            fallback_plan = [{"tool": "search_symbols_fts", "query": keywords[0], "reason": "fallback 검색"}]
+                            additional_info = self._execute_additional_search(
+                                codechat_agent, fallback_plan, question, context
+                            )
+                            logger.info("✅ fallback 검색 완료")
+                    except Exception as e:
+                        logger.warning(f"fallback 검색도 실패: {e}")
             
             # 3. 컨텍스트 정보 준비
             context_info = ""
-            if context and context.get("recent_conversations"):
+            if context and isinstance(context, dict) and context.get("recent_conversations"):
                 recent_queries = [conv["query"] for conv in context["recent_conversations"][-2:]]
                 context_info = f"최근 대화 맥락: {', '.join(recent_queries)}"
             
@@ -224,34 +257,27 @@ JSON 형식으로 응답:
 **사용 가능한 도구들**:
 - search_symbols_fts: 키워드 검색 (특정 키워드로 코드 검색)
 - search_symbols_semantic: 의미 검색 (의미 유사도로 코드 검색)
-- get_symbol: 심볼 상세 정보 (특정 심볼의 상세 정보)
-- get_calls_from: 호출 관계 (어떤 함수들이 호출하는지)
-- get_calls_to: 호출받는 관계 (어떤 함수들이 호출하는지)
-- analyze_symbol_llm: LLM 심볼 분석 (심볼을 LLM으로 분석)
-- analyze_file_llm: LLM 파일 분석 (파일을 LLM으로 분석)
-- analyze_chunk_llm: LLM 청크 분석 (코드 청크를 LLM으로 분석)
 - get_artifact: 산출물 조회 (InsightGen 생성 문서 조회)
-- list_artifacts: 산출물 목록 (사용 가능한 문서 목록)
-- get_artifact_summary: 산출물 요약 (문서 요약 정보)
+  * 사용 가능한 산출물은 list_artifacts 도구로 확인 후 적절한 파일 선택
+- analyze_source_code_with_llm: 소스코드 분석 (소스코드를 LLM으로 분석)
 
-부족한 부분을 보완하기 위해 어떤 도구를 사용해서 무엇을 검색해야 하는지 JSON으로 작성하세요:
+부족한 부분을 보완하기 위해 어떤 도구를 사용해서 무엇을 검색해야 하는지 JSON으로 작성하세요.
 
-{{
-    "searches": [
-        {{"tool": "search_symbols_fts", "query": "사용 예시", "reason": "구체적인 사용 예시 찾기"}},
-        {{"tool": "analyze_symbol_llm", "target": "성능", "reason": "성능 특성 분석"}}
-    ]
-}}
+반드시 다음 형식으로만 응답하세요 (다른 텍스트 포함 금지):
+
+{{"searches": [{{"tool": "search_symbols_fts", "query": "main", "reason": "진입점 찾기"}}]}}
+
+최대 3개의 검색까지만 포함하세요.
 """
             
             response = self.openai_client.chat.completions.create(
                 model=self.deployment_name,
                 messages=[
-                    {"role": "system", "content": "당신은 검색 계획을 수립하는 전문가입니다. 부족한 부분을 보완하기 위한 구체적인 검색 전략을 제공하세요."},
+                    {"role": "system", "content": "당신은 검색 계획을 수립하는 전문가입니다. 반드시 유효한 JSON만 출력하세요. 다른 텍스트는 절대 포함하지 마세요."},
                     {"role": "user", "content": search_plan_prompt}
                 ],
-                temperature=0.3,
-                max_tokens=400
+                temperature=0.1,
+                max_tokens=200
             )
             
             llm_response = response.choices[0].message.content
@@ -262,19 +288,103 @@ JSON 형식으로 응답:
             return []
     
     def _parse_search_plan(self, llm_response: str) -> List[Dict[str, str]]:
-        """검색 계획 파싱"""
+        """검색 계획 파싱 (견고한 JSON 처리)"""
         
         try:
             import re
-            json_match = re.search(r'\{.*\}', llm_response, re.DOTALL)
-            if json_match:
-                plan_data = json.loads(json_match.group())
-                return plan_data.get("searches", [])
-            else:
-                return []
+            
+            # 안전한 JSON 추출을 위한 여러 시도
+            json_candidates = []
+            
+            # 1. searches 키워드가 포함된 완전한 JSON 블록 찾기
+            complete_json_match = re.search(r'\{[^{}]*"searches"[^{}]*:\s*\[[^\]]*\][^{}]*\}', llm_response, re.DOTALL)
+            if complete_json_match:
+                json_candidates.append(complete_json_match.group())
+            
+            # 2. 중괄호 균형이 맞는 JSON 블록들 찾기
+            brace_matches = []
+            brace_count = 0
+            start_pos = -1
+            
+            for i, char in enumerate(llm_response):
+                if char == '{':
+                    if brace_count == 0:
+                        start_pos = i
+                    brace_count += 1
+                elif char == '}':
+                    brace_count -= 1
+                    if brace_count == 0 and start_pos != -1:
+                        candidate = llm_response[start_pos:i+1]
+                        if '"searches"' in candidate:
+                            brace_matches.append(candidate)
+                        start_pos = -1
+            
+            json_candidates.extend(brace_matches)
+            
+            # 3. 각 JSON 후보 시도
+            for i, json_str in enumerate(json_candidates):
+                try:
+                    logger.info(f"🔍 JSON 후보 {i+1} 파싱 시도 (길이: {len(json_str)})")
+                    
+                    # 잘린 JSON 수정 시도
+                    if not json_str.endswith('}'):
+                        # 마지막 완전한 객체까지만 사용
+                        last_complete_obj = json_str.rfind('}')
+                        if last_complete_obj > 0:
+                            json_str = json_str[:last_complete_obj + 1]
+                    
+                    plan_data = json.loads(json_str)
+                    
+                    if isinstance(plan_data, dict):
+                        searches = plan_data.get("searches", [])
+                        if isinstance(searches, list) and len(searches) > 0:
+                            # 각 검색 항목이 올바른 형식인지 확인
+                            valid_searches = []
+                            for search in searches:
+                                if isinstance(search, dict) and "tool" in search:
+                                    valid_searches.append(search)
+                            
+                            if valid_searches:
+                                logger.info(f"✅ 검색 계획 파싱 성공: {len(valid_searches)}개 계획")
+                                return valid_searches
+                    
+                except json.JSONDecodeError as e:
+                    logger.warning(f"   JSON 후보 {i+1} 파싱 실패: {e}")
+                    continue
+                except Exception as e:
+                    logger.warning(f"   JSON 후보 {i+1} 처리 실패: {e}")
+                    continue
+            
+            # 4. 모든 시도 실패시 - 개별 검색 명령어 추출 시도
+            logger.warning("❌ JSON 파싱 모두 실패 - 개별 명령어 추출 시도")
+            
+            # 간단한 패턴으로 도구명과 쿼리 추출
+            tool_patterns = [
+                r'"tool":\s*"([^"]+)"',
+                r'search_symbols_fts[^"]*"([^"]+)"',
+                r'search_symbols_semantic[^"]*"([^"]+)"'
+            ]
+            
+            fallback_searches = []
+            for pattern in tool_patterns:
+                matches = re.findall(pattern, llm_response)
+                for match in matches:
+                    if match and len(fallback_searches) < 3:  # 최대 3개까지
+                        fallback_searches.append({
+                            "tool": "search_symbols_fts",
+                            "query": match,
+                            "reason": "LLM 응답에서 추출"
+                        })
+            
+            if fallback_searches:
+                logger.info(f"🔄 fallback 검색 계획 사용: {len(fallback_searches)}개")
+                return fallback_searches
+            
+            logger.warning("❌ 모든 검색 계획 추출 실패")
+            return []
                 
         except Exception as e:
-            logger.error(f"검색 계획 파싱 실패: {e}")
+            logger.error(f"❌ 검색 계획 파싱 전체 실패: {e}")
             return []
     
     def _execute_additional_search(self, codechat_agent, search_plan: List[Dict[str, str]], 
@@ -284,10 +394,25 @@ JSON 형식으로 응답:
         try:
             search_results = []
             
-            for search in search_plan:
+            # search_plan이 None이거나 빈 리스트인 경우 처리
+            if not search_plan or not isinstance(search_plan, list):
+                logger.warning("❌ 검색 계획이 없거나 유효하지 않음")
+                return "검색 계획 없음"
+            
+            logger.info(f"🔍 검색 계획 실행 시작: {len(search_plan)}개 계획")
+            
+            for i, search in enumerate(search_plan):
+                if not isinstance(search, dict):
+                    logger.warning(f"❌ 검색 계획 {i+1}이 딕셔너리가 아님: {search}")
+                    continue
+                    
                 tool = search.get("tool")
                 query = search.get("query", question)
                 reason = search.get("reason", "개선을 위한 추가 검색")
+                
+                if not tool:
+                    logger.warning(f"❌ 검색 계획 {i+1}에 tool이 없음: {search}")
+                    continue
                 
                 logger.info(f"🔍 추가 검색 실행: {tool} - {query} ({reason})")
                 
@@ -296,10 +421,15 @@ JSON 형식으로 응답:
                 if result:
                     search_results.append(result)
             
-            return "\n".join(search_results) if search_results else "추가 검색 결과 없음"
+            if search_results:
+                logger.info(f"✅ 추가 검색 완료: {len(search_results)}개 결과")
+                return "\n".join(search_results)
+            else:
+                logger.warning("❌ 추가 검색 결과 없음")
+                return "추가 검색 결과 없음"
             
         except Exception as e:
-            logger.error(f"추가 검색 실행 실패: {e}")
+            logger.error(f"❌ 추가 검색 실행 실패: {e}")
             return "추가 검색 실패"
     
     def _execute_single_search(self, codechat_agent, tool: str, query: str, reason: str) -> str:
@@ -435,15 +565,35 @@ JSON 형식으로 응답:
         except Exception as e:
             return f"산출물 요약 조회 실패: {e}"
     
-    def evaluate_and_improve(self, question: str, answer: str, context: Optional[Dict[str, Any]] = None, codechat_agent=None) -> Tuple[str, SimpleEvaluation]:
+    def evaluate_and_improve(self, question: str, answer: str, context: Optional[Dict[str, Any]] = None, codechat_agent=None, attempt_number: int = 1) -> Tuple[str, SimpleEvaluation]:
         """평가하고 필요시 개선"""
+        
+        logger.info(f"🔍 시도 {attempt_number}: 답변 평가 및 개선")
         
         # 1. 평가
         evaluation = self.evaluate_answer(question, answer, context)
         
-        # 2. 개선 (필요시)
-        if not evaluation.is_sufficient:
+        # 2. 개선 (필요시 또는 시도 횟수에 따라)
+        should_improve = (
+            not evaluation.is_sufficient or  # 점수가 낮거나
+            (attempt_number > 1 and evaluation.score < 70.0)  # 2번째 이후 시도에서는 90점 미만이면 개선
+        )
+        
+        if should_improve:
+            logger.info(f"   점수 {evaluation.score:.1f}점 - 개선 필요")
             improved_answer = self.improve_answer(question, answer, evaluation, context, codechat_agent)
-            return improved_answer, evaluation
+            
+            # 개선된 답변 재평가
+            logger.info(f"   개선된 답변 재평가")
+            new_evaluation = self.evaluate_answer(question, improved_answer, context)
+            
+            # 개선 전후 비교
+            if new_evaluation.score > evaluation.score:
+                logger.info(f"   개선 성공: {evaluation.score:.1f} → {new_evaluation.score:.1f}점")
+                return improved_answer, new_evaluation
+            else:
+                logger.info(f"   개선 효과 없음: {evaluation.score:.1f} ≥ {new_evaluation.score:.1f}점, 원본 유지")
+                return answer, evaluation
         else:
+            logger.info(f"   점수 {evaluation.score:.1f}점 - 개선 불필요")
             return answer, evaluation

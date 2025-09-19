@@ -40,3 +40,17 @@ markdown2>=2.4
 # LLM Orchestration
 langchain>=0.2.16
 langgraph>=0.2.35
+
+# Language-specific Parsers for Code Analysis
+# Java Parser
+javalang>=0.13.0
+
+# C/C++ Parser
+libclang>=16.0.0
+pycparser>=2.21
+
+# ANTLR4 Runtime (for advanced parsing)
+antlr4-python3-runtime>=4.13.0
+
+# Multi-language parsing support
+# srcml>=1.0.0  # 설치 문제로 임시 비활성화

@@ -40,6 +40,23 @@ def get_symbol(symbol_id: int, data_dir: str = "./data") -> Optional[Dict[str, A
     return store.get_symbol_by_id(symbol_id)
 
 
+@tool("get_symbol_by_name", return_direct=False)
+def get_symbol_by_name(symbol_name: str, data_dir: str = "./data") -> Optional[Dict[str, Any]]:
+    """이름으로 심볼 정보를 조회합니다."""
+    import sqlite3
+    store = _get_store(data_dir=data_dir)
+    
+    with sqlite3.connect(store.db_path) as conn:
+        cursor = conn.execute("""
+            SELECT * FROM symbols WHERE name = ? LIMIT 1
+        """, (symbol_name,))
+        row = cursor.fetchone()
+        if row:
+            columns = [description[0] for description in cursor.description]
+            return dict(zip(columns, row))
+    return None
+
+
 @tool("get_chunks_by_symbol", return_direct=False)
 def get_chunks_by_symbol(symbol_id: int, data_dir: str = "./data") -> List[Dict[str, Any]]:
     """심볼 ID로 청크 목록을 조회합니다."""
@@ -66,6 +83,102 @@ def get_calls_to(callee_id: int, data_dir: str = "./data") -> List[Dict[str, Any
     """callee 심볼로 들어오는 호출 관계를 조회합니다."""
     store = _get_store(data_dir=data_dir)
     return store.get_calls_by_callee(callee_id)
+
+
+@tool("get_call_graph", return_direct=False)
+def get_call_graph(symbol_id: int, depth: int = 2, data_dir: str = "./data") -> Dict[str, Any]:
+    """심볼의 호출 그래프를 깊이 지정하여 조회합니다."""
+    store = _get_store(data_dir=data_dir)
+    
+    def build_graph(current_id: int, current_depth: int, visited: set) -> Dict[str, Any]:
+        if current_depth <= 0 or current_id in visited:
+            return {"symbol_id": current_id, "calls": []}
+        
+        visited.add(current_id)
+        symbol_info = store.get_symbol_by_id(current_id)
+        calls_out = store.get_calls_by_caller(current_id)
+        calls_in = store.get_calls_by_callee(current_id)
+        
+        graph_node = {
+            "symbol_id": current_id,
+            "symbol_info": symbol_info,
+            "calls_out": [],
+            "calls_in": calls_in,
+            "depth": current_depth
+        }
+        
+        # 나가는 호출들을 재귀적으로 탐색
+        for call in calls_out:
+            callee_id = call.get("callee_id")
+            if callee_id and callee_id not in visited:
+                sub_graph = build_graph(callee_id, current_depth - 1, visited.copy())
+                graph_node["calls_out"].append({
+                    "call_info": call,
+                    "target_graph": sub_graph
+                })
+        
+        return graph_node
+    
+    return build_graph(symbol_id, depth, set())
+
+
+@tool("analyze_call_patterns", return_direct=False)
+def analyze_call_patterns(data_dir: str = "./data") -> Dict[str, Any]:
+    """전체 코드베이스의 호출 패턴을 분석합니다."""
+    import sqlite3
+    store = _get_store(data_dir=data_dir)
+    
+    with sqlite3.connect(store.db_path) as conn:
+        # 호출 타입별 통계
+        cursor = conn.execute("""
+            SELECT call_type, COUNT(*) as count
+            FROM calls
+            GROUP BY call_type
+            ORDER BY count DESC
+        """)
+        call_type_stats = [{"call_type": row[0], "count": row[1]} for row in cursor.fetchall()]
+        
+        # 가장 많이 호출되는 함수들 (인기도)
+        cursor = conn.execute("""
+            SELECT s.name, s.type, COUNT(c.id) as call_count
+            FROM symbols s
+            LEFT JOIN calls c ON s.id = c.callee_id
+            GROUP BY s.id, s.name, s.type
+            HAVING call_count > 0
+            ORDER BY call_count DESC
+            LIMIT 10
+        """)
+        most_called = [{"name": row[0], "type": row[1], "call_count": row[2]} for row in cursor.fetchall()]
+        
+        # 가장 많이 호출하는 함수들 (복잡도)
+        cursor = conn.execute("""
+            SELECT s.name, s.type, COUNT(c.id) as calls_made
+            FROM symbols s
+            LEFT JOIN calls c ON s.id = c.caller_id
+            GROUP BY s.id, s.name, s.type
+            HAVING calls_made > 0
+            ORDER BY calls_made DESC
+            LIMIT 10
+        """)
+        most_calling = [{"name": row[0], "type": row[1], "calls_made": row[2]} for row in cursor.fetchall()]
+        
+        # 외부 호출 통계
+        cursor = conn.execute("""
+            SELECT call_type, COUNT(*) as count
+            FROM calls
+            WHERE call_type LIKE 'external_%' OR call_type LIKE 'import_%'
+            GROUP BY call_type
+            ORDER BY count DESC
+        """)
+        external_calls = [{"call_type": row[0], "count": row[1]} for row in cursor.fetchall()]
+    
+    return {
+        "call_type_statistics": call_type_stats,
+        "most_called_symbols": most_called,
+        "most_calling_symbols": most_calling,
+        "external_call_patterns": external_calls,
+        "total_calls": sum(stat["count"] for stat in call_type_stats)
+    }
 
 
 @tool("list_files", return_direct=False)

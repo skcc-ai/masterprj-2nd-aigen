@@ -6,6 +6,8 @@ StructSynth Agent - 코드 구조 분석 및 AST 추출
 import os
 import logging
 import json
+import sqlite3
+import time
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from datetime import datetime
@@ -17,6 +19,59 @@ from common.store.sqlite_store import SQLiteStore
 from common.store.faiss_store import FAISSStore
 
 logger = logging.getLogger(__name__)
+
+class PerformanceTimer:
+    """성능 측정을 위한 타이머 클래스"""
+    
+    def __init__(self):
+        self.timings = {}
+        self.start_times = {}
+        self.total_start_time = None
+    
+    def start_total(self):
+        """전체 분석 시작 시간 기록"""
+        self.total_start_time = time.time()
+        logger.info("🚀 전체 분석 시작")
+    
+    def start_step(self, step_name: str):
+        """단계별 시작 시간 기록"""
+        self.start_times[step_name] = time.time()
+        logger.info(f"⏱️  [{step_name}] 시작")
+    
+    def end_step(self, step_name: str):
+        """단계별 종료 시간 기록 및 결과 출력"""
+        if step_name in self.start_times:
+            elapsed = time.time() - self.start_times[step_name]
+            self.timings[step_name] = elapsed
+            logger.info(f"✅ [{step_name}] 완료 - 소요시간: {elapsed:.2f}초")
+            return elapsed
+        return 0
+    
+    def end_total(self):
+        """전체 분석 종료 및 요약 출력"""
+        if self.total_start_time:
+            total_elapsed = time.time() - self.total_start_time
+            self.timings["총 소요시간"] = total_elapsed
+            
+            logger.info("=" * 60)
+            logger.info("📊 성능 분석 결과 요약")
+            logger.info("=" * 60)
+            
+            for step_name, elapsed in self.timings.items():
+                if step_name != "총 소요시간":
+                    percentage = (elapsed / total_elapsed) * 100
+                    logger.info(f"  {step_name:<20}: {elapsed:>7.2f}초 ({percentage:>5.1f}%)")
+            
+            logger.info("-" * 60)
+            logger.info(f"  {'총 소요시간':<20}: {total_elapsed:>7.2f}초 (100.0%)")
+            logger.info("=" * 60)
+            
+            return total_elapsed
+        return 0
+    
+    def get_summary(self) -> Dict[str, float]:
+        """성능 측정 결과 반환"""
+        return self.timings.copy()
 
 class StructSynthAgent:
     """코드 구조 분석 및 AST 추출 에이전트"""
@@ -64,6 +119,9 @@ class StructSynthAgent:
         self.analysis_results = {}
         self.run_id = None
         
+        # 성능 측정 타이머 초기화
+        self.timer = PerformanceTimer()
+        
         logger.info(f"StructSynthAgent 초기화 완료: {self.repo_path}")
     
     def analyze_repository(self) -> Dict[str, Any]:
@@ -75,8 +133,12 @@ class StructSynthAgent:
         """
         logger.info(f"저장소 분석 시작: {self.repo_path}")
         
+        # 전체 성능 측정 시작
+        self.timer.start_total()
+        
         try:
             # 실행 세션 시작
+            self.timer.start_step("초기화")
             self.run_id = self.sqlite_store.insert_run(
                 agent_name="StructSynth",
                 input_summary=f"Repository: {self.repo_path}",
@@ -86,32 +148,46 @@ class StructSynthAgent:
                     "status": "running"
                 }
             )
+            self.timer.end_step("초기화")
             
             # 1. 코드 파싱 및 AST 추출
+            self.timer.start_step("1단계_코드_파싱")
             logger.info("1단계: 코드 파싱 및 AST 추출")
             parsed_data = self._parse_repository()
+            self.timer.end_step("1단계_코드_파싱")
             
-            # 2. 파일 및 심볼 레벨 LLM 분석
-            logger.info("2단계: 파일 및 심볼 레벨 LLM 분석")
-            parsed_data = self._perform_file_symbol_llm_analysis(parsed_data)
+            # 2. 파일 레벨 LLM 분석 (심볼 분석은 청크에서 처리)
+            self.timer.start_step("2단계_파일_LLM_분석")
+            logger.info("2단계: 파일 레벨 LLM 분석")
+            parsed_data = self._perform_file_llm_analysis(parsed_data)
+            self.timer.end_step("2단계_파일_LLM_분석")
             
             # 3. 코드 청킹
+            self.timer.start_step("3단계_코드_청킹")
             logger.info("3단계: 코드 청킹")
             chunked_data = self._chunk_code(parsed_data)
+            self.timer.end_step("3단계_코드_청킹")
             
-            # 4. 청킹 단위 LLM 분석
-            logger.info("4단계: 청킹 단위 LLM 분석")
-            chunked_data = self._perform_chunk_llm_analysis(chunked_data)
+            # 4. 심볼별 직접 LLM 분석
+            self.timer.start_step("4단계_심볼_LLM_분석")
+            logger.info("4단계: 심볼별 직접 LLM 분석")
+            parsed_data = self._perform_symbol_llm_analysis(parsed_data)
+            self.timer.end_step("4단계_심볼_LLM_분석")
             
             # 5. 데이터베이스 저장
+            self.timer.start_step("5단계_DB_저장")
             logger.info("5단계: 데이터베이스 저장")
             self._save_to_database(parsed_data, chunked_data)
+            self.timer.end_step("5단계_DB_저장")
             
             # 5-1. JSON 파일 자동 저장
+            self.timer.start_step("5-1단계_JSON_저장")
             logger.info("5-1단계: JSON 파일 자동 저장")
             self._save_metadata_to_json(parsed_data, chunked_data)
+            self.timer.end_step("5-1단계_JSON_저장")
             
             # 6. 벡터 임베딩 생성
+            self.timer.start_step("6단계_벡터_임베딩")
             logger.info("6단계: 벡터 임베딩 생성")
             try:
                 self._create_embeddings(chunked_data)
@@ -119,6 +195,7 @@ class StructSynthAgent:
             except Exception as e:
                 logger.warning(f"벡터 임베딩 생성 실패 (분석은 완료됨): {e}")
                 # 벡터 생성 실패해도 분석 결과는 이미 저장됨
+            self.timer.end_step("6단계_벡터_임베딩")
             
             # 실행 완료 (벡터 생성 실패 여부와 관계없이)
             self.sqlite_store.update_run_status(
@@ -128,12 +205,16 @@ class StructSynthAgent:
                 output_summary=f"Analysis completed: {parsed_data['total_files']} files, {parsed_data['total_symbols']} symbols (벡터 생성: {'성공' if '벡터 임베딩 생성 완료' in locals() else '실패'})"
             )
             
+            # 전체 성능 측정 종료 및 요약 출력
+            total_time = self.timer.end_total()
+            
             # 결과 정리
             self.analysis_results = {
                 "parsed_data": parsed_data,
                 "chunked_data": chunked_data,
                 "run_id": self.run_id,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().isoformat(),
+                "performance_summary": self.timer.get_summary()
             }
             
             logger.info("저장소 분석 완료")
@@ -159,8 +240,8 @@ class StructSynthAgent:
             "total_symbols": 0
         }
         
-        # 지원하는 파일 확장자
-        supported_extensions = {'.py', '.js', '.ts', '.java', '.cpp', '.c', '.go'}
+        # 지원하는 파일 확장자  
+        supported_extensions = {'.py', '.js', '.ts', '.java', '.cpp', '.cc', '.cxx', '.c', '.h', '.hpp', '.go'}
         
         for file_path in self.repo_path.rglob('*'):
             if file_path.is_file() and file_path.suffix in supported_extensions:
@@ -197,10 +278,10 @@ class StructSynthAgent:
         logger.info(f"청킹 완료: {chunked_data['total_chunks']}개 청크")
         return chunked_data
     
-    def _perform_file_symbol_llm_analysis(self, parsed_data: Dict[str, Any]) -> Dict[str, Any]:
-        """파일 및 심볼 레벨 LLM 분석 수행"""
+    def _perform_file_llm_analysis(self, parsed_data: Dict[str, Any]) -> Dict[str, Any]:
+        """파일 레벨 LLM 분석 수행 (심볼 분석은 청크에서 처리)"""
         if not self.llm_analyzer:
-            logger.warning("LLM Analyzer가 초기화되지 않아 파일/심볼 분석을 건너뜁니다.")
+            logger.warning("LLM Analyzer가 초기화되지 않아 파일 분석을 건너뜁니다.")
             return parsed_data
         
         try:
@@ -219,7 +300,7 @@ class StructSynthAgent:
                     except Exception as e:
                         logger.warning(f"파일 읽기 실패 {file_path}: {e}")
                     
-                    # 파일 레벨 LLM 분석
+                    # 파일 레벨 LLM 분석만 수행
                     file_llm_analysis = self.llm_analyzer.analyze_file(file_data, file_context)
                     
                     # 파일 데이터에 LLM 분석 결과 추가
@@ -227,48 +308,8 @@ class StructSynthAgent:
                     enriched_file["llm_summary"] = file_llm_analysis.get("summary", "")
                     enriched_file["llm_analysis"] = file_llm_analysis
                     
-                    # 심볼별 LLM 분석
-                    enriched_symbols = []
-                    for symbol in file_data.get("symbols", []):
-                        try:
-                            symbol_type = symbol.get("type", "")
-                            
-                            if symbol_type == "function":
-                                symbol_llm_analysis = self.llm_analyzer.analyze_function(symbol, file_context)
-                            elif symbol_type == "class":
-                                symbol_llm_analysis = self.llm_analyzer.analyze_class(symbol, file_context)
-                            else:
-                                # 변수나 다른 타입의 심볼
-                                symbol_llm_analysis = {
-                                    "llm_summary": f"{symbol_type} 심볼",
-                                    "responsibility": "변수 또는 기타 심볼",
-                                    "design_notes": "기본 심볼",
-                                    "collaboration": "기본 심볼",
-                                    "llm_analysis": {}
-                                }
-                            
-                            # 심볼에 LLM 분석 결과 추가 - symbols 테이블 스키마와 일치
-                            enriched_symbol = symbol.copy()
-                            enriched_symbol["llm_summary"] = symbol_llm_analysis.get("llm_summary", "")
-                            enriched_symbol["responsibility"] = symbol_llm_analysis.get("responsibility", "")
-                            enriched_symbol["design_notes"] = symbol_llm_analysis.get("design_notes", "")
-                            enriched_symbol["collaboration"] = symbol_llm_analysis.get("collaboration", "")
-                            enriched_symbol["llm_analysis"] = symbol_llm_analysis.get("llm_analysis", {})
-                            
-                            enriched_symbols.append(enriched_symbol)
-                            
-                        except Exception as e:
-                            logger.warning(f"심볼 LLM 분석 실패 {symbol.get('name', 'unknown')}: {e}")
-                            # 분석 실패 시 원본 심볼 유지
-                            symbol["llm_summary"] = "분석 실패"
-                            symbol["responsibility"] = "분석 실패"
-                            symbol["design_notes"] = "분석 실패"
-                            symbol["collaboration"] = "분석 실패"
-                            symbol["llm_analysis"] = {"error": str(e)}
-                            enriched_symbols.append(symbol)
-                    
-                    # 파일의 심볼을 분석된 심볼로 교체
-                    enriched_file["symbols"] = enriched_symbols
+                    # 심볼은 원본 정보 유지 (LLM 분석은 별도 단계에서 수행)
+                    enriched_file["symbols"] = file_data.get("symbols", [])
                     analyzed_files.append(enriched_file)
                     
                     logger.info(f"파일 LLM 분석 완료: {file_path}")
@@ -287,11 +328,11 @@ class StructSynthAgent:
                 all_symbols.extend(file_data.get("symbols", []))
             parsed_data["symbols"] = all_symbols
             
-            logger.info(f"파일 및 심볼 LLM 분석 완료: {len(analyzed_files)}개 파일, {len(all_symbols)}개 심볼")
+            logger.info(f"파일 LLM 분석 완료: {len(analyzed_files)}개 파일, {len(all_symbols)}개 심볼")
             return parsed_data
             
         except Exception as e:
-            logger.error(f"파일 및 심볼 LLM 분석 실패: {e}")
+            logger.error(f"파일 LLM 분석 실패: {e}")
             return parsed_data
     
     def _create_embeddings(self, chunked_data: Dict[str, Any]):
@@ -365,15 +406,110 @@ class StructSynthAgent:
         
         return " | ".join(text_parts)
     
+    def _perform_symbol_llm_analysis(self, parsed_data: Dict[str, Any]) -> Dict[str, Any]:
+        """심볼별 직접 LLM 분석 수행"""
+        try:
+            total_symbols = 0
+            analyzed_symbols = 0
+            
+            # 각 파일의 심볼들을 분석
+            for file_data in parsed_data.get("files", []):
+                file_context = self._get_file_context(file_data)
+                
+                updated_symbols = []
+                for symbol in file_data.get("symbols", []):
+                    total_symbols += 1
+                    
+                    try:
+                        # 심볼 타입에 따른 LLM 분석
+                        if symbol.get("type") == "function":
+                            analyzed_symbol = self.llm_analyzer.analyze_function(symbol, file_context)
+                        elif symbol.get("type") == "class":
+                            analyzed_symbol = self.llm_analyzer.analyze_class(symbol, file_context)
+                        else:
+                            # 기타 심볼들은 기본 분석
+                            analyzed_symbol = symbol.copy()
+                            analyzed_symbol["llm_summary"] = f"{symbol.get('type', 'unknown')} 심볼"
+                            analyzed_symbol["responsibility"] = f"{symbol.get('name', 'unknown')}의 기본 책임"
+                            analyzed_symbol["design_notes"] = "기본 설계 노트"
+                            analyzed_symbol["collaboration"] = "협력 정보 없음"
+                        
+                        updated_symbols.append(analyzed_symbol)
+                        analyzed_symbols += 1
+                        
+                        logger.debug(f"심볼 분석 완료: {symbol.get('name', 'unknown')} ({symbol.get('type', 'unknown')})")
+                        
+                    except Exception as e:
+                        logger.warning(f"심볼 분석 실패: {symbol.get('name', 'unknown')} - {e}")
+                        # 분석 실패 시 기본값 설정
+                        symbol["llm_summary"] = "분석 실패"
+                        symbol["responsibility"] = "분석 실패"
+                        symbol["design_notes"] = "분석 실패"
+                        symbol["collaboration"] = "분석 실패"
+                        updated_symbols.append(symbol)
+                
+                # 파일의 심볼 목록 업데이트
+                file_data["symbols"] = updated_symbols
+            
+            # 전체 심볼 목록 업데이트
+            all_symbols = []
+            for file_data in parsed_data["files"]:
+                all_symbols.extend(file_data.get("symbols", []))
+            parsed_data["symbols"] = all_symbols
+            
+            logger.info(f"심볼 LLM 분석 완료: {analyzed_symbols}/{total_symbols}개 심볼")
+            return parsed_data
+            
+        except Exception as e:
+            logger.error(f"심볼 LLM 분석 실패: {e}")
+            return parsed_data
+    
+    def _get_file_context(self, file_data: Dict[str, Any]) -> str:
+        """파일 컨텍스트 정보 생성"""
+        try:
+            file_info = file_data.get("file", {})
+            context_parts = []
+            
+            context_parts.append(f"파일: {file_info.get('path', 'unknown')}")
+            context_parts.append(f"언어: {file_info.get('language', 'unknown')}")
+            
+            # 파일의 다른 심볼들 정보
+            symbols = file_data.get("symbols", [])
+            if symbols:
+                context_parts.append(f"파일 내 심볼 수: {len(symbols)}")
+                symbol_types = {}
+                for symbol in symbols:
+                    symbol_type = symbol.get("type", "unknown")
+                    symbol_types[symbol_type] = symbol_types.get(symbol_type, 0) + 1
+                
+                type_summary = ", ".join([f"{k}: {v}개" for k, v in symbol_types.items()])
+                context_parts.append(f"심볼 구성: {type_summary}")
+            
+            return "\n".join(context_parts)
+            
+        except Exception as e:
+            logger.warning(f"파일 컨텍스트 생성 실패: {e}")
+            return "파일 컨텍스트 생성 실패"
+
     def _perform_chunk_llm_analysis(self, chunked_data: Dict[str, Any]) -> Dict[str, Any]:
         """청킹 단위 LLM 분석 수행"""
         try:
             analyzed_chunks = []
+            total_chunks = len(chunked_data["chunks"])
+            llm_call_times = []
+            
+            logger.info(f"청크 LLM 분석 시작: 총 {total_chunks}개 청크")
             
             for i, chunk in enumerate(chunked_data["chunks"]):
                 try:
+                    # 개별 청크 LLM 분석 시간 측정
+                    chunk_start_time = time.time()
+                    
                     # 청크별 LLM 분석
                     chunk_analysis = self.llm_analyzer.analyze_chunk(chunk)
+                    
+                    chunk_elapsed = time.time() - chunk_start_time
+                    llm_call_times.append(chunk_elapsed)
                     
                     # 분석 결과를 청크에 추가
                     enriched_chunk = chunk.copy()
@@ -382,7 +518,14 @@ class StructSynthAgent:
                     
                     analyzed_chunks.append(enriched_chunk)
                     
-                    logger.info(f"청크 {i} LLM 분석 완료: {chunk.get('symbol_name', 'unknown')}")
+                    # 진행률과 시간 정보 출력
+                    progress = ((i + 1) / total_chunks) * 100
+                    avg_time = sum(llm_call_times) / len(llm_call_times)
+                    estimated_remaining = avg_time * (total_chunks - i - 1)
+                    
+                    logger.info(f"청크 {i+1}/{total_chunks} LLM 분석 완료 ({progress:.1f}%) - "
+                              f"소요: {chunk_elapsed:.1f}초, 평균: {avg_time:.1f}초, "
+                              f"예상 남은 시간: {estimated_remaining:.1f}초")
                     
                 except Exception as e:
                     logger.warning(f"청크 {i} LLM 분석 실패: {e}")
@@ -394,12 +537,26 @@ class StructSynthAgent:
             chunked_data["chunks"] = analyzed_chunks
             chunked_data["analyzed_chunks"] = len(analyzed_chunks)
             
+            # LLM 호출 통계 출력
+            if llm_call_times:
+                total_llm_time = sum(llm_call_times)
+                avg_llm_time = total_llm_time / len(llm_call_times)
+                min_llm_time = min(llm_call_times)
+                max_llm_time = max(llm_call_times)
+                
+                logger.info(f"📊 청크 LLM 분석 통계:")
+                logger.info(f"  - 총 LLM 호출 시간: {total_llm_time:.2f}초")
+                logger.info(f"  - 평균 호출 시간: {avg_llm_time:.2f}초")
+                logger.info(f"  - 최소/최대 호출 시간: {min_llm_time:.2f}초 / {max_llm_time:.2f}초")
+                logger.info(f"  - 성공률: {len(llm_call_times)}/{total_chunks} ({(len(llm_call_times)/total_chunks)*100:.1f}%)")
+            
             logger.info(f"청킹 단위 LLM 분석 완료: {len(analyzed_chunks)}개 청크")
             return chunked_data
             
         except Exception as e:
             logger.error(f"청킹 단위 LLM 분석 실패: {e}")
             return chunked_data
+    
     
     def _save_to_database(self, parsed_data: Dict[str, Any], chunked_data: Dict[str, Any]):
         """SQLite 데이터베이스에 저장"""
@@ -631,15 +788,48 @@ class StructSynthAgent:
         if not self.analysis_results:
             return {"status": "no_analysis_performed"}
         
-        return {
+        summary = {
             "status": "completed",
             "run_id": self.run_id,
             "files_analyzed": self.analysis_results.get("parsed_data", {}).get("total_files", 0),
             "symbols_found": self.analysis_results.get("parsed_data", {}).get("total_symbols", 0),
             "chunks_created": self.analysis_results.get("chunked_data", {}).get("total_chunks", 0),
             "timestamp": self.analysis_results.get("timestamp"),
-            "vector_store_stats": self.get_vector_store_stats()
+            "vector_store_stats": self.get_vector_store_stats(),
+            "performance_summary": self.analysis_results.get("performance_summary", {})
         }
+        
+        # 성능 요약을 파일로 저장
+        self._save_performance_summary(summary)
+        
+        return summary
+    
+    def _save_performance_summary(self, summary: Dict[str, Any]):
+        """성능 측정 결과를 파일로 저장"""
+        try:
+            performance_file = self.artifacts_dir / "performance_summary.json"
+            
+            # 성능 데이터 구성
+            performance_data = {
+                "timestamp": summary.get("timestamp"),
+                "run_id": summary.get("run_id"),
+                "analysis_stats": {
+                    "files_analyzed": summary.get("files_analyzed", 0),
+                    "symbols_found": summary.get("symbols_found", 0),
+                    "chunks_created": summary.get("chunks_created", 0)
+                },
+                "performance_timings": summary.get("performance_summary", {}),
+                "vector_store_stats": summary.get("vector_store_stats", {})
+            }
+            
+            # JSON 파일로 저장
+            with open(performance_file, 'w', encoding='utf-8') as f:
+                json.dump(performance_data, f, ensure_ascii=False, indent=2)
+            
+            logger.info(f"✅ 성능 측정 결과 저장: {performance_file}")
+            
+        except Exception as e:
+            logger.warning(f"성능 측정 결과 저장 실패: {e}")
     
     def _save_embeddings_to_sqlite(self, vectors: List[List[float]], doc_ids: List[int]):
         """임베딩을 SQLite embeddings 테이블에 저장"""
